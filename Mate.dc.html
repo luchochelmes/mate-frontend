@@ -1,0 +1,1616 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin" />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..900&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#ECEEE3;color:#23281C;font-family:"Instrument Sans",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  button{font:inherit;color:inherit;border:0;background:none;cursor:pointer}
+  input,select{font:inherit;color:inherit}
+  a{color:#3B4A2F;text-decoration:underline;text-underline-offset:2px}
+  a:hover{color:#8A5A3B}
+  ::selection{background:#D8DEC3}
+  :focus-visible{outline:2px solid #8A5A3B;outline-offset:2px;border-radius:4px}
+  @keyframes matein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  @keyframes matepop{0%{transform:scale(1)}45%{transform:scale(1.18)}100%{transform:scale(1)}}
+  @media (prefers-reduced-motion: reduce){*{animation-duration:.01ms !important;transition-duration:.01ms !important}}
+</style>
+</helmet>
+<sc-if value="{{ noHayUsuario }}" hint-placeholder-val="{{ false }}">
+  <div style="min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;background:#ECEEE3">
+    <div style="width:100%;max-width:440px;background:#F8F9F2;border:1px solid #DDE1D0;border-radius:16px;padding:36px 32px;display:flex;flex-direction:column;gap:22px">
+      <div style="display:flex;flex-direction:column;gap:6px;align-items:center">
+        <div style="display:flex;align-items:center;gap:10px">
+          <span style="width:17px;height:17px;border-radius:999px;border:2px solid #3B4A2F;background:linear-gradient(to top,#3B4A2F 60%,transparent 60%)"></span>
+          <span style="font-family:Fraunces,serif;font-weight:800;font-size:26px;letter-spacing:-0.01em">Mate</span>
+        </div>
+        <div style="font-size:13px;color:#565B47;text-align:center">Tu compañero de cursada</div>
+      </div>
+      <div style="display:flex;gap:4px;background:#E3E6D6;border-radius:10px;padding:4px">
+        <sc-for list="{{ authTabs }}" as="t" hint-placeholder-count="2">
+          <button type="button" onClick="{{ t.pick }}" style="flex:1;font-size:14px;font-weight:{{ t.peso }};border-radius:7px;padding:9px 12px;background:{{ t.bg }};color:{{ t.fg }};transition:all .16s ease">{{ t.label }}</button>
+        </sc-for>
+      </div>
+      <sc-if value="{{ modoRegister }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <input type="text" placeholder="Nombre" value="{{ form.nombre }}" onInput="{{ setNombre }}" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
+            <input type="text" placeholder="Apellido" value="{{ form.apellido }}" onInput="{{ setApellido }}" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
+          </div>
+          <input type="text" placeholder="Apodo (como te digan tus amigos)" value="{{ form.apodo }}" onInput="{{ setApodo }}" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
+          <input type="email" placeholder="Email" value="{{ form.email }}" onInput="{{ setEmail }}" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
+          <input type="text" placeholder="Carrera (ej: Ingeniería en Sistemas)" value="{{ form.carrera }}" onInput="{{ setCarrera }}" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
+          <input type="text" placeholder="Universidad (ej: UTN FRC)" value="{{ form.universidad }}" onInput="{{ setUniversidad }}" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
+          <div style="position:relative;display:flex">
+            <input type="{{ passType }}" placeholder="Contraseña" value="{{ form.password }}" onInput="{{ setPassword }}" style="flex:1;border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 44px 10px 12px;font-size:14px;font-family:inherit;color:#23281C">
+            <button type="button" onClick="{{ toggleShowPass }}" aria-label="Mostrar contraseña" style="position:absolute;right:6px;top:50%;transform:translateY(-50%);background:none;border:0;padding:6px 8px;color:#565B47;font-size:12.5px;cursor:pointer">{{ showPassLabel }}</button>
+          </div>
+        </div>
+      </sc-if>
+      <sc-if value="{{ modoLogin }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <input type="email" placeholder="Email" value="{{ form.email }}" onInput="{{ setEmail }}" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
+          <div style="position:relative;display:flex">
+            <input type="{{ passType }}" placeholder="Contraseña" value="{{ form.password }}" onInput="{{ setPassword }}" style="flex:1;border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 44px 10px 12px;font-size:14px;font-family:inherit;color:#23281C">
+            <button type="button" onClick="{{ toggleShowPass }}" aria-label="Mostrar contraseña" style="position:absolute;right:6px;top:50%;transform:translateY(-50%);background:none;border:0;padding:6px 8px;color:#565B47;font-size:12.5px;cursor:pointer">{{ showPassLabel }}</button>
+          </div>
+        </div>
+      </sc-if>
+      <sc-if value="{{ hayAuthError }}" hint-placeholder-val="{{ false }}">
+        <div style="font-size:13px;color:#9B3B28;background:#F3E1DC;border:1px solid #E2CBAE;border-radius:8px;padding:10px 12px">{{ authError }}</div>
+      </sc-if>
+      <button type="button" onClick="{{ doAuth }}" style="background:#3B4A2F;color:#EDF1E0;border-radius:9px;padding:12px 18px;font-size:15px;font-weight:600;transition:background .18s ease" style-hover="background:#2E3A25">{{ authBtnLabel }}</button>
+    </div>
+  </div>
+</sc-if>
+
+<sc-if value="{{ hayUsuario }}" hint-placeholder-val="{{ true }}">
+<div style="min-height:100vh;display:flex;align-items:stretch">
+
+  <sc-if value="{{ esDesktop }}" hint-placeholder-val="{{ true }}">
+    <nav style="width:238px;flex:none;background:#3B4A2F;color:#E7EBDA;padding:26px 16px 22px;display:flex;flex-direction:column;gap:26px;position:sticky;top:0;height:100vh">
+      <div style="display:flex;align-items:center;gap:10px;padding:0 8px">
+        <span style="width:15px;height:15px;border-radius:999px;border:2px solid #C9D3A9;background:linear-gradient(to top,#C9D3A9 60%,transparent 60%)"></span>
+        <span style="font-family:Fraunces,serif;font-weight:800;font-size:23px;letter-spacing:-0.01em">Mate</span>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:2px;overflow-y:auto;flex:1;min-height:0">
+        <sc-for list="{{ navSections }}" as="sec" hint-placeholder-count="3">
+          <div style="font-family:'Instrument Sans',sans-serif;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#AEBE90;padding:10px 12px 4px">{{ sec.titulo }}</div>
+          <sc-for list="{{ sec.items }}" as="it" hint-placeholder-count="3">
+            <button type="button" onClick="{{ it.go }}" style="display:flex;align-items:center;gap:10px;text-align:left;padding:9px 12px;border-radius:9px;background:{{ it.bg }};color:{{ it.fg }};font-size:14.5px;font-weight:{{ it.peso }};transition:background .18s ease">
+              <span style="width:6px;height:6px;border-radius:999px;background:{{ it.punto }}"></span>
+              {{ it.label }}
+            </button>
+          </sc-for>
+        </sc-for>
+      </div>
+      <div style="border-top:1px solid #4C5C3D;padding-top:14px;display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;align-items:center;gap:10px;padding:0 12px">
+          <div style="width:32px;height:32px;border-radius:999px;background:#5C6E48;display:flex;align-items:center;justify-content:center;font-family:Fraunces,serif;font-weight:700;font-size:14px;color:#EDF1E0">{{ userInitials }}</div>
+          <div style="display:flex;flex-direction:column;min-width:0;flex:1">
+            <span style="font-size:13.5px;font-weight:600;color:#EDF1E0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ userDisplayName }}</span>
+            <span style="font-size:11.5px;color:#AEBE90;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ userCarrera }}</span>
+          </div>
+        </div>
+        <button type="button" onClick="{{ doLogout }}" style="display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:8px;font-size:13px;color:#B4C39A;transition:background .18s ease" style-hover="background:#4C5C3D">
+          <span>↩</span> Cerrar sesión
+        </button>
+      </div>
+    </nav>
+  </sc-if>
+
+  <main style="flex:1;min-width:0;padding:clamp(18px,3.5vw,40px);padding-bottom:{{ padBottom }}">
+    <div style="max-width:1120px;margin:0 auto">
+
+      <sc-if value="{{ esInicio }}" hint-placeholder-val="{{ true }}">
+        <section data-screen-label="Inicio" style="animation:matein .3s ease both;display:flex;flex-direction:column;gap:26px">
+          <header style="display:flex;flex-direction:column;gap:4px">
+            <div style="font-family:"Instrument Sans",sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#565B47">{{ hoyTexto }}</div>
+            <h1 style="margin:0;font-family:Fraunces,serif;font-weight:800;font-size:clamp(28px,4.4vw,40px);letter-spacing:-0.02em;color:#23281C">Buenas, {{ saludoNombre }}</h1>
+          </header>
+
+          <div style="background:#F8F9F2;border:1px solid #DDE1D0;border-radius:16px;padding:clamp(16px,2.6vw,26px);display:flex;flex-direction:column;gap:18px">
+            <div style="font-family:"Instrument Sans",sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#565B47">Lo que viene</div>
+            <div style="display:flex;flex-wrap:wrap;align-items:center;gap:clamp(16px,3vw,30px)">
+              <div style="flex:none;width:148px;border-radius:13px;overflow:hidden;background:#3B4A2F;color:#EDF1E0;box-shadow:0 10px 24px -16px rgba(35,40,28,.7)">
+                <div style="height:26px;background:#2E3A25;display:flex;align-items:center;justify-content:center;gap:26px">
+                  <span style="width:8px;height:8px;border-radius:999px;background:#ECEEE3"></span>
+                  <span style="width:8px;height:8px;border-radius:999px;background:#ECEEE3"></span>
+                </div>
+                <div style="padding:12px 0 16px;display:flex;flex-direction:column;align-items:center;gap:2px">
+                  <div style="font-family:"Instrument Sans",sans-serif;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#A9B98A">{{ prox.mes }}</div>
+                  <div style="font-family:Fraunces,serif;font-weight:800;font-size:66px;line-height:.92;letter-spacing:-0.03em">{{ prox.dia }}</div>
+                  <div style="font-size:14px;color:#BCC9A2">{{ prox.diaSemana }}</div>
+                </div>
+              </div>
+              <div style="flex:1;min-width:200px;display:flex;flex-direction:column;gap:10px">
+                <div style="display:inline-flex;align-self:flex-start;font-family:"Instrument Sans",sans-serif;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#565B47;border:1px solid #D3D8C2;border-radius:999px;padding:4px 10px">{{ prox.tipo }}</div>
+                <h2 style="margin:0;font-family:Fraunces,serif;font-weight:700;font-size:clamp(24px,3.4vw,32px);letter-spacing:-0.02em;line-height:1.1">{{ prox.titulo }}</h2>
+                <div style="display:flex;align-items:center;gap:9px">
+                  <span style="width:11px;height:11px;border-radius:3px;background:{{ prox.color }}"></span>
+                  <span style="font-size:16px;color:#3D4433">{{ prox.materia }}</span>
+                  <span style="font-size:14px;color:#565B47">{{ prox.catedra }}</span>
+                </div>
+              </div>
+            </div>
+            <div style="border-top:1px solid #E2E5D5;padding-top:14px;display:flex;flex-wrap:wrap;gap:18px">
+              <sc-for list="{{ proxDespues }}" as="p" hint-placeholder-count="2">
+                <div style="display:flex;align-items:center;gap:8px;font-size:14px;color:#565B47">
+                  <span style="width:8px;height:8px;border-radius:2px;background:{{ p.color }}"></span>
+                  <span style="font-family:"Instrument Sans",sans-serif;font-size:12.5px;color:#3D4433">{{ p.fecha }}</span>
+                  {{ p.texto }}
+                </div>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:10px">
+            <sc-for list="{{ accesos }}" as="a" hint-placeholder-count="8">
+              <button type="button" onClick="{{ a.go }}" style="text-align:left;background:#F8F9F2;border:1px solid #DDE1D0;border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:5px;transition:border-color .18s ease,transform .18s ease" style-hover="border-color:#8A5A3B;transform:translateY(-2px)">
+                <span style="font-family:Fraunces,serif;font-weight:700;font-size:15.5px;letter-spacing:-0.01em">{{ a.titulo }}</span>
+                <span style="font-size:12.5px;color:#565B47;line-height:1.35">{{ a.sub }}</span>
+              </button>
+            </sc-for>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;align-items:start">
+            <div style="background:#F8F9F2;border:1px solid #DDE1D0;border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:14px">
+              <div style="font-family:"Instrument Sans",sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#565B47">Cómo va la cursada</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+                <sc-for list="{{ resumen }}" as="r" hint-placeholder-count="4">
+                  <div style="display:flex;flex-direction:column;gap:1px">
+                    <div style="font-family:Fraunces,serif;font-weight:800;font-size:27px;letter-spacing:-0.02em;color:#3B4A2F">{{ r.valor }}</div>
+                    <div style="font-size:12.5px;color:#565B47">{{ r.label }}</div>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:6px">
+                <div style="height:7px;border-radius:999px;background:#E2E5D5;overflow:hidden">
+                  <div style="height:100%;border-radius:999px;background:#3B4A2F;width:{{ carreraPct }}%"></div>
+                </div>
+                <div style="font-size:12.5px;color:#565B47">{{ carreraTexto }}</div>
+              </div>
+            </div>
+
+            <sc-if value="{{ mostrarAvisos }}" hint-placeholder-val="{{ true }}">
+              <div style="background:#F8F9F2;border:1px solid #DDE1D0;border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:12px">
+                <div style="font-family:"Instrument Sans",sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#565B47">Para tener en cuenta</div>
+                <sc-for list="{{ avisos }}" as="v" hint-placeholder-count="2">
+                  <div style="display:flex;gap:11px;align-items:flex-start">
+                    <span style="margin-top:5px;width:9px;height:9px;flex:none;border-radius:999px;background:{{ v.color }}"></span>
+                    <div style="display:flex;flex-direction:column;gap:2px">
+                      <span style="font-size:14.5px;line-height:1.35;color:#33392A">{{ v.texto }}</span>
+                      <button type="button" onClick="{{ v.go }}" style="align-self:flex-start;font-size:13px;color:#8A5A3B;text-decoration:underline;text-underline-offset:2px;padding:0">{{ v.accion }}</button>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+          </div>
+        </section>
+      </sc-if>
+
+      <sc-if value="{{ esMaterias }}" hint-placeholder-val="{{ false }}">
+        <section data-screen-label="Mis materias" style="animation:matein .3s ease both;display:flex;flex-direction:column;gap:22px">
+          <header style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:14px">
+            <h1 style="margin:0;font-family:Fraunces,serif;font-weight:800;font-size:clamp(26px,4vw,36px);letter-spacing:-0.02em">Mis materias</h1>
+            <button type="button" onClick="{{ abrirAddMat }}" style="background:#3B4A2F;color:#EDF1E0;border-radius:9px;padding:10px 16px;font-size:14.5px;font-weight:600;transition:background .18s ease" style-hover="background:#2E3A25">+ Agregá una materia</button>
+          </header>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px">
+            <div style="background:#F8F9F2;border:1px solid #DDE1D0;border-radius:14px;padding:16px 18px;display:flex;gap:26px">
+              <div style="display:flex;flex-direction:column;gap:1px">
+                <div style="font-family:Fraunces,serif;font-weight:800;font-size:30px;letter-spacing:-0.02em;color:#3B4A2F">{{ promSin }}</div>
+                <div style="font-size:12.5px;color:#565B47">Promedio sin aplazos</div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:1px">
+                <div style="font-family:Fraunces,serif;font-weight:800;font-size:30px;letter-spacing:-0.02em;color:#8A5A3B">{{ promCon }}</div>
+                <div style="font-size:12.5px;color:#565B47">Con aplazos</div>
+              </div>
+            </div>
+            <div style="background:#F8F9F2;border:1px solid #DDE1D0;border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:9px;justify-content:center">
+              <div style="display:flex;align-items:baseline;gap:8px">
+                <span style="font-family:Fraunces,serif;font-weight:800;font-size:30px;letter-spacing:-0.02em;color:#3B4A2F">{{ carreraPctTxt }}</span>
+                <span style="font-size:12.5px;color:#565B47">{{ carreraTexto }}</span>
+              </div>
+              <div style="height:7px;border-radius:999px;background:#E2E5D5;overflow:hidden">
+                <div style="height:100%;border-radius:999px;background:#3B4A2F;width:{{ carreraPct }}%"></div>
+              </div>
+            </div>
+          </div>
+
+          <div style="background:#F8F9F2;border:1px solid #DDE1D0;border-radius:14px;padding:16px 18px;display:flex;flex-direction:column;gap:14px">
+            <button type="button" onClick="{{ toggleSim }}" style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0;text-align:left">
+              <span style="font-family:Fraunces,serif;font-weight:700;font-size:16px">Simulador de notas</span>
+              <span style="font-size:13px;color:#8A5A3B">{{ simToggleTxt }}</span>
+            </button>
+            <sc-if value="{{ simOpen }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:14px;border-top:1px solid #E2E5D5;padding-top:14px">
+                <div style="display:flex;flex-wrap:wrap;gap:7px">
+                  <sc-for list="{{ simMaterias }}" as="s" hint-placeholder-count="3">
+                    <button type="button" onClick="{{ s.pick }}" style="font-size:13.5px;border:1px solid {{ s.bd }};background:{{ s.bg }};color:{{ s.fg }};border-radius:999px;padding:6px 12px;transition:all .16s ease">{{ s.n }}</button>
+                  </sc-for>
+                </div>
+                <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px">
+                  <span style="font-size:14px;color:#565B47">Si me saco</span>
+                  <div style="display:flex;gap:4px">
+                    <sc-for list="{{ simNotas }}" as="n" hint-placeholder-count="7">
+                      <button type="button" onClick="{{ n.pick }}" style="width:34px;height:34px;border-radius:8px;font-family:Fraunces,serif;font-weight:700;font-size:15px;border:1px solid {{ n.bd }};background:{{ n.bg }};color:{{ n.fg }};transition:all .16s ease">{{ n.v }}</button>
+                    </sc-for>
+                  </div>
+                </div>
+                <div style="font-size:16px;color:#33392A;line-height:1.45">{{ simTexto }}</div>
+              </div>
+            </sc-if>
+          </div>
+
+          <div style="display:flex;flex-wrap:wrap;gap:7px">
+            <sc-for list="{{ filtros }}" as="f" hint-placeholder-count="8">
+              <button type="button" onClick="{{ f.pick }}" style="display:flex;align-items:center;gap:7px;font-size:13.5px;border:1px solid {{ f.bd }};background:{{ f.bg }};color:{{ f.fg }};border-radius:999px;padding:6px 12px 6px 9px;transition:all .16s ease">
+                <span style="width:13px;height:13px;border-radius:999px;flex:none;border:1.5px solid {{ f.marca }};background:{{ f.marcaBg }}"></span>
+                {{ f.label }}
+                <span style="font-family:"Instrument Sans",sans-serif;font-size:11.5px;opacity:.65">{{ f.n }}</span>
+              </button>
+            </sc-for>
+          </div>
+
+          <sc-if value="{{ hayMaterias }}" hint-placeholder-val="{{ true }}">
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(262px,1fr));gap:14px">
+              <sc-for list="{{ materias }}" as="m" hint-placeholder-count="6">
+                <button type="button" onClick="{{ m.abrir }}" style="text-align:left;background:#F8F9F2;border:1px solid #DDE1D0;border-left:4px solid {{ m.col }};border-radius:13px;padding:{{ cardPad }};display:flex;flex-direction:column;gap:11px;transition:border-color .18s ease,transform .18s ease" style-hover="transform:translateY(-2px)">
+                  <div style="display:flex;flex-direction:column;gap:3px">
+                    <span style="font-family:Fraunces,serif;font-weight:700;font-size:16.5px;letter-spacing:-0.01em;line-height:1.25;text-wrap:pretty">{{ m.n }}</span>
+                    <span style="font-size:12.5px;color:#565B47">{{ m.cat }}</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:7px">
+                    <span style="width:13px;height:13px;border-radius:999px;flex:none;border:1.5px solid {{ m.estColor }};background:{{ m.estBg }};opacity:{{ m.estOp }}"></span>
+                    <span style="font-size:13px;color:{{ m.estColor }};font-weight:600">{{ m.estLabel }}</span>
+                  </div>
+                  <div style="display:flex;flex-wrap:wrap;gap:6px">
+                    <sc-for list="{{ m.chips }}" as="c" hint-placeholder-count="2">
+                      <span style="font-family:"Instrument Sans",sans-serif;font-size:11.5px;color:{{ c.fg }};background:{{ c.bg }};border-radius:6px;padding:3px 7px">{{ c.t }}</span>
+                    </sc-for>
+                  </div>
+                  <sc-if value="{{ m.tieneAviso }}" hint-placeholder-val="{{ false }}">
+                    <span style="font-size:12.5px;color:#8A5A3B;line-height:1.35">{{ m.aviso }}</span>
+                  </sc-if>
+                </button>
+              </sc-for>
+            </div>
+          </sc-if>
+          <sc-if value="{{ sinMaterias }}" hint-placeholder-val="{{ false }}">
+            <div style="border:1px dashed #C9CEB8;border-radius:14px;padding:44px 24px;text-align:center;display:flex;flex-direction:column;gap:8px;align-items:center">
+              <span style="font-family:Fraunces,serif;font-weight:700;font-size:17px">No tenés materias en este estado</span>
+              <span style="font-size:14px;color:#565B47">Probá con otro filtro o agregá una materia nueva.</span>
+            </div>
+          </sc-if>
+        </section>
+      </sc-if>
+
+      <sc-if value="{{ esDetalle }}" hint-placeholder-val="{{ false }}">
+        <section data-screen-label="Detalle de materia" style="animation:matein .3s ease both;display:flex;flex-direction:column;gap:22px">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
+            <button type="button" onClick="{{ volver }}" style="font-size:14px;color:#565B47;padding:0">← Mis materias</button>
+            <div style="display:flex;gap:8px">
+              <button type="button" onClick="{{ abrirEditMat }}" style="border:1px solid #DDE1D0;background:#F8F9F2;border-radius:8px;padding:8px 14px;font-size:13px;color:#23281C">Editar materia</button>
+              <button type="button" onClick="{{ pedirDelMat }}" style="border:1px solid #E2CBAE;background:#F6EDE1;border-radius:8px;padding:8px 14px;font-size:13px;color:#9B3B28">Eliminar</button>
+            </div>
+          </div>
+          <header style="display:flex;flex-direction:column;gap:9px">
+            <div style="display:flex;align-items:center;gap:9px">
+              <span style="width:12px;height:12px;border-radius:3px;background:{{ det.col }}"></span>
+              <span style="font-size:13.5px;color:#565B47">{{ det.cat }}</span>
+            </div>
+            <h1 style="margin:0;font-family:Fraunces,serif;font-weight:800;font-size:clamp(26px,4vw,38px);letter-spacing:-0.02em;line-height:1.08;text-wrap:pretty">{{ det.n }}</h1>
+          </header>
+
+          <div style="background:#F8F9F2;border:1px solid #DDE1D0;border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:12px">
+            <div style="font-family:"Instrument Sans",sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#565B47">Estado</div>
+            <div style="display:flex;flex-wrap:wrap;gap:7px">
+              <sc-for list="{{ det.estados }}" as="e" hint-placeholder-count="7">
+                <button type="button" onClick="{{ e.pick }}" style="display:flex;align-items:center;gap:7px;font-size:13.5px;border:1px solid {{ e.bd }};background:{{ e.bg }};color:{{ e.fg }};border-radius:999px;padding:6px 12px 6px 9px;font-weight:{{ e.peso }};transition:all .16s ease">
+                  <span style="width:13px;height:13px;border-radius:999px;flex:none;border:1.5px solid {{ e.marca }};background:{{ e.marcaBg }};animation:{{ e.anim }}"></span>
+                  {{ e.label }}
+                </button>
+              </sc-for>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(258px,1fr));gap:14px;align-items:start">
+            <div style="background:#F8F9F2;border:1px solid #DDE1D0;border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:13px">
+              <div style="font-family:"Instrument Sans",sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#565B47">Notas</div>
+              <sc-if value="{{ det.tieneNotas }}" hint-placeholder-val="{{ true }}">
+                <div style="display:flex;flex-direction:column;gap:9px">
+                  <sc-for list="{{ det.notas }}" as="nt" hint-placeholder-count="2">
+                    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding-bottom:8px;border-bottom:1px solid #E7EADB">
+                      <span style="font-size:14.5px;color:#33392A">{{ nt.n }}</span>
+                      <span style="font-family:Fraunces,serif;font-weight:800;font-size:21px;color:{{ nt.color }}">{{ nt.v }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+              <sc-if value="{{ det.sinNotas }}" hint-placeholder-val="{{ false }}">
+                <span style="font-size:14px;color:#565B47">Todavía no cargaste notas. Agregá la primera cuando la tengas.</span>
+              </sc-if>
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+                <span style="font-size:14.5px;color:#565B47">{{ det.finalLabel }}</span>
+                <span style="font-family:Fraunces,serif;font-weight:800;font-size:21px;color:#3B4A2F">{{ det.finalTxt }}</span>
+              </div>
+            </div>
+
+            <div style="display:flex;flex-direction:column;gap:14px">
+              <sc-if value="{{ det.asisOn }}" hint-placeholder-val="{{ true }}">
+                <div style="background:#F8F9F2;border:1px solid #DDE1D0;border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:11px">
+                  <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                    <span style="font-family:"Instrument Sans",sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#565B47">Asistencia</span>
+                    <span style="font-family:Fraunces,serif;font-weight:800;font-size:22px;color:{{ det.asisColor }}">{{ det.asisPct }}%</span>
+                  </div>
+                  <div style="height:8px;border-radius:999px;background:#E2E5D5;overflow:hidden;position:relative">
+                    <div style="height:100%;border-radius:999px;background:{{ det.asisColor }};width:{{ det.asisPct }}%"></div>
+                  </div>
+                  <span style="font-size:13px;color:#565B47">{{ det.asisTxt }}</span>
+                </div>
+              </sc-if>
+              <sc-if value="{{ det.regOn }}" hint-placeholder-val="{{ false }}">
+                <div style="background:{{ det.regBg }};border:1px solid {{ det.regBd }};border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:5px">
+                  <span style="font-family:"Instrument Sans",sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#565B47">Regularidad</span>
+                  <span style="font-size:15.5px;color:#33392A;line-height:1.4">{{ det.regTxt }}</span>
+                </div>
+              </sc-if>
+              <sc-if value="{{ det.habOn }}" hint-placeholder-val="{{ true }}">
+                <div style="background:#F8F9F2;border:1px solid #DDE1D0;border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:10px">
+                  <span style="font-family:"Instrument Sans",sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#565B47">Al aprobarla se abren</span>
+                  <sc-for list="{{ det.hab }}" as="h" hint-placeholder-count="2">
+                    <div style="display:flex;align-items:center;gap:9px;font-size:14.5px;color:#33392A">
+                      <span style="width:16px;height:1px;background:#B9C0A2"></span>
+                      {{ h.n }}
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+
+          <div style="background:#F8F9F2;border:1px solid #DDE1D0;border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:12px">
+            <div style="font-family:"Instrument Sans",sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#565B47">Próximas fechas</div>
+            <sc-if value="{{ det.tieneFechas }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <sc-for list="{{ det.fechas }}" as="fe" hint-placeholder-count="2">
+                  <div style="display:flex;align-items:center;gap:12px">
+                    <span style="font-family:"Instrument Sans",sans-serif;font-size:12.5px;color:#3D4433;min-width:66px">{{ fe.fecha }}</span>
+                    <span style="font-size:14.5px;color:#33392A">{{ fe.titulo }}</span>
+                    <span style="font-size:12.5px;color:#565B47">{{ fe.tipo }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+            <sc-if value="{{ det.sinFechas }}" hint-placeholder-val="{{ false }}">
+              <span style="font-size:14px;color:#565B47">No hay nada anotado. Cargá una fecha desde el calendario.</span>
+            </sc-if>
+          </div>
+
+          <div style="background:#F8F9F2;border:1px solid #DDE1D0;border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:10px">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
+              <div style="font-family:'Instrument Sans',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#565B47">Apuntes</div>
+              <span style="font-size:11.5px;color:#565B47">{{ notasStatus }}</span>
+            </div>
+            <textarea placeholder="Anotá lo que quieras sobre la materia (bibliografía, teoremas, links...)" value="{{ notasBuf }}" onInput="{{ setNotasBuf }}" style="width:100%;min-height:180px;border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:12px 14px;font-size:14px;font-family:inherit;color:#23281C;line-height:1.5;resize:vertical"></textarea>
+            <button type="button" onClick="{{ guardarNotas }}" style="align-self:flex-start;background:#3B4A2F;color:#EDF1E0;border-radius:8px;padding:8px 16px;font-size:13.5px;font-weight:600">Guardar apuntes</button>
+          </div>
+        </section>
+      </sc-if>
+
+      <sc-if value="{{ esCalendario }}" hint-placeholder-val="{{ false }}">
+        <section data-screen-label="Calendario" style="animation:matein .3s ease both;display:flex;flex-direction:column;gap:20px">
+          <header style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:14px">
+            <h1 style="margin:0;font-family:Fraunces,serif;font-weight:800;font-size:clamp(26px,4vw,36px);letter-spacing:-0.02em">Calendario</h1>
+            <button type="button" style="background:#3B4A2F;color:#EDF1E0;border-radius:9px;padding:10px 16px;font-size:14.5px;font-weight:600;transition:background .18s ease" style-hover="background:#2E3A25">Agregá un evento</button>
+          </header>
+
+          <div style="display:flex;gap:4px;background:#E3E6D6;border-radius:10px;padding:4px;align-self:flex-start">
+            <sc-for list="{{ vistas }}" as="v" hint-placeholder-count="3">
+              <button type="button" onClick="{{ v.pick }}" style="font-size:14px;font-weight:{{ v.peso }};border-radius:7px;padding:7px 14px;background:{{ v.bg }};color:{{ v.fg }};transition:all .16s ease">{{ v.label }}</button>
+            </sc-for>
+          </div>
+
+          <sc-if value="{{ vistaMes }}" hint-placeholder-val="{{ true }}">
+            <div style="background:#F8F9F2;border:1px solid #DDE1D0;border-radius:14px;padding:clamp(12px,2vw,20px);display:flex;flex-direction:column;gap:12px">
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+                <span style="font-family:Fraunces,serif;font-weight:700;font-size:20px;letter-spacing:-0.01em">{{ mesNombre }}</span>
+                <div style="display:flex;gap:6px">
+                  <button type="button" onClick="{{ mesPrev }}" style="width:32px;height:32px;border:1px solid #DDE1D0;border-radius:8px;background:#ECEEE3">‹</button>
+                  <button type="button" onClick="{{ mesNext }}" style="width:32px;height:32px;border:1px solid #DDE1D0;border-radius:8px;background:#ECEEE3">›</button>
+                </div>
+              </div>
+              <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:4px">
+                <sc-for list="{{ diasSemana }}" as="d" hint-placeholder-count="7">
+                  <div style="font-family:"Instrument Sans",sans-serif;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:#565B47;text-align:center;padding-bottom:2px">{{ d.t }}</div>
+                </sc-for>
+                <sc-for list="{{ mesCeldas }}" as="c" hint-placeholder-count="42">
+                  <div style="min-height:{{ celdaAlto }};border-radius:8px;background:{{ c.bg }};border:1px solid {{ c.bd }};padding:5px 5px 6px;display:flex;flex-direction:column;gap:4px">
+                    <span style="font-family:"Instrument Sans",sans-serif;font-size:11.5px;color:{{ c.numColor }};font-weight:{{ c.numPeso }}">{{ c.dia }}</span>
+                    <sc-for list="{{ c.eventos }}" as="ev" hint-placeholder-count="0">
+                      <span style="display:block;height:5px;border-radius:3px;background:{{ ev.color }};opacity:{{ ev.op }}"></span>
+                    </sc-for>
+                  </div>
+                </sc-for>
+              </div>
+              <div style="display:flex;flex-wrap:wrap;gap:12px;border-top:1px solid #E7EADB;padding-top:12px">
+                <sc-for list="{{ leyenda }}" as="l" hint-placeholder-count="5">
+                  <div style="display:flex;align-items:center;gap:7px;font-size:12.5px;color:#565B47">
+                    <span style="width:9px;height:9px;border-radius:2px;background:{{ l.color }}"></span>
+                    {{ l.n }}
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ vistaLista }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:22px">
+              <sc-for list="{{ lista }}" as="g" hint-placeholder-count="2">
+                <div style="display:flex;flex-direction:column;gap:9px">
+                  <div style="font-family:"Instrument Sans",sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#565B47">{{ g.mes }}</div>
+                  <sc-for list="{{ g.items }}" as="e" hint-placeholder-count="4">
+                    <div style="background:#F8F9F2;border:1px solid #DDE1D0;border-left:4px solid {{ e.color }};border-radius:12px;padding:13px 15px;display:flex;align-items:center;gap:14px;opacity:{{ e.op }};transition:opacity .2s ease">
+                      <div style="flex:none;width:46px;display:flex;flex-direction:column;align-items:center">
+                        <span style="font-family:Fraunces,serif;font-weight:800;font-size:22px;line-height:1;color:#3B4A2F">{{ e.dia }}</span>
+                        <span style="font-family:"Instrument Sans",sans-serif;font-size:10.5px;color:#565B47">{{ e.diaSemana }}</span>
+                      </div>
+                      <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px">
+                        <span style="font-size:15.5px;font-weight:600;color:#23281C;text-decoration:{{ e.deco }}">{{ e.titulo }}</span>
+                        <span style="font-size:13px;color:#565B47">{{ e.materia }} · {{ e.tipo }}</span>
+                      </div>
+                      <button type="button" onClick="{{ e.toggle }}" style="flex:none;width:26px;height:26px;border-radius:999px;border:1.5px solid {{ e.checkBd }};background:{{ e.checkBg }};color:#F8F9F2;font-size:13px;line-height:1;display:flex;align-items:center;justify-content:center;animation:{{ e.anim }}" aria-label="Marcar como hecho">{{ e.check }}</button>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-for>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ vistaCarga }}" hint-placeholder-val="{{ false }}">
+            <div style="background:#F8F9F2;border:1px solid #DDE1D0;border-radius:14px;padding:clamp(14px,2vw,22px);display:flex;flex-direction:column;gap:16px">
+              <div style="display:flex;flex-direction:column;gap:4px">
+                <span style="font-family:Fraunces,serif;font-weight:700;font-size:19px;letter-spacing:-0.01em">Carga por semana</span>
+                <span style="font-size:14px;color:#565B47">{{ cargaResumen }}</span>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <sc-for list="{{ semanas }}" as="s" hint-placeholder-count="7">
+                  <div style="display:flex;align-items:center;gap:12px">
+                    <span style="font-family:"Instrument Sans",sans-serif;font-size:12px;color:#565B47;min-width:96px">{{ s.rango }}</span>
+                    <div style="flex:1;height:26px;border-radius:7px;background:#E9EBDD;overflow:hidden">
+                      <div style="height:100%;border-radius:7px;background:{{ s.color }};width:{{ s.pct }}%;transition:width .3s ease"></div>
+                    </div>
+                    <span style="font-size:13px;color:#565B47;min-width:82px;text-align:right">{{ s.txt }}</span>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </sc-if>
+        </section>
+      </sc-if>
+
+
+      <sc-if value="{{ esHorarios }}" hint-placeholder-val="{{ false }}">
+        <section data-screen-label="Horarios" style="animation:matein .3s ease both;display:flex;flex-direction:column;gap:18px">
+          <header style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:14px">
+            <div style="display:flex;flex-direction:column;gap:4px">
+              <div style="font-family:'Instrument Sans',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#565B47">Semana en curso</div>
+              <h1 style="margin:0;font-family:Fraunces,serif;font-weight:800;font-size:clamp(26px,4vw,36px);letter-spacing:-0.02em">Tu grilla semanal</h1>
+            </div>
+            <button type="button" style="background:#3B4A2F;color:#EDF1E0;border-radius:9px;padding:10px 16px;font-size:14.5px;font-weight:600">Agregar bloque</button>
+          </header>
+          <div style="background:#F8F9F2;border:1px solid #DDE1D0;border-radius:14px;padding:14px;overflow-x:auto">
+            <div style="display:grid;grid-template-columns:60px repeat(6,minmax(120px,1fr));gap:6px;min-width:820px">
+              <div></div>
+              <sc-for list="{{ horDias }}" as="d" hint-placeholder-count="6">
+                <div style="font-family:'Instrument Sans',sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#565B47;text-align:center;padding:8px 0;font-weight:600">{{ d.n }}</div>
+              </sc-for>
+              <sc-for list="{{ horFilas }}" as="row" hint-placeholder-count="12">
+                <div style="font-family:'Instrument Sans',sans-serif;font-size:10.5px;color:#565B47;text-align:right;padding:6px 8px 0 0">{{ row.hora }}</div>
+                <sc-for list="{{ row.celdas }}" as="c" hint-placeholder-count="6">
+                  <div style="min-height:44px;border-radius:8px;background:{{ c.bg }};color:{{ c.fg }};padding:{{ c.pad }};display:flex;flex-direction:column;gap:2px;border:1px solid {{ c.bd }}">
+                    <sc-if value="{{ c.tieneMat }}" hint-placeholder-val="{{ true }}">
+                      <span style="font-size:12px;font-weight:600;line-height:1.15">{{ c.mat }}</span>
+                      <span style="font-size:10.5px;opacity:.8">{{ c.aula }}</span>
+                    </sc-if>
+                  </div>
+                </sc-for>
+              </sc-for>
+            </div>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:12px">
+            <sc-for list="{{ horLeyenda }}" as="l" hint-placeholder-count="4">
+              <div style="display:flex;align-items:center;gap:7px;font-size:12.5px;color:#565B47">
+                <span style="width:11px;height:11px;border-radius:3px;background:{{ l.color }}"></span>
+                {{ l.n }}
+              </div>
+            </sc-for>
+          </div>
+        </section>
+      </sc-if>
+
+      <sc-if value="{{ esPlan }}" hint-placeholder-val="{{ false }}">
+        <section data-screen-label="Plan de estudio" style="animation:matein .3s ease both;display:flex;flex-direction:column;gap:20px">
+          <header style="display:flex;flex-direction:column;gap:4px">
+            <div style="font-family:'Instrument Sans',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#565B47">Repartí los temas hasta el examen</div>
+            <h1 style="margin:0;font-family:Fraunces,serif;font-weight:800;font-size:clamp(26px,4vw,36px);letter-spacing:-0.02em">Plan de estudio</h1>
+          </header>
+          <div style="background:#F8F9F2;border:1px solid #DDE1D0;border-radius:14px;padding:18px;display:flex;flex-wrap:wrap;gap:14px;align-items:center">
+            <div style="display:flex;flex-direction:column;gap:6px;flex:1;min-width:200px">
+              <span style="font-family:'Instrument Sans',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#565B47">Materia</span>
+              <span style="font-family:Fraunces,serif;font-weight:700;font-size:18px">{{ planMat.n }}</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <span style="font-family:'Instrument Sans',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#565B47">Examen</span>
+              <span style="font-family:Fraunces,serif;font-weight:700;font-size:18px">{{ planFecha }}</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <span style="font-family:'Instrument Sans',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#565B47">Días restantes</span>
+              <span style="font-family:Fraunces,serif;font-weight:800;font-size:28px;color:#3B4A2F">{{ planDias }}</span>
+            </div>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:7px">
+            <sc-for list="{{ planMaterias }}" as="m" hint-placeholder-count="5">
+              <button type="button" onClick="{{ m.pick }}" style="font-size:13.5px;border:1px solid {{ m.bd }};background:{{ m.bg }};color:{{ m.fg }};border-radius:999px;padding:6px 12px">{{ m.n }}</button>
+            </sc-for>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <sc-for list="{{ planSemanas }}" as="s" hint-placeholder-count="4">
+              <div style="background:#F8F9F2;border:1px solid #DDE1D0;border-left:4px solid {{ s.color }};border-radius:12px;padding:14px 18px;display:flex;flex-direction:column;gap:8px">
+                <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+                  <span style="font-family:Fraunces,serif;font-weight:700;font-size:16px">{{ s.titulo }}</span>
+                  <span style="font-family:'Instrument Sans',sans-serif;font-size:11.5px;color:#565B47">{{ s.rango }}</span>
+                </div>
+                <sc-for list="{{ s.temas }}" as="t" hint-placeholder-count="3">
+                  <div style="display:flex;align-items:center;gap:8px;font-size:14px;color:#33392A">
+                    <span style="width:6px;height:6px;border-radius:999px;background:#565B47"></span>
+                    {{ t }}
+                  </div>
+                </sc-for>
+              </div>
+            </sc-for>
+          </div>
+        </section>
+      </sc-if>
+
+      <sc-if value="{{ esChat }}" hint-placeholder-val="{{ false }}">
+        <section data-screen-label="Chat" style="animation:matein .3s ease both;display:grid;grid-template-columns:260px 1fr;gap:14px;min-height:70vh">
+          <div style="background:#F8F9F2;border:1px solid #DDE1D0;border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:6px">
+            <div style="font-family:'Instrument Sans',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#565B47;padding:4px 10px 8px">Materias</div>
+            <sc-for list="{{ chatMaterias }}" as="c" hint-placeholder-count="6">
+              <button type="button" onClick="{{ c.pick }}" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:9px;background:{{ c.bg }};text-align:left">
+                <span style="width:10px;height:10px;border-radius:3px;background:{{ c.col }}"></span>
+                <div style="display:flex;flex-direction:column;min-width:0;flex:1">
+                  <span style="font-size:13.5px;font-weight:{{ c.peso }};color:#23281C;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ c.n }}</span>
+                  <span style="font-size:11.5px;color:#565B47;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ c.ultimo }}</span>
+                </div>
+              </button>
+            </sc-for>
+          </div>
+          <div style="background:#F8F9F2;border:1px solid #DDE1D0;border-radius:14px;display:flex;flex-direction:column">
+            <div style="padding:16px 18px;border-bottom:1px solid #E7EADB;display:flex;align-items:center;gap:10px">
+              <span style="width:12px;height:12px;border-radius:3px;background:{{ chatActMat.col }}"></span>
+              <span style="font-family:Fraunces,serif;font-weight:700;font-size:16px">{{ chatActMat.n }}</span>
+              <span style="font-size:12px;color:#565B47;margin-left:auto">Con tu material · IA</span>
+            </div>
+            <div style="flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:12px">
+              <sc-for list="{{ chatMensajes }}" as="m" hint-placeholder-count="4">
+                <div style="max-width:75%;align-self:{{ m.align }};background:{{ m.bg }};color:{{ m.fg }};padding:10px 14px;border-radius:12px;font-size:14px;line-height:1.4">{{ m.texto }}</div>
+              </sc-for>
+            </div>
+            <div style="padding:12px 14px;border-top:1px solid #E7EADB;display:flex;gap:8px">
+              <input type="text" placeholder="Preguntá lo que quieras..." style="flex:1;border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
+              <button type="button" style="background:#3B4A2F;color:#EDF1E0;border-radius:8px;padding:0 16px;font-size:14px;font-weight:600">Enviar</button>
+            </div>
+          </div>
+        </section>
+      </sc-if>
+
+      <sc-if value="{{ esFlash }}" hint-placeholder-val="{{ false }}">
+        <section data-screen-label="Flashcards" style="animation:matein .3s ease both;display:flex;flex-direction:column;gap:18px">
+          <header style="display:flex;flex-direction:column;gap:4px">
+            <div style="font-family:'Instrument Sans',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#565B47">Repaso espaciado</div>
+            <h1 style="margin:0;font-family:Fraunces,serif;font-weight:800;font-size:clamp(26px,4vw,36px);letter-spacing:-0.02em">Flashcards</h1>
+          </header>
+          <div style="display:flex;flex-wrap:wrap;gap:7px">
+            <sc-for list="{{ flashDecks }}" as="d" hint-placeholder-count="4">
+              <button type="button" onClick="{{ d.pick }}" style="font-size:13.5px;border:1px solid {{ d.bd }};background:{{ d.bg }};color:{{ d.fg }};border-radius:999px;padding:6px 12px">{{ d.n }} <span style="font-size:11px;opacity:.7">· {{ d.cantidad }}</span></button>
+            </sc-for>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:16px">
+            <div style="font-family:'Instrument Sans',sans-serif;font-size:12px;color:#565B47">Tarjeta {{ flashActN }} de {{ flashActTotal }}</div>
+            <div style="width:100%;max-width:520px;min-height:280px;background:#F8F9F2;border:1px solid #DDE1D0;border-radius:16px;padding:36px 30px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:16px;text-wrap:pretty">
+              <sc-if value="{{ flashFrente }}" hint-placeholder-val="{{ true }}">
+                <div style="font-family:'Instrument Sans',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#565B47">Pregunta</div>
+                <div style="font-family:Fraunces,serif;font-weight:700;font-size:22px;line-height:1.3">{{ flashPregunta }}</div>
+              </sc-if>
+              <sc-if value="{{ flashDorso }}" hint-placeholder-val="{{ false }}">
+                <div style="font-family:'Instrument Sans',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#565B47">Respuesta</div>
+                <div style="font-family:Fraunces,serif;font-weight:600;font-size:18px;line-height:1.4;color:#3B4A2F">{{ flashRespuesta }}</div>
+              </sc-if>
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
+              <button type="button" onClick="{{ flashPrev }}" style="border:1px solid #DDE1D0;background:#F8F9F2;border-radius:8px;padding:10px 16px;font-size:13.5px;color:#23281C">← Anterior</button>
+              <button type="button" onClick="{{ flashFlip }}" style="background:#3B4A2F;color:#EDF1E0;border-radius:8px;padding:10px 20px;font-size:13.5px;font-weight:600">Voltear</button>
+              <button type="button" onClick="{{ flashNext }}" style="border:1px solid #DDE1D0;background:#F8F9F2;border-radius:8px;padding:10px 16px;font-size:13.5px;color:#23281C">Siguiente →</button>
+            </div>
+            <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">
+              <button type="button" style="background:#F3E1DC;color:#9B3B28;border:1px solid #E2CBAE;border-radius:8px;padding:8px 14px;font-size:12.5px">Difícil</button>
+              <button type="button" style="background:#E9EBDD;color:#4B5240;border:1px solid #D3D8C2;border-radius:8px;padding:8px 14px;font-size:12.5px">Normal</button>
+              <button type="button" style="background:#E1E7D2;color:#3B4A2F;border:1px solid #C5CFB0;border-radius:8px;padding:8px 14px;font-size:12.5px">Fácil</button>
+            </div>
+          </div>
+        </section>
+      </sc-if>
+
+      <sc-if value="{{ esExamen }}" hint-placeholder-val="{{ false }}">
+        <section data-screen-label="Modo examen" style="animation:matein .3s ease both;display:flex;flex-direction:column;gap:18px">
+          <header style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:14px">
+            <div style="display:flex;flex-direction:column;gap:4px">
+              <div style="font-family:'Instrument Sans',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#565B47">Simulacro</div>
+              <h1 style="margin:0;font-family:Fraunces,serif;font-weight:800;font-size:clamp(26px,4vw,36px);letter-spacing:-0.02em">Modo examen</h1>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px">
+              <span style="font-family:'Instrument Sans',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#565B47">Tiempo restante</span>
+              <span style="font-family:Fraunces,serif;font-weight:800;font-size:32px;letter-spacing:-0.02em;color:#8A5A3B">42:15</span>
+            </div>
+          </header>
+          <div style="height:6px;border-radius:999px;background:#E2E5D5;overflow:hidden">
+            <div style="height:100%;border-radius:999px;background:#3B4A2F;width:35%"></div>
+          </div>
+          <div style="background:#F8F9F2;border:1px solid #DDE1D0;border-radius:14px;padding:24px;display:flex;flex-direction:column;gap:18px">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+              <span style="font-family:'Instrument Sans',sans-serif;font-size:12px;color:#565B47">Pregunta 4 de 10 · Análisis Matemático II</span>
+              <span style="font-size:12px;color:#8A5A3B">Elegí una respuesta</span>
+            </div>
+            <div style="font-family:Fraunces,serif;font-weight:700;font-size:20px;line-height:1.35;text-wrap:pretty">Si f(x) es continua en [a,b] y derivable en (a,b), ¿cuál de las siguientes afirmaciones es siempre verdadera por el Teorema del Valor Medio?</div>
+            <div style="display:flex;flex-direction:column;gap:8px">
+              <sc-for list="{{ examOpc }}" as="o" hint-placeholder-count="4">
+                <button type="button" style="display:flex;align-items:flex-start;gap:12px;text-align:left;background:#fff;border:1px solid #DDE1D0;border-radius:10px;padding:14px 16px;font-size:14px;color:#23281C;line-height:1.4;transition:border-color .16s ease" style-hover="border-color:#8A5A3B">
+                  <span style="width:22px;height:22px;flex:none;border-radius:6px;border:1.5px solid #DDE1D0;background:#F8F9F2;font-family:Fraunces,serif;font-weight:700;font-size:12px;display:flex;align-items:center;justify-content:center;color:#565B47">{{ o.letra }}</span>
+                  {{ o.texto }}
+                </button>
+              </sc-for>
+            </div>
+            <div style="display:flex;justify-content:space-between;gap:10px">
+              <button type="button" style="border:1px solid #DDE1D0;background:#F8F9F2;border-radius:8px;padding:10px 16px;font-size:14px;color:#23281C">← Anterior</button>
+              <button type="button" style="background:#3B4A2F;color:#EDF1E0;border-radius:8px;padding:10px 20px;font-size:14px;font-weight:600">Siguiente →</button>
+            </div>
+          </div>
+        </section>
+      </sc-if>
+
+      <sc-if value="{{ esBanco }}" hint-placeholder-val="{{ false }}">
+        <section data-screen-label="Banco de parciales" style="animation:matein .3s ease both;display:flex;flex-direction:column;gap:18px">
+          <header style="display:flex;flex-direction:column;gap:4px">
+            <div style="font-family:'Instrument Sans',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#565B47">Compartido por la comunidad</div>
+            <h1 style="margin:0;font-family:Fraunces,serif;font-weight:800;font-size:clamp(26px,4vw,36px);letter-spacing:-0.02em">Banco de parciales</h1>
+          </header>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <input type="text" placeholder="Buscar por materia o cátedra..." style="flex:1;min-width:220px;border:1px solid #DDE1D0;background:#F8F9F2;border-radius:8px;padding:10px 14px;font-size:14px;font-family:inherit;color:#23281C">
+            <button type="button" onClick="{{ abrirUpParcial }}" style="background:#3B4A2F;color:#EDF1E0;border-radius:8px;padding:10px 18px;font-size:14px;font-weight:600">+ Subir parcial</button>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px">
+            <sc-for list="{{ bancoItems }}" as="b" hint-placeholder-count="6">
+              <div style="background:#F8F9F2;border:1px solid #DDE1D0;border-left:4px solid {{ b.col }};border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:8px">
+                <div style="display:flex;flex-direction:column;gap:2px">
+                  <span style="font-family:Fraunces,serif;font-weight:700;font-size:16px;line-height:1.25">{{ b.mat }}</span>
+                  <span style="font-size:12.5px;color:#565B47">{{ b.cat }}</span>
+                </div>
+                <div style="display:flex;flex-wrap:wrap;gap:6px">
+                  <span style="font-family:'Instrument Sans',sans-serif;font-size:11px;color:#4B5240;background:#E9EBDD;border-radius:6px;padding:3px 7px">{{ b.tipo }}</span>
+                  <span style="font-family:'Instrument Sans',sans-serif;font-size:11px;color:#4B5240;background:#E9EBDD;border-radius:6px;padding:3px 7px">{{ b.anio }}</span>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between;margin-top:4px">
+                  <span style="font-size:12px;color:#565B47">↓ {{ b.descargas }}</span>
+                  <button type="button" onClick="{{ b.download }}" style="background:#3B4A2F;color:#EDF1E0;border-radius:7px;padding:6px 12px;font-size:12.5px;font-weight:600">{{ b.dlLabel }}</button>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </section>
+      </sc-if>
+
+      <sc-if value="{{ esGrupos }}" hint-placeholder-val="{{ false }}">
+        <section data-screen-label="Grupos" style="animation:matein .3s ease both;display:flex;flex-direction:column;gap:18px">
+          <header style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:14px">
+            <div style="display:flex;flex-direction:column;gap:4px">
+              <div style="font-family:'Instrument Sans',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#565B47">Estudiá con otros</div>
+              <h1 style="margin:0;font-family:Fraunces,serif;font-weight:800;font-size:clamp(26px,4vw,36px);letter-spacing:-0.02em">Grupos</h1>
+            </div>
+            <button type="button" style="background:#3B4A2F;color:#EDF1E0;border-radius:9px;padding:10px 16px;font-size:14.5px;font-weight:600">Crear grupo</button>
+          </header>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px">
+            <sc-for list="{{ gruposItems }}" as="g" hint-placeholder-count="4">
+              <div style="background:#F8F9F2;border:1px solid #DDE1D0;border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:12px">
+                <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
+                  <div style="display:flex;flex-direction:column;gap:3px">
+                    <span style="font-family:Fraunces,serif;font-weight:700;font-size:17px">{{ g.n }}</span>
+                    <span style="font-size:12.5px;color:#565B47">{{ g.mat }}</span>
+                  </div>
+                  <span style="width:12px;height:12px;border-radius:3px;background:{{ g.col }}"></span>
+                </div>
+                <div style="display:flex;align-items:center;gap:-6px">
+                  <sc-for list="{{ g.miembros }}" as="m" hint-placeholder-count="4">
+                    <div style="width:28px;height:28px;border-radius:999px;background:{{ m.bg }};color:#EDF1E0;display:flex;align-items:center;justify-content:center;font-family:Fraunces,serif;font-weight:700;font-size:11.5px;border:2px solid #F8F9F2;margin-left:-6px">{{ m.i }}</div>
+                  </sc-for>
+                  <span style="margin-left:8px;font-size:12px;color:#565B47">{{ g.miembrosTxt }}</span>
+                </div>
+                <div style="border-top:1px solid #E7EADB;padding-top:10px;display:flex;align-items:center;justify-content:space-between;gap:8px">
+                  <div style="display:flex;flex-direction:column;gap:1px">
+                    <span style="font-family:'Instrument Sans',sans-serif;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#565B47">Próxima</span>
+                    <span style="font-size:13px;color:#33392A">{{ g.prox }}</span>
+                  </div>
+                  <button type="button" style="background:#3B4A2F;color:#EDF1E0;border-radius:7px;padding:7px 12px;font-size:12.5px;font-weight:600">Entrar</button>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </section>
+      </sc-if>
+
+      <sc-if value="{{ esPomo }}" hint-placeholder-val="{{ false }}">
+        <section data-screen-label="Pomodoro" style="animation:matein .3s ease both;display:flex;flex-direction:column;gap:22px">
+          <header style="display:flex;flex-direction:column;gap:4px">
+            <div style="font-family:'Instrument Sans',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#565B47">Bloques de 25 minutos</div>
+            <h1 style="margin:0;font-family:Fraunces,serif;font-weight:800;font-size:clamp(26px,4vw,36px);letter-spacing:-0.02em">Pomodoro</h1>
+          </header>
+          <div style="background:#F8F9F2;border:1px solid #DDE1D0;border-radius:16px;padding:36px;display:flex;flex-direction:column;align-items:center;gap:22px">
+            <div style="display:flex;gap:4px;background:#E3E6D6;border-radius:10px;padding:4px">
+              <button type="button" style="font-size:13.5px;font-weight:700;border-radius:7px;padding:7px 14px;background:#F8F9F2;color:#23281C">Foco 25</button>
+              <button type="button" style="font-size:13.5px;font-weight:500;border-radius:7px;padding:7px 14px;color:#565B47">Descanso 5</button>
+              <button type="button" style="font-size:13.5px;font-weight:500;border-radius:7px;padding:7px 14px;color:#565B47">Descanso largo 15</button>
+            </div>
+            <div style="font-family:Fraunces,serif;font-weight:800;font-size:clamp(96px,15vw,140px);letter-spacing:-0.04em;line-height:1;color:#3B4A2F">25:00</div>
+            <div style="display:flex;gap:12px">
+              <button type="button" style="background:#3B4A2F;color:#EDF1E0;border-radius:10px;padding:14px 30px;font-size:15px;font-weight:600">▶ Iniciar</button>
+              <button type="button" style="border:1px solid #DDE1D0;background:#F8F9F2;color:#23281C;border-radius:10px;padding:14px 24px;font-size:15px">Reiniciar</button>
+            </div>
+            <div style="font-size:13px;color:#565B47">Estudiando: <strong style="color:#23281C">Análisis Matemático II</strong></div>
+          </div>
+          <div style="background:#F8F9F2;border:1px solid #DDE1D0;border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:14px">
+            <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+              <span style="font-family:Fraunces,serif;font-weight:700;font-size:17px">Horas por materia · esta semana</span>
+              <span style="font-size:12.5px;color:#565B47">Total: {{ pomoTotal }}</span>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <sc-for list="{{ pomoBars }}" as="p" hint-placeholder-count="5">
+                <div style="display:flex;align-items:center;gap:12px">
+                  <span style="min-width:180px;font-size:13.5px;color:#33392A">{{ p.n }}</span>
+                  <div style="flex:1;height:20px;border-radius:6px;background:#E9EBDD;overflow:hidden">
+                    <div style="height:100%;border-radius:6px;background:{{ p.color }};width:{{ p.pct }}%"></div>
+                  </div>
+                  <span style="min-width:56px;text-align:right;font-family:'Instrument Sans',sans-serif;font-size:13px;color:#565B47">{{ p.txt }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </section>
+      </sc-if>
+
+      <sc-if value="{{ esOtra }}" hint-placeholder-val="{{ false }}">
+        <section data-screen-label="En camino" style="animation:matein .3s ease both;display:flex;flex-direction:column;gap:10px;padding-top:40px">
+          <h1 style="margin:0;font-family:Fraunces,serif;font-weight:800;font-size:32px;letter-spacing:-0.02em">{{ otraTitulo }}</h1>
+          <p style="margin:0;font-size:16px;color:#565B47;max-width:44ch;line-height:1.5">Esta sección todavía no está diseñada. Arrancamos por inicio, materias y calendario.</p>
+          <button type="button" onClick="{{ irInicio }}" style="align-self:flex-start;margin-top:10px;background:#3B4A2F;color:#EDF1E0;border-radius:9px;padding:10px 16px;font-size:14.5px;font-weight:600">Volver al inicio</button>
+        </section>
+      </sc-if>
+
+    </div>
+  </main>
+
+  <sc-if value="{{ esMobile }}" hint-placeholder-val="{{ false }}">
+    <nav style="position:fixed;left:0;right:0;bottom:0;background:#3B4A2F;display:flex;padding:8px 8px calc(8px + env(safe-area-inset-bottom));gap:4px;z-index:20">
+      <sc-for list="{{ navPrincipal }}" as="it" hint-placeholder-count="3">
+        <button type="button" onClick="{{ it.go }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;padding:8px 4px;border-radius:9px;background:{{ it.bg }};color:{{ it.fg }};font-size:12.5px;font-weight:{{ it.peso }}">
+          <span style="width:7px;height:7px;border-radius:999px;background:{{ it.punto }}"></span>
+          {{ it.label }}
+        </button>
+      </sc-for>
+    </nav>
+  </sc-if>
+</div>
+</sc-if>
+
+
+<sc-if value="{{ modalOpen }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;inset:0;background:rgba(20,25,15,.55);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px" onClick="{{ modalOverlayClick }}">
+    <div style="background:#F8F9F2;border-radius:16px;padding:28px 28px 24px;max-width:520px;width:100%;max-height:90vh;overflow-y:auto;display:flex;flex-direction:column;gap:16px">
+
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+        <h2 style="margin:0;font-family:Fraunces,serif;font-weight:800;font-size:22px;letter-spacing:-0.01em">{{ modalTitle }}</h2>
+        <button type="button" onClick="{{ cerrarModal }}" style="background:none;border:0;font-size:22px;color:#565B47;cursor:pointer;padding:0 6px" aria-label="Cerrar">×</button>
+      </div>
+
+      <sc-if value="{{ esModalMat }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <input type="text" placeholder="Nombre de la materia" value="{{ matForm.n }}" onInput="{{ setMatN }}" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
+          <input type="text" placeholder="Cátedra (ej: Cátedra Ferrari)" value="{{ matForm.cat }}" onInput="{{ setMatCat }}" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
+          <div style="display:flex;gap:10px;align-items:center">
+            <span style="font-size:13px;color:#565B47;min-width:80px">Color</span>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;flex:1">
+              <sc-for list="{{ matColors }}" as="cc" hint-placeholder-count="8">
+                <button type="button" onClick="{{ cc.pick }}" aria-label="Color" style="width:28px;height:28px;border-radius:8px;background:{{ cc.hex }};border:2px solid {{ cc.bd }};cursor:pointer"></button>
+              </sc-for>
+            </div>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center">
+            <span style="font-size:13px;color:#565B47;min-width:80px">Estado</span>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;flex:1">
+              <sc-for list="{{ matEstOpts }}" as="ee" hint-placeholder-count="7">
+                <button type="button" onClick="{{ ee.pick }}" style="font-size:12.5px;border:1px solid {{ ee.bd }};background:{{ ee.bg }};color:{{ ee.fg }};border-radius:999px;padding:5px 10px">{{ ee.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+          <sc-if value="{{ hayMatError }}" hint-placeholder-val="{{ false }}">
+            <div style="font-size:13px;color:#9B3B28;background:#F3E1DC;border:1px solid #E2CBAE;border-radius:8px;padding:8px 12px">{{ matError }}</div>
+          </sc-if>
+          <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:6px">
+            <button type="button" onClick="{{ cerrarModal }}" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 16px;font-size:14px;color:#565B47">Cancelar</button>
+            <button type="button" onClick="{{ guardarMat }}" style="background:#3B4A2F;color:#EDF1E0;border-radius:8px;padding:10px 18px;font-size:14px;font-weight:600">Guardar</button>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ esModalDel }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:14px">
+          <p style="margin:0;font-size:14.5px;line-height:1.5;color:#33392A">¿Estás segura de eliminar <strong>{{ delMatNom }}</strong>? Esta acción no se puede deshacer.</p>
+          <div style="display:flex;gap:10px;justify-content:flex-end">
+            <button type="button" onClick="{{ cerrarModal }}" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 16px;font-size:14px;color:#565B47">Cancelar</button>
+            <button type="button" onClick="{{ confirmarDelMat }}" style="background:#9B3B28;color:#F8F9F2;border-radius:8px;padding:10px 18px;font-size:14px;font-weight:600">Eliminar</button>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ esModalParcial }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <label style="font-size:12px;color:#565B47">Materia</label>
+            <select onChange="{{ setParMat }}" value="{{ parForm.mat }}" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
+              <sc-for list="{{ parMatOpts }}" as="o" hint-placeholder-count="6">
+                <option value="{{ o.v }}">{{ o.n }}</option>
+              </sc-for>
+            </select>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <label style="font-size:12px;color:#565B47">Cátedra</label>
+              <input type="text" placeholder="Ej: Cátedra Ferrari" value="{{ parForm.cat }}" onInput="{{ setParCat }}" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <label style="font-size:12px;color:#565B47">Año</label>
+              <input type="text" placeholder="2026" value="{{ parForm.anio }}" onInput="{{ setParAnio }}" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <label style="font-size:12px;color:#565B47">Tipo</label>
+            <div style="display:flex;flex-wrap:wrap;gap:6px">
+              <sc-for list="{{ parTipoOpts }}" as="t" hint-placeholder-count="5">
+                <button type="button" onClick="{{ t.pick }}" style="font-size:12.5px;border:1px solid {{ t.bd }};background:{{ t.bg }};color:{{ t.fg }};border-radius:999px;padding:5px 12px">{{ t.label }}</button>
+              </sc-for>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <label style="font-size:12px;color:#565B47">Archivo (PDF o imagen, hasta ~4 MB)</label>
+            <input type="file" onChange="{{ setParFile }}" accept=".pdf,image/*" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:13px;font-family:inherit;color:#23281C">
+            <sc-if value="{{ parTieneArchivo }}" hint-placeholder-val="{{ false }}">
+              <span style="font-size:12px;color:#565B47">Archivo cargado: <strong>{{ parForm.filename }}</strong></span>
+            </sc-if>
+          </div>
+          <sc-if value="{{ hayParError }}" hint-placeholder-val="{{ false }}">
+            <div style="font-size:13px;color:#9B3B28;background:#F3E1DC;border:1px solid #E2CBAE;border-radius:8px;padding:8px 12px">{{ parError }}</div>
+          </sc-if>
+          <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:6px">
+            <button type="button" onClick="{{ cerrarModal }}" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 16px;font-size:14px;color:#565B47">Cancelar</button>
+            <button type="button" onClick="{{ guardarParcial }}" style="background:#3B4A2F;color:#EDF1E0;border-radius:8px;padding:10px 18px;font-size:14px;font-weight:600">Subir parcial</button>
+          </div>
+        </div>
+      </sc-if>
+
+    </div>
+  </div>
+</sc-if>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;pantallaInicial&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;inicio&quot;,&quot;materias&quot;,&quot;calendario&quot;],&quot;default&quot;:&quot;inicio&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Vista&quot;},&quot;mostrarAvisos&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Inicio&quot;},&quot;densidad&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;cómoda&quot;,&quot;compacta&quot;],&quot;default&quot;:&quot;cómoda&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Vista&quot;}}">
+class Component extends DCLogic {
+  ESTADOS = {
+    cursando:     { label: 'Cursando',     color: '#8A5A3B', fill: 45 },
+    regular:      { label: 'Regular',      color: '#6E8B3D', fill: 65 },
+    promocionada: { label: 'Promocionada', color: '#2F7A55', fill: 100 },
+    aprobada:     { label: 'Aprobada',     color: '#3B4A2F', fill: 100 },
+    libre:        { label: 'Libre',        color: '#B07314', fill: 15 },
+    recursando:   { label: 'Recursando',   color: '#9B3B28', fill: 30 },
+    abandonada:   { label: 'Abandonada',   color: '#84806F', fill: 0 }
+  };
+  ORDEN = ['cursando','regular','promocionada','aprobada','libre','recursando','abandonada'];
+  MATERIAS = [
+    { id:'amii', n:'Análisis Matemático II', cat:'Cátedra Ferrari', est:'cursando', col:'#4E6B33', notas:[{n:'Parcial 1',v:7}], final:null, asis:{on:true,p:9,t:11,min:75}, reg:null, hab:['Análisis Matemático III','Física III'] },
+    { id:'fis2', n:'Física II', cat:'Cátedra Sosa', est:'cursando', col:'#2F6B63', notas:[{n:'Parcial 1',v:4}], final:null, asis:{on:true,p:6,t:10,min:75}, reg:null, hab:['Electrotecnia'] },
+    { id:'bd', n:'Bases de Datos', cat:'Cátedra Iriarte', est:'cursando', col:'#9B4A2A', notas:[{n:'TP 1',v:8}], final:null, asis:{on:false}, reg:null, hab:['Sistemas de Información'] },
+    { id:'so', n:'Sistemas Operativos', cat:'Cátedra Peralta', est:'regular', col:'#3E5C7E', notas:[{n:'Parcial 1',v:7},{n:'Parcial 2',v:6}], final:null, asis:{on:false}, reg:'2026-09-05', hab:['Redes de Datos'] },
+    { id:'alg', n:'Álgebra y Geometría Analítica', cat:'Cátedra Duarte', est:'regular', col:'#8C6E4A', notas:[{n:'Parcial 1',v:6},{n:'Parcial 2',v:8}], final:null, asis:{on:false}, reg:'2027-03-20', hab:['Análisis Matemático II'] },
+    { id:'poo', n:'Programación Orientada a Objetos', cat:'Cátedra Molina', est:'promocionada', col:'#6A5B8A', notas:[{n:'Parcial 1',v:9},{n:'Parcial 2',v:9}], final:9, asis:{on:false}, reg:null, hab:['Bases de Datos','Ingeniería de Software'] },
+    { id:'eco', n:'Economía para Ingeniería', cat:'Cátedra Vera', est:'libre', col:'#A67C1F', notas:[{n:'Parcial 1',v:3}], final:null, asis:{on:false}, reg:null, hab:[] },
+    { id:'qui', n:'Química General', cat:'Cátedra Lugo', est:'recursando', col:'#84806F', notas:[{n:'Parcial 1',v:2}], final:null, asis:{on:true,p:4,t:9,min:75}, reg:null, hab:[] },
+    { id:'ing', n:'Inglés Técnico I', cat:'Cátedra Ortiz', est:'aprobada', col:'#5C7343', notas:[], final:8, asis:{on:false}, reg:null, hab:['Inglés Técnico II'] },
+    { id:'aed', n:'Algoritmos y Estructuras de Datos', cat:'Cátedra Molina', est:'aprobada', col:'#7B3F53', notas:[], final:10, asis:{on:false}, reg:null, hab:['Programación Orientada a Objetos'] },
+    { id:'ami', n:'Análisis Matemático I', cat:'Cátedra Ferrari', est:'aprobada', col:'#6B7F3A', notas:[], final:6, asis:{on:false}, reg:null, hab:['Análisis Matemático II','Física I'] }
+  ];
+  EVENTOS = [
+    { f:'2026-08-05', tipo:'Parcial', titulo:'Parcial 1', mid:'amii' },
+    { f:'2026-08-07', tipo:'Trabajo práctico', titulo:'TP 1', mid:'bd' },
+    { f:'2026-08-14', tipo:'Entrega', titulo:'Entrega TP 2', mid:'bd' },
+    { f:'2026-08-18', tipo:'Parcial', titulo:'Parcial 2', mid:'amii' },
+    { f:'2026-08-20', tipo:'Trabajo práctico', titulo:'TP 3', mid:'fis2' },
+    { f:'2026-08-24', tipo:'Presentación', titulo:'Presentación de proyecto', mid:'bd' },
+    { f:'2026-08-26', tipo:'Parcial', titulo:'Parcial 2', mid:'fis2' },
+    { f:'2026-08-28', tipo:'Final', titulo:'Final', mid:'eco' },
+    { f:'2026-09-03', tipo:'Parcial', titulo:'Parcial 1', mid:'so' },
+    { f:'2026-09-05', tipo:'Regularidad', titulo:'Vence la regularidad', mid:'so' },
+    { f:'2026-09-10', tipo:'Trabajo práctico', titulo:'TP 4', mid:'fis2' },
+    { f:'2026-09-15', tipo:'Final', titulo:'Final', mid:'alg' },
+    { f:'2026-09-22', tipo:'Parcial', titulo:'Parcial 3', mid:'amii' }
+  ];
+  APLAZO = { m:'Economía para Ingeniería', v:2 };
+  PLAN_TOTAL = 38;
+  HOY = new Date(2026, 7, 12);
+  DIAS = ['dom','lun','mar','mié','jue','vie','sáb'];
+  MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
+
+  state = {
+    screen: null, materiaId: null, calView: 'mes', filtro: 'todas',
+    simMid: 'amii', simNota: 8, simOpen: false, hechos: {}, estados: {},
+    mesOffset: 0, w: typeof window !== 'undefined' ? window.innerWidth : 1200,
+    user: null, authMode: 'login',
+    form: { nombre:'', apellido:'', apodo:'', email:'', carrera:'', universidad:'', password:'' },
+    authError: null, showPass: false,
+    modal: null,
+    userMats: null, notas: {}, uploads: [],
+    matForm: { id:'', n:'', cat:'', col:'#4E6B33', est:'cursando' },
+    parForm: { mat:'', cat:'', tipo:'Parcial 1', anio:'2026', filename:'', base64:'', mime:'' },
+    notasBuf: '',
+    confirmDelId: null,
+    flashDeckId: 'amii', flashIdx: 0, flashFlipped: false,
+    chatSel: 'amii',
+    planMid: 'amii'
+  };
+
+  componentDidMount() {
+    this._r = () => this.setState({ w: window.innerWidth });
+    window.addEventListener('resize', this._r);
+    try {
+      const cur = localStorage.getItem('lucho_current_email');
+      if (cur) {
+        const accs = JSON.parse(localStorage.getItem('lucho_accounts') || '[]');
+        const u = accs.find(a => a.email === cur);
+        if (u) { this.setState({ user: u }); this.loadUserData(u); }
+      }
+    } catch(e) {}
+  }
+  componentDidUpdate(pp, ps) {
+    if (this.state.user && (!ps.user || ps.user.email !== this.state.user.email)) {
+      this.loadUserData(this.state.user);
+    }
+  }
+  userKey(k) { return 'mate_' + (this.state.user ? this.state.user.email : 'anon') + '_' + k; }
+  loadUserData(u) {
+    try {
+      const prefix = 'mate_' + u.email + '_';
+      const rawMats = localStorage.getItem(prefix + 'materias');
+      const notas = JSON.parse(localStorage.getItem(prefix + 'notas') || '{}');
+      const uploads = JSON.parse(localStorage.getItem(prefix + 'uploads') || '[]');
+      let userMats;
+      if (rawMats) {
+        userMats = JSON.parse(rawMats);
+      } else {
+        userMats = JSON.parse(JSON.stringify(this.MATERIAS));
+        localStorage.setItem(prefix + 'materias', JSON.stringify(userMats));
+      }
+      this.setState({ userMats, notas, uploads });
+    } catch(e) {}
+  }
+  saveUserKey(key, val) {
+    if (!this.state.user) return;
+    try { localStorage.setItem('mate_' + this.state.user.email + '_' + key, JSON.stringify(val)); } catch(e){}
+  }
+  componentWillUnmount() { window.removeEventListener('resize', this._r); }
+
+  estadoDe(m) { return this.state.estados[m.id] || m.est; }
+  marca(estKey, op) {
+    const e = this.ESTADOS[estKey];
+    return { color: e.color, bg: 'linear-gradient(to top, ' + e.color + ' ' + e.fill + '%, rgba(0,0,0,0) ' + e.fill + '%)', op: op || 1 };
+  }
+  parse(s) { const p = s.split('-'); return new Date(+p[0], +p[1] - 1, +p[2]); }
+  fmtCorto(d) { return d.getDate() + ' ' + this.MESES[d.getMonth()].slice(0, 3); }
+  mat(id) { return this.MATERIAS.find(m => m.id === id); }
+
+  renderVals() {
+    const S = this.state, E = this.ESTADOS, hoy = this.HOY;
+    const MATS = S.userMats || MATS;
+    const _matAll = (id) => MATS.find(m => m.id === id) || MATS.find(m => m.id === id);
+    const dens = this.props.densidad || 'cómoda';
+    const screen = S.screen || this.props.pantallaInicial || 'inicio';
+    const isMobile = S.w < 860;
+    const go = s => () => this.setState({ screen: s, materiaId: null });
+
+    const navItems = [['inicio','Inicio'],['calendario','Calendario'],['materias','Mis materias']];
+    const navPrincipal = navItems.map(([k, label]) => {
+      const on = screen === k || (k === 'materias' && screen === 'detalle');
+      return { label, go: go(k), bg: on ? (isMobile ? '#2E3A25' : '#4A5B3B') : 'rgba(0,0,0,0)', fg: on ? '#F2F5E6' : '#B9C7A0', peso: on ? 700 : 500, punto: on ? '#C9D3A9' : 'rgba(201,211,169,.35)' };
+    });
+    const navFuturo = ['Horarios','Plan de estudio','Chat','Flashcards','Modo examen','Banco de parciales','Grupos','Pomodoro'].map(label => ({ label }));
+
+    // --- próximos eventos ---
+    const futuros = this.EVENTOS.filter(e => this.parse(e.f) >= hoy).sort((a, b) => a.f < b.f ? -1 : 1);
+    const p0 = futuros[0], m0 = _matAll(p0.mid), d0 = this.parse(p0.f);
+    const prox = { dia: d0.getDate(), mes: this.MESES[d0.getMonth()].slice(0, 3), diaSemana: this.DIAS[d0.getDay()], tipo: p0.tipo, titulo: p0.titulo, materia: m0.n, catedra: m0.cat, color: m0.col };
+    const proxDespues = futuros.slice(1, 3).map(e => {
+      const m = _matAll(e.mid);
+      return { fecha: this.fmtCorto(this.parse(e.f)), texto: e.titulo + ' de ' + m.n, color: m.col };
+    });
+
+    // --- promedios ---
+    const aprobadas = MATS.filter(m => ['aprobada','promocionada'].includes(this.estadoDe(m)) && m.final != null);
+    const suma = aprobadas.reduce((a, m) => a + m.final, 0);
+    const promSin = (suma / aprobadas.length).toFixed(2);
+    const promCon = ((suma + this.APLAZO.v) / (aprobadas.length + 1)).toFixed(2);
+    const carreraPct = +(aprobadas.length / this.PLAN_TOTAL * 100).toFixed(1);
+    const cursandoN = MATS.filter(m => this.estadoDe(m) === 'cursando').length;
+    const estaSemana = this.EVENTOS.filter(e => { const d = this.parse(e.f); const diff = (d - hoy) / 86400000; return diff >= 0 && diff < 14; }).length;
+
+    // --- materias ---
+    const conteo = {};
+    MATS.forEach(m => { const k = this.estadoDe(m); conteo[k] = (conteo[k] || 0) + 1; });
+    const filtros = [{ key: 'todas', label: 'Todas', n: MATS.length, marcaKey: null }]
+      .concat(this.ORDEN.filter(k => conteo[k]).map(k => ({ key: k, label: E[k].label, n: conteo[k], marcaKey: k })))
+      .map(f => {
+        const on = S.filtro === f.key;
+        const mk = f.marcaKey ? this.marca(f.marcaKey) : { color: '#565B47', bg: 'rgba(0,0,0,0)' };
+        return { label: f.label, n: f.n, pick: () => this.setState({ filtro: f.key }), bd: on ? '#3B4A2F' : '#D3D8C2', bg: on ? '#3B4A2F' : '#F8F9F2', fg: on ? '#F2F5E6' : '#4B5240', marca: on ? '#C9D3A9' : mk.color, marcaBg: on ? 'rgba(0,0,0,0)' : mk.bg };
+      });
+
+    const listaMaterias = MATS.filter(m => S.filtro === 'todas' || this.estadoDe(m) === S.filtro).map(m => {
+      const k = this.estadoDe(m), mk = this.marca(k, k === 'abandonada' ? 0.55 : 1);
+      const chips = [];
+      if (m.final != null) chips.push({ t: 'Final ' + m.final, fg: '#3B4A2F', bg: '#E1E7D2' });
+      m.notas.forEach(n => chips.push({ t: n.n + ' · ' + n.v, fg: n.v < 4 ? '#9B3B28' : '#4B5240', bg: n.v < 4 ? '#F3E1DC' : '#E9EBDD' }));
+      if (m.asis.on) { const pct = Math.round(m.asis.p / m.asis.t * 100); chips.push({ t: 'Asistencia ' + pct + '%', fg: pct < m.asis.min ? '#8A5A3B' : '#4B5240', bg: pct < m.asis.min ? '#F1E4D6' : '#E9EBDD' }); }
+      let aviso = null;
+      if (m.reg) { const dias = Math.round((this.parse(m.reg) - hoy) / 86400000); if (dias <= 45) aviso = 'La regularidad vence el ' + this.fmtCorto(this.parse(m.reg)) + '.'; }
+      if (!aviso && m.asis.on) { const pct = Math.round(m.asis.p / m.asis.t * 100); if (pct < m.asis.min) aviso = 'Vas por debajo del mínimo de asistencia.'; }
+      return { n: m.n, cat: m.cat, col: m.col, estColor: E[k].color, estBg: mk.bg, estOp: mk.op, estLabel: E[k].label, chips, tieneAviso: !!aviso, aviso: aviso || '', abrir: () => this.setState({ screen: 'detalle', materiaId: m.id }) };
+    });
+
+    // --- simulador ---
+    const cursando = MATS.filter(m => this.estadoDe(m) === 'cursando');
+    const simMaterias = cursando.map(m => { const on = S.simMid === m.id; return { n: m.n, pick: () => this.setState({ simMid: m.id }), bd: on ? '#3B4A2F' : '#D3D8C2', bg: on ? '#3B4A2F' : '#ECEEE3', fg: on ? '#F2F5E6' : '#4B5240' }; });
+    const simNotas = [4,5,6,7,8,9,10].map(v => { const on = S.simNota === v; return { v, pick: () => this.setState({ simNota: v }), bd: on ? '#8A5A3B' : '#D3D8C2', bg: on ? '#8A5A3B' : '#ECEEE3', fg: on ? '#F8F5F0' : '#4B5240' }; });
+    const simRes = ((suma + S.simNota) / (aprobadas.length + 1)).toFixed(2);
+    const simMat = _matAll(S.simMid) || cursando[0];
+    const delta = (+simRes - +promSin).toFixed(2);
+    const simTexto = 'Si te sacás ' + S.simNota + ' en ' + simMat.n + ', tu promedio queda en ' + simRes + ' (' + (delta >= 0 ? '+' : '') + delta + ').';
+
+    // --- detalle ---
+    let det = null;
+    if (screen === 'detalle' && S.materiaId) {
+      const m = _matAll(S.materiaId), k = this.estadoDe(m);
+      const estados = this.ORDEN.map(key => {
+        const on = k === key, mk = this.marca(key);
+        return { label: E[key].label, pick: () => this.setState({ estados: Object.assign({}, S.estados, { [m.id]: key }) }), bd: on ? E[key].color : '#D3D8C2', bg: on ? E[key].color : '#ECEEE3', fg: on ? '#F8F9F2' : '#4B5240', peso: on ? 700 : 500, marca: on ? '#F8F9F2' : mk.color, marcaBg: on ? 'rgba(248,249,242,.35)' : mk.bg, anim: on ? 'matepop .3s ease' : 'none' };
+      });
+      const fechas = this.EVENTOS.filter(e => e.mid === m.id && this.parse(e.f) >= hoy).map(e => ({ fecha: this.fmtCorto(this.parse(e.f)), titulo: e.titulo, tipo: e.tipo }));
+      const asisPct = m.asis.on ? Math.round(m.asis.p / m.asis.t * 100) : 0;
+      const regDias = m.reg ? Math.round((this.parse(m.reg) - hoy) / 86400000) : 0;
+      const regCerca = m.reg && regDias <= 45;
+      det = {
+        n: m.n, cat: m.cat, col: m.col, estados,
+        notas: m.notas.map(n => ({ n: n.n, v: n.v, color: n.v < 4 ? '#9B3B28' : '#23281C' })),
+        tieneNotas: m.notas.length > 0, sinNotas: m.notas.length === 0,
+        finalLabel: m.final != null ? 'Nota final' : 'Nota final', finalTxt: m.final != null ? String(m.final) : '—',
+        asisOn: m.asis.on, asisPct, asisColor: asisPct < (m.asis.min || 0) ? '#8A5A3B' : '#2F7A55',
+        asisTxt: m.asis.on ? m.asis.p + ' de ' + m.asis.t + ' clases · el mínimo de la cátedra es ' + m.asis.min + '%' : '',
+        regOn: !!m.reg, regTxt: m.reg ? (regCerca ? 'Vence el ' + this.fmtCorto(this.parse(m.reg)) + ', en ' + regDias + ' días. Anotate al final o pedí prórroga.' : 'Vence el ' + this.fmtCorto(this.parse(m.reg)) + ' de 2027. Todavía tenés tiempo.') : '',
+        regBg: regCerca ? '#F6EDE1' : '#F8F9F2', regBd: regCerca ? '#E2CBAE' : '#DDE1D0',
+        habOn: m.hab.length > 0, hab: m.hab.map(n => ({ n })),
+        fechas, tieneFechas: fechas.length > 0, sinFechas: fechas.length === 0
+      };
+    }
+
+    // --- calendario mes ---
+    const base = new Date(2026, 7 + S.mesOffset, 1);
+    const y = base.getFullYear(), mo = base.getMonth();
+    const primerDia = (new Date(y, mo, 1).getDay() + 6) % 7;
+    const totalDias = new Date(y, mo + 1, 0).getDate();
+    const mesCeldas = [];
+    for (let i = 0; i < 42; i++) {
+      const dnum = i - primerDia + 1;
+      if (dnum < 1 || dnum > totalDias) { mesCeldas.push({ dia: '', bg: 'rgba(0,0,0,0)', bd: 'rgba(0,0,0,0)', numColor: '#C6CBB6', numPeso: 400, eventos: [] }); continue; }
+      const iso = y + '-' + String(mo + 1).padStart(2, '0') + '-' + String(dnum).padStart(2, '0');
+      const evs = this.EVENTOS.filter(e => e.f === iso).map(e => { const m = _matAll(e.mid); const pasado = this.parse(e.f) < hoy; return { color: m.col, op: pasado ? 0.32 : 1 }; });
+      const esHoy = y === hoy.getFullYear() && mo === hoy.getMonth() && dnum === hoy.getDate();
+      mesCeldas.push({ dia: dnum, bg: esHoy ? '#3B4A2F' : '#EFF1E6', bd: esHoy ? '#3B4A2F' : '#E4E7D8', numColor: esHoy ? '#EDF1E0' : '#5B6151', numPeso: esHoy ? 600 : 400, eventos: evs });
+    }
+    const leyenda = [...new Set(this.EVENTOS.filter(e => { const d = this.parse(e.f); return d.getMonth() === mo && d.getFullYear() === y; }).map(e => e.mid))].map(id => { const m = _matAll(id); return { n: m.n, color: m.col }; });
+
+    // --- calendario lista ---
+    const grupos = {};
+    this.EVENTOS.filter(e => this.parse(e.f) >= hoy).forEach(e => {
+      const d = this.parse(e.f), key = this.MESES[d.getMonth()] + ' ' + d.getFullYear();
+      (grupos[key] = grupos[key] || []).push({ e, d });
+    });
+    const lista = Object.keys(grupos).map(mes => ({
+      mes, items: grupos[mes].map(({ e, d }) => {
+        const m = _matAll(e.mid), hecho = !!S.hechos[e.f + e.titulo];
+        return { dia: d.getDate(), diaSemana: this.DIAS[d.getDay()], titulo: e.titulo, materia: m.n, tipo: e.tipo, color: m.col, op: hecho ? 0.5 : 1, deco: hecho ? 'line-through' : 'none', check: hecho ? '✓' : '', checkBd: hecho ? '#2F7A55' : '#C9CEB8', checkBg: hecho ? '#2F7A55' : 'rgba(0,0,0,0)', anim: hecho ? 'matepop .32s ease' : 'none', toggle: () => this.setState({ hechos: Object.assign({}, S.hechos, { [e.f + e.titulo]: !hecho }) }) };
+      })
+    }));
+
+    // --- carga semanal ---
+    const semanas = [];
+    let cur = new Date(2026, 7, 3);
+    for (let i = 0; i < 8; i++) {
+      const fin = new Date(cur.getTime() + 6 * 86400000);
+      const n = this.EVENTOS.filter(e => { const d = this.parse(e.f); return d >= cur && d <= fin; }).length;
+      const color = n >= 3 ? '#8A5A3B' : n === 2 ? '#6E8B3D' : n === 1 ? '#A9BC8A' : '#DCE0CE';
+      semanas.push({ rango: cur.getDate() + ' – ' + this.fmtCorto(fin), pct: Math.min(100, n * 28 + (n ? 12 : 0)), color, txt: n === 0 ? 'libre' : n === 1 ? '1 fecha' : n + ' fechas', n });
+      cur = new Date(cur.getTime() + 7 * 86400000);
+    }
+    const pico = semanas.reduce((a, b) => b.n > a.n ? b : a, semanas[0]);
+
+    // --- avisos ---
+    const avisos = [];
+    MATS.forEach(m => {
+      if (m.reg) { const dias = Math.round((this.parse(m.reg) - hoy) / 86400000); if (dias <= 45) avisos.push({ texto: m.n + ': la regularidad vence el ' + this.fmtCorto(this.parse(m.reg)) + '.', color: '#B07314', accion: 'Ver la materia', go: () => this.setState({ screen: 'detalle', materiaId: m.id }) }); }
+      if (m.asis.on) { const pct = Math.round(m.asis.p / m.asis.t * 100); if (pct < m.asis.min) avisos.push({ texto: m.n + ': llevás ' + pct + '% de asistencia y el mínimo es ' + m.asis.min + '%.', color: '#8A5A3B', accion: 'Ver la materia', go: () => this.setState({ screen: 'detalle', materiaId: m.id }) }); }
+    });
+
+    const accesos = [
+      { titulo: 'Horarios', sub: 'Tu grilla semanal de cursada', key: 'horarios' },
+      { titulo: 'Plan de estudio', sub: 'Repartí los temas hasta el examen', key: 'plan' },
+      { titulo: 'Chat', sub: 'Uno por materia, con tu material', key: 'chat' },
+      { titulo: 'Flashcards', sub: 'Repaso espaciado de tus apuntes', key: 'flashcards' },
+      { titulo: 'Modo examen', sub: 'Preguntas y corrección', key: 'examen' },
+      { titulo: 'Banco de parciales', sub: 'Parciales viejos por cátedra', key: 'banco' },
+      { titulo: 'Grupos', sub: 'Fechas y apuntes compartidos', key: 'grupos' },
+      { titulo: 'Pomodoro', sub: 'Bloques de 25 y horas por materia', key: 'pomodoro' }
+    ].map(a => ({ titulo: a.titulo, sub: a.sub, go: () => this.setState({ screen: a.key, otra: a.titulo }) }));
+
+    const conocidas = ['inicio','materias','calendario','detalle','horarios','plan','chatm','flash','examen','banco','grupos','pomo'];
+    const otraTitulo = S.otra || 'En camino';
+
+    // --- AUTH derivations ---
+    const user = S.user;
+    const hayUsuario = !!user;
+    const initials = user ? ((user.apodo || user.nombre || '?').charAt(0) + (user.apellido ? user.apellido.charAt(0) : '')).toUpperCase() : '';
+    const displayName = user ? (user.apodo || (user.nombre + ' ' + user.apellido)) : '';
+    const authTabs = [
+      { key: 'login',    label: 'Iniciar sesión' },
+      { key: 'register', label: 'Registrarme' }
+    ].map(t => {
+      const on = S.authMode === t.key;
+      return { label: t.label, pick: () => this.setState({ authMode: t.key, authError: null }), bg: on ? '#F8F9F2' : 'rgba(0,0,0,0)', fg: on ? '#23281C' : '#565B47', peso: on ? 700 : 500 };
+    });
+    const setField = k => e => this.setState({ form: Object.assign({}, S.form, { [k]: (e && e.target ? e.target.value : '') }), authError: null });
+    const doAuth = () => {
+      const f = S.form;
+      const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email);
+      try {
+        const accs = JSON.parse(localStorage.getItem('lucho_accounts') || '[]');
+        if (S.authMode === 'register') {
+          if (!f.nombre || !f.apellido || !f.email || !f.password) return this.setState({ authError: 'Completá al menos nombre, apellido, email y contraseña.' });
+          if (!emailOk) return this.setState({ authError: 'El email no parece válido.' });
+          if (f.password.length < 4) return this.setState({ authError: 'La contraseña tiene que tener al menos 4 caracteres.' });
+          if (accs.find(a => a.email === f.email)) return this.setState({ authError: 'Ese email ya está registrado. Iniciá sesión.' });
+          accs.push(Object.assign({}, f));
+          localStorage.setItem('lucho_accounts', JSON.stringify(accs));
+          localStorage.setItem('lucho_current_email', f.email);
+          this.setState({ user: Object.assign({}, f), authError: null, form: { nombre:'', apellido:'', apodo:'', email:'', carrera:'', universidad:'', password:'' } });
+        } else {
+          const u = accs.find(a => a.email === f.email && a.password === f.password);
+          if (!u) return this.setState({ authError: 'Email o contraseña incorrectos.' });
+          localStorage.setItem('lucho_current_email', u.email);
+          this.setState({ user: u, authError: null, form: { nombre:'', apellido:'', apodo:'', email:'', carrera:'', universidad:'', password:'' } });
+        }
+      } catch (err) { this.setState({ authError: 'No pudimos acceder al almacenamiento del navegador.' }); }
+    };
+    const doLogout = () => {
+      try { localStorage.removeItem('lucho_current_email'); } catch(e) {}
+      this.setState({ user: null, screen: null });
+    };
+
+    // --- NAV SECTIONS (expandido) ---
+    const navSecDef = [
+      { titulo: 'Principal',    keys: [['inicio','Inicio'],['calendario','Calendario'],['materias','Mis materias']] },
+      { titulo: 'Estudio',      keys: [['horarios','Horarios'],['plan','Plan de estudio'],['chatm','Chat'],['flash','Flashcards'],['examen','Modo examen'],['banco','Banco de parciales']] },
+      { titulo: 'Herramientas', keys: [['grupos','Grupos'],['pomo','Pomodoro']] }
+    ];
+    const navSections = navSecDef.map(sec => ({
+      titulo: sec.titulo,
+      items: sec.keys.map(([k, label]) => {
+        const on = screen === k || (k === 'materias' && screen === 'detalle');
+        return { label, go: go(k), bg: on ? '#4A5B3B' : 'rgba(0,0,0,0)', fg: on ? '#F2F5E6' : '#B9C7A0', peso: on ? 700 : 500, punto: on ? '#C9D3A9' : 'rgba(201,211,169,.35)' };
+      })
+    }));
+
+    // --- HORARIOS ---
+    const horDias = [{n:'Lun'},{n:'Mar'},{n:'Mié'},{n:'Jue'},{n:'Vie'},{n:'Sáb'}];
+    const horHoras = ['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00'];
+    const horBloques = {
+      '08:00-0': {mat:'Análisis Mat. II', aula:'Aula 12', col:'#4E6B33'},
+      '10:00-0': {mat:'Química General',   aula:'Lab 3',   col:'#84806F'},
+      '14:00-1': {mat:'Física II',         aula:'Aula 8',  col:'#2F6B63'},
+      '18:00-1': {mat:'POO',               aula:'Aula 5',  col:'#6A5B8A'},
+      '09:00-2': {mat:'Álgebra',           aula:'Aula 12', col:'#8C6E4A'},
+      '15:00-2': {mat:'Bases de Datos',    aula:'Lab 1',   col:'#9B4A2A'},
+      '11:00-3': {mat:'Análisis Mat. II',  aula:'Aula 12', col:'#4E6B33'},
+      '16:00-3': {mat:'Sist. Operativos',  aula:'Aula 8',  col:'#3E5C7E'},
+      '08:00-4': {mat:'Física II',         aula:'Aula 8',  col:'#2F6B63'},
+      '13:00-4': {mat:'Bases de Datos',    aula:'Lab 1',   col:'#9B4A2A'}
+    };
+    const horFilas = horHoras.map(h => ({
+      hora: h,
+      celdas: [0,1,2,3,4,5].map(d => {
+        const b = horBloques[h+'-'+d];
+        return b ? { tieneMat:true, mat:b.mat, aula:b.aula, bg:b.col+'22', bd:b.col+'55', fg:b.col, pad:'8px 10px' }
+                 : { tieneMat:false, mat:'', aula:'', bg:'rgba(0,0,0,0)', bd:'rgba(0,0,0,0.04)', fg:'#565B47', pad:'0' };
+      })
+    }));
+    const horLeyenda = [
+      {n:'Análisis Mat. II', color:'#4E6B33'},
+      {n:'Física II',        color:'#2F6B63'},
+      {n:'Bases de Datos',   color:'#9B4A2A'},
+      {n:'POO',              color:'#6A5B8A'},
+      {n:'Álgebra',          color:'#8C6E4A'},
+      {n:'Química',          color:'#84806F'},
+      {n:'Sist. Operativos', color:'#3E5C7E'}
+    ];
+
+    // --- PLAN DE ESTUDIO ---
+    const cursandoList = MATS.filter(m => this.estadoDe(m) === 'cursando');
+    const planMat = _matAll(S.planMid) || cursandoList[0] || MATS[0];
+    const planMaterias = cursandoList.map(m => {
+      const on = S.planMid === m.id;
+      return { n: m.n, pick: () => this.setState({ planMid: m.id }), bd: on ? '#3B4A2F' : '#D3D8C2', bg: on ? '#3B4A2F' : '#F8F9F2', fg: on ? '#F2F5E6' : '#4B5240' };
+    });
+    const planEventoFinal = this.EVENTOS.filter(e => e.mid === planMat.id && (e.tipo === 'Parcial' || e.tipo === 'Final')).sort((a,b)=>a.f<b.f?-1:1).pop();
+    const planFechaDate = planEventoFinal ? this.parse(planEventoFinal.f) : new Date(hoy.getTime() + 30*86400000);
+    const planFecha = planFechaDate.getDate() + ' ' + this.MESES[planFechaDate.getMonth()];
+    const planDias = Math.max(0, Math.round((planFechaDate - hoy) / 86400000));
+    const planTemasPorMat = {
+      amii: ['Sucesiones y series','Series numéricas','Series de potencias','Series de Fourier','Ecuaciones diferenciales de 1er orden','EDO lineales','Sistemas de EDO','Aplicaciones'],
+      fis2: ['Electrostática','Campo eléctrico','Potencial y capacidad','Corriente y resistencia','Circuitos DC','Magnetismo','Inducción electromagnética','Circuitos AC'],
+      bd:   ['Modelo relacional','SQL básico','Consultas avanzadas','Joins y subconsultas','Normalización','Índices y performance','Transacciones','NoSQL'],
+      so:   ['Procesos','Threads','Sincronización','Deadlocks','Memoria virtual','File systems','I/O','Casos: Linux y Windows'],
+      alg:  ['Vectores en R2 y R3','Matrices','Determinantes','Sistemas lineales','Espacios vectoriales','Transformaciones','Autovalores','Cónicas y cuádricas']
+    };
+    const planTemas = planTemasPorMat[planMat.id] || ['Repaso teoría','Ejercicios de práctica','Problemas tipo parcial','Simulacros'];
+    const semTotal = Math.max(1, Math.ceil(planDias / 7));
+    const perSem = Math.ceil(planTemas.length / semTotal);
+    const planSemanas = [];
+    for (let i = 0; i < semTotal; i++) {
+      const desde = new Date(hoy.getTime() + i*7*86400000);
+      const hasta = new Date(hoy.getTime() + Math.min((i+1)*7-1, planDias)*86400000);
+      planSemanas.push({
+        titulo: 'Semana ' + (i+1),
+        rango: desde.getDate()+' '+this.MESES[desde.getMonth()].slice(0,3)+' – '+hasta.getDate()+' '+this.MESES[hasta.getMonth()].slice(0,3),
+        color: planMat.col,
+        temas: planTemas.slice(i*perSem, (i+1)*perSem)
+      });
+    }
+
+    // --- CHAT ---
+    const chatUltimos = {
+      amii: '¿Podrías explicarme series de Fourier?',
+      fis2: 'Dame ejercicios de circuitos DC',
+      bd:   'Cuál es la diferencia entre INNER y LEFT JOIN',
+      so:   'Explicame deadlock con un ejemplo',
+      alg:  'Cómo se calcula un autovalor',
+      poo:  'Diferencia entre abstracción y encapsulamiento'
+    };
+    const chatMaterias = MATS.slice(0, 6).map(m => {
+      const on = S.chatSel === m.id;
+      return { n: m.n, col: m.col, pick: () => this.setState({ chatSel: m.id }), bg: on ? '#E9EBDD' : 'rgba(0,0,0,0)', peso: on ? 700 : 500, ultimo: chatUltimos[m.id] || 'Sin mensajes' };
+    });
+    const chatActMat = _matAll(S.chatSel) || MATS[0];
+    const chatMensajes = [
+      { align:'flex-start', bg:'#EDEFE0', fg:'#23281C', texto:'Hola! Soy tu asistente para ' + chatActMat.n + '. ¿En qué te puedo ayudar hoy?' },
+      { align:'flex-end',   bg:'#3B4A2F', fg:'#EDF1E0', texto: chatUltimos[chatActMat.id] || '¿Podrías darme un resumen del último tema?' },
+      { align:'flex-start', bg:'#EDEFE0', fg:'#23281C', texto:'Claro. Te lo explico paso a paso...' },
+      { align:'flex-start', bg:'#EDEFE0', fg:'#23281C', texto:'(este chat se conectará al material que subas cuando la función esté activa online)' }
+    ];
+
+    // --- FLASHCARDS ---
+    const flashDecksData = {
+      amii: [
+        { p:'¿Qué es una serie geométrica?', r:'Una serie de la forma Σ ar^n donde |r|<1 para que converja.' },
+        { p:'Fórmula de la suma de una serie geométrica convergente', r:'S = a / (1 - r) para |r| < 1' },
+        { p:'¿Qué establece el criterio de la razón?', r:'Si lim |a(n+1)/a(n)| < 1, la serie converge absolutamente.' },
+        { p:'¿Qué es una serie de Fourier?', r:'Una representación de una función periódica como suma de senos y cosenos.' }
+      ],
+      fis2: [
+        { p:'Ley de Coulomb', r:'F = k · q1·q2 / r²' },
+        { p:'Ley de Ohm', r:'V = I · R' },
+        { p:'Ley de Gauss (forma integral)', r:'∮ E · dA = Q_enc / ε₀' }
+      ],
+      bd: [
+        { p:'¿Qué es una clave primaria?', r:'Un atributo (o conjunto) que identifica de forma única a cada fila de una tabla.' },
+        { p:'Diferencia entre INNER JOIN y LEFT JOIN', r:'INNER devuelve solo filas con coincidencia; LEFT devuelve todas las de la izquierda + coincidencias.' }
+      ],
+      so: [
+        { p:'¿Qué es un deadlock?', r:'Situación en la que dos o más procesos se bloquean esperando recursos que el otro tiene.' }
+      ]
+    };
+    const flashDecks = [
+      {id:'amii', n:'Análisis Mat. II'},
+      {id:'fis2', n:'Física II'},
+      {id:'bd',   n:'Bases de Datos'},
+      {id:'so',   n:'Sistemas Operativos'}
+    ].map(d => {
+      const on = S.flashDeckId === d.id;
+      const cant = (flashDecksData[d.id] || []).length;
+      return { n: d.n, cantidad: cant, pick: () => this.setState({ flashDeckId: d.id, flashIdx: 0, flashFlipped: false }), bd: on ? '#3B4A2F' : '#D3D8C2', bg: on ? '#3B4A2F' : '#F8F9F2', fg: on ? '#F2F5E6' : '#4B5240' };
+    });
+    const flashCards = flashDecksData[S.flashDeckId] || [];
+    const flashCard = flashCards[S.flashIdx] || { p: 'Todavía no hay tarjetas en este mazo', r: '' };
+    const flashActTotal = flashCards.length || 1;
+    const flashActN = flashCards.length ? (S.flashIdx + 1) : 0;
+
+    // --- EXAMEN ---
+    const examOpc = [
+      { letra:'A', texto:'Existe al menos un punto c en (a,b) tal que f\'(c) = 0' },
+      { letra:'B', texto:'Existe al menos un punto c en (a,b) tal que f\'(c) = (f(b) - f(a)) / (b - a)' },
+      { letra:'C', texto:'La función f es constante en el intervalo [a,b]' },
+      { letra:'D', texto:'La derivada de f es continua en (a,b)' }
+    ];
+
+    // --- BANCO ---
+    const bancoDefault = [
+      {mat:'Análisis Matemático II', cat:'Ferrari', tipo:'Parcial 1', anio:'2025', descargas:142, col:'#4E6B33', esDefault:true},
+      {mat:'Análisis Matemático II', cat:'Ferrari', tipo:'Final',     anio:'2024', descargas:98,  col:'#4E6B33', esDefault:true},
+      {mat:'Física II',              cat:'Sosa',    tipo:'Parcial 2', anio:'2025', descargas:76,  col:'#2F6B63', esDefault:true},
+      {mat:'Bases de Datos',         cat:'Iriarte', tipo:'Parcial 1', anio:'2025', descargas:210, col:'#9B4A2A', esDefault:true},
+      {mat:'Bases de Datos',         cat:'Iriarte', tipo:'Recuperatorio', anio:'2024', descargas:54, col:'#9B4A2A', esDefault:true},
+      {mat:'Sistemas Operativos',    cat:'Peralta', tipo:'Parcial 2', anio:'2025', descargas:64,  col:'#3E5C7E', esDefault:true},
+      {mat:'POO',                    cat:'Molina',  tipo:'Final',     anio:'2025', descargas:88,  col:'#6A5B8A', esDefault:true},
+      {mat:'Álgebra',                cat:'Duarte',  tipo:'Parcial 1', anio:'2025', descargas:120, col:'#8C6E4A', esDefault:true}
+    ];
+    const bancoSubidos = S.uploads.map(u => ({ mat: u.matNombre, cat: u.cat, tipo: u.tipo, anio: u.anio, descargas: u.descargas || 0, col: u.col || '#565B47', esDefault:false, id: u.id, download: descargarSubido(u), dlLabel: 'Descargar' }));
+    const bancoItems = [...bancoSubidos, ...bancoDefault].map(b => Object.assign({}, b, {
+      download: b.download || (() => alert('Este es un parcial de ejemplo. Subí los tuyos con el botón de arriba y podrás descargarlos.')),
+      dlLabel: b.dlLabel || 'Descargar'
+    }));
+
+    // --- GRUPOS ---
+    const avatarColors = ['#5C6E48','#8A5A3B','#3E5C7E','#84806F','#6A5B8A','#9B4A2A','#2F6B63'];
+    const gruposItems = [
+      { n:'Los Fourier',         mat:'Análisis Mat. II', col:'#4E6B33', prox:'Jueves 20hs · Google Meet',   miembros: ['LC','MP','JV','SR','+2'] },
+      { n:'Circuitos y Café',    mat:'Física II',        col:'#2F6B63', prox:'Sábado 15hs · Biblioteca',    miembros: ['FT','AB','LC'] },
+      { n:'SELECT * FROM Team',  mat:'Bases de Datos',   col:'#9B4A2A', prox:'Miércoles 19hs · Discord',    miembros: ['LC','KP','NS','AM','+3'] },
+      { n:'Estudio POO',         mat:'Programación',     col:'#6A5B8A', prox:'Viernes 18hs · Aula 5',       miembros: ['MP','LC','JV'] }
+    ].map(g => ({
+      n: g.n, mat: g.mat, col: g.col, prox: g.prox,
+      miembros: g.miembros.map((i, idx) => ({ i, bg: avatarColors[idx % avatarColors.length] })),
+      miembrosTxt: g.miembros.length + ' miembros'
+    }));
+
+    // --- MATERIAS: acciones ---
+    const abrirAddMat = () => this.setState({ modal:'addMat', matForm:{ id:'', n:'', cat:'', col:'#4E6B33', est:'cursando' } });
+    const abrirEditMat = () => {
+      if (S.materiaId) {
+        const m = _matAll(S.materiaId);
+        if (m) this.setState({ modal:'editMat', matForm:{ id:m.id, n:m.n, cat:m.cat, col:m.col, est: this.estadoDe(m) } });
+      }
+    };
+    const pedirDelMat = () => this.setState({ modal:'delMat', confirmDelId: S.materiaId });
+    const cerrarModal = () => this.setState({ modal:null, confirmDelId:null });
+    const modalOverlayClick = (e) => { if (e && e.target === e.currentTarget) cerrarModal(); };
+    const setMatN = e => this.setState({ matForm: Object.assign({}, S.matForm, { n: e.target.value }) });
+    const setMatCat = e => this.setState({ matForm: Object.assign({}, S.matForm, { cat: e.target.value }) });
+    const matColorsList = ['#4E6B33','#2F6B63','#9B4A2A','#3E5C7E','#8C6E4A','#6A5B8A','#A67C1F','#84806F','#5C7343','#7B3F53','#6B7F3A'];
+    const matColors = matColorsList.map(hex => ({ hex, bd: S.matForm.col === hex ? '#23281C' : 'transparent', pick: () => this.setState({ matForm: Object.assign({}, S.matForm, { col: hex }) }) }));
+    const matEstOpts = this.ORDEN.map(k => {
+      const on = S.matForm.est === k;
+      return { label: E[k].label, pick: () => this.setState({ matForm: Object.assign({}, S.matForm, { est: k }) }), bd: on ? E[k].color : '#D3D8C2', bg: on ? E[k].color : '#F8F9F2', fg: on ? '#F8F9F2' : '#4B5240' };
+    });
+    let matError = null;
+    const guardarMat = () => {
+      const f = S.matForm;
+      if (!f.n.trim()) { this.setState({ __matErr: 'Ponele nombre a la materia.' }); return; }
+      const isEdit = !!f.id;
+      const newId = isEdit ? f.id : ('u' + Date.now().toString(36));
+      const seed = isEdit ? _matAll(f.id) : { id:newId, n:'', cat:'', est:'cursando', col:'#4E6B33', notas:[], final:null, asis:{on:false}, reg:null, hab:[] };
+      const nuevo = Object.assign({}, seed, { id:newId, n:f.n.trim(), cat:f.cat.trim(), est:f.est, col:f.col });
+      let updated;
+      if (isEdit && MATS.some(m => m.id === f.id)) {
+        updated = MATS.map(m => m.id === f.id ? nuevo : m);
+      } else {
+        updated = [...MATS, nuevo];
+      }
+      this.saveUserKey('materias', updated);
+      this.setState({ userMats: updated, modal:null, __matErr:null });
+    };
+    const confirmarDelMat = () => {
+      const id = S.confirmDelId;
+      if (!id) return cerrarModal();
+      const updated = MATS.filter(m => m.id !== id);
+      this.saveUserKey('materias', updated);
+      const nuevasNotas = Object.assign({}, S.notas); delete nuevasNotas[id];
+      this.saveUserKey('notas', nuevasNotas);
+      this.setState({ userMats: updated, notas: nuevasNotas, modal:null, confirmDelId:null, screen:'materias', materiaId:null });
+    };
+
+    // --- NOTAS ---
+    const currentMatId = S.materiaId;
+    const notasSaved = (currentMatId && S.notas[currentMatId]) || '';
+    // Actualizamos el buffer cuando cambia la materia (via componentDidUpdate no lo hacemos, hacemos setState al vuelo)
+    // Estrategia: si notasBuf está vacío y la materia tiene notas guardadas, mostramos las guardadas por default hasta que el user tipee.
+    const notasBuf = S.notasBuf || notasSaved;
+    const setNotasBuf = e => this.setState({ notasBuf: e.target.value });
+    const guardarNotas = () => {
+      if (!currentMatId) return;
+      const nuevas = Object.assign({}, S.notas, { [currentMatId]: S.notasBuf || '' });
+      this.saveUserKey('notas', nuevas);
+      this.setState({ notas: nuevas });
+    };
+    const notasStatus = (S.notasBuf && S.notasBuf !== notasSaved) ? '● Sin guardar' : (notasSaved ? '✓ Guardado' : '');
+
+    // --- PARCIALES: acciones ---
+    const abrirUpParcial = () => this.setState({ modal:'upParcial', parForm:{ mat:(MATS[0] && MATS[0].id) || '', cat:'', tipo:'Parcial 1', anio:'2026', filename:'', base64:'', mime:'' } });
+    const setParMat = e => this.setState({ parForm: Object.assign({}, S.parForm, { mat: e.target.value }) });
+    const setParCat = e => this.setState({ parForm: Object.assign({}, S.parForm, { cat: e.target.value }) });
+    const setParAnio = e => this.setState({ parForm: Object.assign({}, S.parForm, { anio: e.target.value }) });
+    const parTipoLista = ['Parcial 1','Parcial 2','Recuperatorio','Final','TP','Resumen'];
+    const parTipoOpts = parTipoLista.map(t => {
+      const on = S.parForm.tipo === t;
+      return { label: t, pick: () => this.setState({ parForm: Object.assign({}, S.parForm, { tipo: t }) }), bd: on ? '#3B4A2F' : '#D3D8C2', bg: on ? '#3B4A2F' : '#F8F9F2', fg: on ? '#F2F5E6' : '#4B5240' };
+    });
+    const parMatOpts = MATS.map(m => ({ v: m.id, n: m.n }));
+    const setParFile = (e) => {
+      const file = e && e.target && e.target.files && e.target.files[0];
+      if (!file) return;
+      if (file.size > 4 * 1024 * 1024) { this.setState({ __parErr: 'El archivo pesa más de 4 MB. Elegí uno más chico.' }); return; }
+      const reader = new FileReader();
+      reader.onload = () => {
+        const dataUrl = reader.result;
+        const comma = dataUrl.indexOf(',');
+        const meta = dataUrl.slice(0, comma);
+        const b64 = dataUrl.slice(comma + 1);
+        const mimeMatch = meta.match(/data:([^;]+);base64/);
+        const mime = mimeMatch ? mimeMatch[1] : 'application/octet-stream';
+        this.setState({ parForm: Object.assign({}, this.state.parForm, { filename: file.name, base64: b64, mime }), __parErr: null });
+      };
+      reader.readAsDataURL(file);
+    };
+    const guardarParcial = () => {
+      const f = S.parForm;
+      if (!f.mat) { this.setState({ __parErr:'Elegí una materia.' }); return; }
+      if (!f.cat.trim()) { this.setState({ __parErr:'Poné el nombre de la cátedra.' }); return; }
+      if (!f.base64) { this.setState({ __parErr:'Adjuntá un archivo.' }); return; }
+      const materia = _matAll(f.mat);
+      const nuevo = { id: 'p' + Date.now().toString(36), matId: f.mat, matNombre: materia ? materia.n : 'Materia', col: materia ? materia.col : '#565B47', cat: f.cat.trim(), tipo: f.tipo, anio: f.anio.trim() || '2026', filename: f.filename, base64: f.base64, mime: f.mime, descargas: 0, subidoPor: (S.user && (S.user.apodo || S.user.nombre)) || 'vos' };
+      const updated = [nuevo, ...S.uploads];
+      this.saveUserKey('uploads', updated);
+      this.setState({ uploads: updated, modal:null, __parErr:null });
+    };
+    const descargarSubido = (b) => () => {
+      try {
+        const link = document.createElement('a');
+        link.href = 'data:' + (b.mime || 'application/octet-stream') + ';base64,' + b.base64;
+        link.download = b.filename || (b.matNombre + '_' + b.tipo + '.pdf');
+        document.body.appendChild(link); link.click(); document.body.removeChild(link);
+        // Aumentar contador de descargas
+        const updated = S.uploads.map(u => u.id === b.id ? Object.assign({}, u, { descargas: (u.descargas||0)+1 }) : u);
+        this.saveUserKey('uploads', updated);
+        this.setState({ uploads: updated });
+      } catch(e){}
+    };
+    const eliminarSubido = (b) => () => {
+      if (!confirm('¿Eliminar este parcial subido?')) return;
+      const updated = S.uploads.filter(u => u.id !== b.id);
+      this.saveUserKey('uploads', updated);
+      this.setState({ uploads: updated });
+    };
+
+    // --- POMODORO ---
+    const pomoBars = [
+      { n:'Análisis Mat. II',     color:'#4E6B33', pct:80, txt:'4.0 hs' },
+      { n:'Física II',            color:'#2F6B63', pct:50, txt:'2.5 hs' },
+      { n:'Bases de Datos',       color:'#9B4A2A', pct:65, txt:'3.2 hs' },
+      { n:'Sistemas Operativos',  color:'#3E5C7E', pct:30, txt:'1.5 hs' },
+      { n:'Álgebra',              color:'#8C6E4A', pct:15, txt:'0.7 hs' }
+    ];
+    const pomoTotalH = pomoBars.reduce((s,p) => s + parseFloat(p.txt), 0).toFixed(1);
+    
+
+    return {
+      esDesktop: !isMobile, esMobile: isMobile,
+      navPrincipal, // legacy: mobile bottom nav
+      navSections,  // desktop grouped nav
+      hayUsuario, noHayUsuario: !hayUsuario,
+      modoLogin: S.authMode === 'login', modoRegister: S.authMode === 'register',
+      form: S.form, authTabs, doAuth, doLogout,
+      setNombre: setField('nombre'), setApellido: setField('apellido'), setApodo: setField('apodo'),
+      setEmail: setField('email'), setCarrera: setField('carrera'), setUniversidad: setField('universidad'), setPassword: setField('password'),
+      authBtnLabel: S.authMode === 'login' ? 'Iniciar sesión' : 'Crear mi cuenta',
+      passType: S.showPass ? 'text' : 'password',
+      showPassLabel: S.showPass ? 'Ocultar' : 'Ver',
+      toggleShowPass: () => this.setState({ showPass: !S.showPass }),
+      hayAuthError: !!S.authError, authError: S.authError || '',
+      userInitials: initials, userDisplayName: displayName, userCarrera: (user && user.carrera) || '',
+      esHorarios: screen === 'horarios', esPlan: screen === 'plan', esChat: screen === 'chatm',
+      esFlash: screen === 'flash', esExamen: screen === 'examen', esBanco: screen === 'banco',
+      esGrupos: screen === 'grupos', esPomo: screen === 'pomo',
+      horDias, horFilas, horLeyenda,
+      planMat, planFecha, planDias, planMaterias, planSemanas,
+      chatMaterias, chatActMat, chatMensajes,
+      flashDecks, flashPregunta: flashCard.p, flashRespuesta: flashCard.r,
+      flashFrente: !S.flashFlipped, flashDorso: S.flashFlipped, flashActN, flashActTotal,
+      flashFlip: () => this.setState({ flashFlipped: !S.flashFlipped }),
+      flashNext: () => this.setState({ flashIdx: (S.flashIdx + 1) % Math.max(1, flashCards.length), flashFlipped: false }),
+      flashPrev: () => this.setState({ flashIdx: (S.flashIdx - 1 + flashCards.length) % Math.max(1, flashCards.length), flashFlipped: false }),
+      examOpc, bancoItems, gruposItems, pomoBars, pomoTotal: pomoTotalH + ' hs',
+      modalOpen: !!S.modal,
+      esModalMat: S.modal === 'addMat' || S.modal === 'editMat',
+      esModalDel: S.modal === 'delMat',
+      esModalParcial: S.modal === 'upParcial',
+      modalTitle: S.modal === 'addMat' ? 'Nueva materia' : (S.modal === 'editMat' ? 'Editar materia' : (S.modal === 'delMat' ? 'Eliminar materia' : (S.modal === 'upParcial' ? 'Subir parcial' : ''))),
+      abrirAddMat, abrirEditMat, pedirDelMat, cerrarModal, modalOverlayClick,
+      matForm: S.matForm, setMatN, setMatCat, matColors, matEstOpts, guardarMat,
+      hayMatError: !!S.__matErr, matError: S.__matErr || '',
+      delMatNom: (S.confirmDelId && (_matAll(S.confirmDelId) || {}).n) || '',
+      confirmarDelMat,
+      abrirUpParcial, parForm: S.parForm, setParMat, setParCat, setParAnio, setParFile, parTipoOpts, parMatOpts,
+      parTieneArchivo: !!S.parForm.base64,
+      hayParError: !!S.__parErr, parError: S.__parErr || '',
+      guardarParcial,
+      notasBuf, setNotasBuf, guardarNotas, notasStatus,
+      padBottom: isMobile ? '96px' : 'clamp(18px,3.5vw,40px)',
+      cardPad: dens === 'compacta' ? '13px' : '16px',
+      celdaAlto: isMobile ? '46px' : '74px',
+      mostrarAvisos: this.props.mostrarAvisos !== false && avisos.length > 0,
+      esInicio: screen === 'inicio', esMaterias: screen === 'materias', esDetalle: screen === 'detalle',
+      esCalendario: screen === 'calendario', esOtra: !conocidas.includes(screen),
+      otraTitulo, irInicio: go('inicio'),
+      hoyTexto: 'miércoles 12 de agosto',
+      prox, proxDespues, accesos,
+      resumen: [
+        { valor: cursandoN, label: 'materias cursando' },
+        { valor: promSin, label: 'promedio' },
+        { valor: estaSemana, label: 'fechas en 2 semanas' },
+        { valor: aprobadas.length, label: 'materias aprobadas' }
+      ],
+      carreraPct, carreraPctTxt: Math.round(carreraPct) + '%',
+      carreraTexto: aprobadas.length + ' de ' + this.PLAN_TOTAL + ' materias del plan',
+      promSin, promCon,
+      filtros, materias: listaMaterias, hayMaterias: listaMaterias.length > 0, sinMaterias: listaMaterias.length === 0,
+      simOpen: S.simOpen, toggleSim: () => this.setState({ simOpen: !S.simOpen }),
+      simToggleTxt: S.simOpen ? 'Cerrar' : 'Probar',
+      simMaterias, simNotas, simTexto,
+      det, volver: () => this.setState({ screen: 'materias', materiaId: null }),
+      vistas: ['mes','lista','carga'].map(v => { const on = S.calView === v; return { label: v === 'mes' ? 'Mes' : v === 'lista' ? 'Lista' : 'Carga semanal', pick: () => this.setState({ calView: v }), bg: on ? '#F8F9F2' : 'rgba(0,0,0,0)', fg: on ? '#23281C' : '#565B47', peso: on ? 700 : 500 }; }),
+      vistaMes: S.calView === 'mes', vistaLista: S.calView === 'lista', vistaCarga: S.calView === 'carga',
+      mesNombre: this.MESES[mo] + ' ' + y, mesCeldas, leyenda,
+      diasSemana: ['lun','mar','mié','jue','vie','sáb','dom'].map(t => ({ t })),
+      mesPrev: () => this.setState({ mesOffset: S.mesOffset - 1 }),
+      mesNext: () => this.setState({ mesOffset: S.mesOffset + 1 }),
+      lista, semanas,
+      cargaResumen: 'La semana del ' + pico.rango.split(' – ')[0] + ' es la más cargada: ' + pico.txt + '.',
+      avisos
+    };
+  }
+}
+</script>
+</body>
+</html>
