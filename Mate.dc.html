@@ -115,8 +115,64 @@
         <section data-screen-label="Inicio" style="animation:matein .3s ease both;display:flex;flex-direction:column;gap:26px">
           <header style="display:flex;flex-direction:column;gap:4px">
             <div style="font-family:"Instrument Sans",sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#565B47">{{ hoyTexto }}</div>
-            <h1 style="margin:0;font-family:Fraunces,serif;font-weight:800;font-size:clamp(28px,4.4vw,40px);letter-spacing:-0.02em;color:#23281C">Buenas, {{ saludoNombre }}</h1>
+            <h1 style="margin:0;font-family:Fraunces,serif;font-weight:700;font-size:clamp(22px,3vw,28px);letter-spacing:-0.01em;color:#23281C">{{ saludoTxt }}</h1>
           </header>
+
+          <sc-if value="{{ cuatriConfigurado }}" hint-placeholder-val="{{ true }}">
+            <div style="background:#F8F9F2;border:1px solid #DDE1D0;border-radius:16px;padding:clamp(18px,2.6vw,26px);display:flex;flex-direction:column;gap:14px">
+              <div style="display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap">
+                <div style="font-family:'Instrument Sans',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#565B47">Tu cuatrimestre</div>
+                <span style="font-size:12px;color:#565B47">{{ cuatriSemanaTxt }}</span>
+              </div>
+              <div style="position:relative;padding:26px 0 22px">
+                <div style="position:relative;height:10px;border-radius:999px;background:#E2E5D5;overflow:visible">
+                  <div style="height:100%;border-radius:999px;background:#3B4A2F;width:{{ cuatriPct }}%"></div>
+                  <sc-for list="{{ tlMarcadores }}" as="m" hint-placeholder-count="6">
+                    <div style="position:absolute;top:50%;left:{{ m.pct }}%;transform:translate(-50%,-50%);width:44px;height:44px;display:flex;align-items:center;justify-content:center;cursor:pointer" role="button" tabindex="0" aria-label="{{ m.aria }}" onClick="{{ m.onClick }}" onKeyDown="{{ m.onKey }}">
+                      <span style="position:relative;width:14px;height:14px;border-radius:999px;background:{{ m.color }};border:2px solid #F8F9F2;box-shadow:0 0 0 1px {{ m.color }}55">
+                        <sc-if value="{{ m.esGrupo }}" hint-placeholder-val="{{ false }}">
+                          <span style="position:absolute;top:-6px;right:-8px;min-width:16px;height:16px;padding:0 4px;border-radius:999px;background:#3B4A2F;color:#EDF1E0;font-family:'Instrument Sans',sans-serif;font-size:10px;font-weight:600;display:flex;align-items:center;justify-content:center;line-height:1">{{ m.count }}</span>
+                        </sc-if>
+                      </span>
+                    </div>
+                  </sc-for>
+                  <div style="position:absolute;top:-6px;left:{{ tlHoyPct }}%;transform:translateX(-50%);width:2px;height:22px;background:#8A5A3B;border-radius:2px" aria-label="Hoy"></div>
+                  <div style="position:absolute;top:-14px;left:{{ tlHoyPct }}%;transform:translateX(-50%);font-family:'Instrument Sans',sans-serif;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#8A5A3B;font-weight:700">Hoy</div>
+                </div>
+              </div>
+              <div style="display:flex;align-items:baseline;justify-content:space-between;gap:8px;font-size:12px;color:#565B47">
+                <span class="cuatri-lbl">{{ cuatriIniTxt }}</span>
+                <span style="font-family:Fraunces,serif;font-weight:600;font-size:14px;color:#23281C">{{ cuatriMidTxt }}</span>
+                <span class="cuatri-lbl">{{ cuatriFinTxt }}</span>
+              </div>
+              <sc-if value="{{ tlPopoverOn }}" hint-placeholder-val="{{ false }}">
+                <div style="border-top:1px solid #E2E5D5;padding-top:12px;display:flex;flex-direction:column;gap:8px">
+                  <div style="display:flex;align-items:center;justify-content:space-between">
+                    <div style="font-family:'Instrument Sans',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#565B47">{{ tlPopoverTitulo }}</div>
+                    <button type="button" onClick="{{ tlPopCerrar }}" style="background:none;border:0;font-size:16px;color:#565B47;cursor:pointer;padding:0 4px" aria-label="Cerrar">×</button>
+                  </div>
+                  <sc-for list="{{ tlPopoverEventos }}" as="e" hint-placeholder-count="2">
+                    <button type="button" onClick="{{ e.irCal }}" style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;background:#EFF1E6;text-align:left;border:0;cursor:pointer">
+                      <span style="width:8px;height:8px;border-radius:2px;background:{{ e.color }};flex:none"></span>
+                      <span style="font-family:'Instrument Sans',sans-serif;font-size:12px;color:#3D4433;min-width:66px">{{ e.fecha }}</span>
+                      <span style="font-size:13.5px;color:#23281C;flex:1;min-width:0">{{ e.titulo }}</span>
+                      <span style="font-size:12px;color:#565B47">{{ e.materia }}</span>
+                    </button>
+                  </sc-for>
+                </div>
+              </sc-if>
+              <sc-if value="{{ sinEventosCuatri }}" hint-placeholder-val="{{ false }}">
+                <div style="border-top:1px solid #E2E5D5;padding-top:12px;font-size:13px;color:#565B47;text-align:center">Cargá tu primera fecha desde <button type="button" onClick="{{ irCalendario }}" style="background:none;border:0;color:#8A5A3B;text-decoration:underline;cursor:pointer;font:inherit;padding:0">Calendario</button>.</div>
+              </sc-if>
+            </div>
+          </sc-if>
+          <sc-if value="{{ cuatriVacio }}" hint-placeholder-val="{{ false }}">
+            <div style="background:#F8F9F2;border:1px dashed #C9CEB8;border-radius:16px;padding:clamp(24px,3vw,32px);display:flex;flex-direction:column;gap:10px;align-items:center;text-align:center">
+              <div style="font-family:'Instrument Sans',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#565B47">Tu cuatrimestre</div>
+              <div style="font-family:Fraunces,serif;font-weight:700;font-size:18px;color:#33392A;max-width:44ch;text-wrap:pretty">Configurá el inicio y el fin del cuatrimestre para ver tu progreso y los eventos en el tiempo.</div>
+              <button type="button" onClick="{{ irConfig }}" style="background:#3B4A2F;color:#EDF1E0;border-radius:9px;padding:10px 18px;font-size:14px;font-weight:600;margin-top:4px">Configurar fechas</button>
+            </div>
+          </sc-if>
 
           <div style="background:#F8F9F2;border:1px solid #DDE1D0;border-radius:16px;padding:clamp(16px,2.6vw,26px);display:flex;flex-direction:column;gap:18px">
             <div style="font-family:"Instrument Sans",sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#565B47">Lo que viene</div>
@@ -132,34 +188,18 @@
                   <div style="font-size:14px;color:#BCC9A2">{{ prox.diaSemana }}</div>
                 </div>
               </div>
-              <div style="flex:1;min-width:200px;display:flex;flex-direction:column;gap:10px">
-                <div style="display:inline-flex;align-self:flex-start;font-family:"Instrument Sans",sans-serif;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#565B47;border:1px solid #D3D8C2;border-radius:999px;padding:4px 10px">{{ prox.tipo }}</div>
-                <h2 style="margin:0;font-family:Fraunces,serif;font-weight:700;font-size:clamp(24px,3.4vw,32px);letter-spacing:-0.02em;line-height:1.1">{{ prox.titulo }}</h2>
-                <div style="display:flex;align-items:center;gap:9px">
-                  <span style="width:11px;height:11px;border-radius:3px;background:{{ prox.color }}"></span>
-                  <span style="font-size:16px;color:#3D4433">{{ prox.materia }}</span>
-                  <span style="font-size:14px;color:#565B47">{{ prox.catedra }}</span>
+              <div style="flex:1;min-width:200px;display:flex;gap:14px;align-items:stretch">
+                <div style="width:6px;flex:none;border-radius:999px;background:{{ prox.color }};align-self:stretch;min-height:80px"></div>
+                <div style="display:flex;flex-direction:column;gap:10px;min-width:0">
+                  <div style="display:inline-flex;align-self:flex-start;font-family:'Instrument Sans',sans-serif;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:{{ prox.color }};background:{{ prox.colorSoft }};border:1px solid {{ prox.colorBd }};border-radius:999px;padding:4px 10px;font-weight:600">{{ prox.tipo }}</div>
+                  <h2 style="margin:0;font-family:Fraunces,serif;font-weight:700;font-size:clamp(24px,3.4vw,32px);letter-spacing:-0.02em;line-height:1.1;text-wrap:pretty">{{ prox.titulo }}</h2>
+                  <div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap">
+                    <span style="font-size:16px;color:#3D4433;font-weight:500">{{ prox.materia }}</span>
+                    <span style="font-size:14px;color:#565B47">· {{ prox.catedra }}</span>
+                  </div>
                 </div>
               </div>
             </div>
-            <div style="border-top:1px solid #E2E5D5;padding-top:14px;display:flex;flex-wrap:wrap;gap:18px">
-              <sc-for list="{{ proxDespues }}" as="p" hint-placeholder-count="2">
-                <div style="display:flex;align-items:center;gap:8px;font-size:14px;color:#565B47">
-                  <span style="width:8px;height:8px;border-radius:2px;background:{{ p.color }}"></span>
-                  <span style="font-family:"Instrument Sans",sans-serif;font-size:12.5px;color:#3D4433">{{ p.fecha }}</span>
-                  {{ p.texto }}
-                </div>
-              </sc-for>
-            </div>
-          </div>
-
-          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(158px,1fr));gap:10px">
-            <sc-for list="{{ accesos }}" as="a" hint-placeholder-count="8">
-              <button type="button" onClick="{{ a.go }}" style="text-align:left;background:#F8F9F2;border:1px solid #DDE1D0;border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:5px;transition:border-color .18s ease,transform .18s ease" style-hover="border-color:#8A5A3B;transform:translateY(-2px)">
-                <span style="font-family:Fraunces,serif;font-weight:700;font-size:15.5px;letter-spacing:-0.01em">{{ a.titulo }}</span>
-                <span style="font-size:12.5px;color:#565B47;line-height:1.35">{{ a.sub }}</span>
-              </button>
-            </sc-for>
           </div>
 
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;align-items:start">
@@ -799,6 +839,49 @@
         </section>
       </sc-if>
 
+
+      <sc-if value="{{ esConfig }}" hint-placeholder-val="{{ false }}">
+        <section data-screen-label="Configuración" style="animation:matein .3s ease both;display:flex;flex-direction:column;gap:22px">
+          <header style="display:flex;flex-direction:column;gap:4px">
+            <div style="font-family:'Instrument Sans',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#565B47">Tu perfil y tus fechas</div>
+            <h1 style="margin:0;font-family:Fraunces,serif;font-weight:700;font-size:clamp(22px,3vw,28px);letter-spacing:-0.01em">Configuración</h1>
+          </header>
+
+          <div style="background:#F8F9F2;border:1px solid #DDE1D0;border-radius:14px;padding:22px;display:flex;flex-direction:column;gap:14px">
+            <div style="font-family:'Instrument Sans',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#565B47">Cuatrimestre en curso</div>
+            <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px">
+              <div style="display:flex;flex-direction:column;gap:6px">
+                <label style="font-size:12px;color:#565B47">Fecha de inicio</label>
+                <input type="date" value="{{ cuatriFormIni }}" onInput="{{ setCuatriIni }}" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
+              </div>
+              <div style="display:flex;flex-direction:column;gap:6px">
+                <label style="font-size:12px;color:#565B47">Fecha de fin</label>
+                <input type="date" value="{{ cuatriFormFin }}" onInput="{{ setCuatriFin }}" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
+              </div>
+            </div>
+            <sc-if value="{{ hayCuatriErr }}" hint-placeholder-val="{{ false }}">
+              <div style="font-size:13px;color:#9B3B28;background:#F3E1DC;border:1px solid #E2CBAE;border-radius:8px;padding:8px 12px">{{ cuatriErr }}</div>
+            </sc-if>
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <button type="button" onClick="{{ guardarCuatri }}" style="background:#3B4A2F;color:#EDF1E0;border-radius:8px;padding:10px 18px;font-size:14px;font-weight:600">Guardar</button>
+              <button type="button" onClick="{{ resetCuatri }}" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 16px;font-size:14px;color:#565B47">Usar valores por defecto</button>
+            </div>
+            <span style="font-size:12px;color:#565B47">Los valores por defecto siguen el calendario argentino: 1er cuatri de marzo a julio, 2do cuatri de agosto a diciembre.</span>
+          </div>
+
+          <div style="background:#F8F9F2;border:1px solid #DDE1D0;border-radius:14px;padding:22px;display:flex;flex-direction:column;gap:10px">
+            <div style="font-family:'Instrument Sans',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#565B47">Cuenta</div>
+            <div style="display:flex;flex-direction:column;gap:4px;font-size:14px;color:#33392A">
+              <div><strong>Nombre:</strong> {{ perfilNombre }}</div>
+              <div><strong>Apodo:</strong> {{ perfilApodo }}</div>
+              <div><strong>Email:</strong> {{ perfilEmail }}</div>
+              <div><strong>Carrera:</strong> {{ perfilCarrera }}</div>
+              <div><strong>Universidad:</strong> {{ perfilUni }}</div>
+            </div>
+          </div>
+        </section>
+      </sc-if>
+
       <sc-if value="{{ esOtra }}" hint-placeholder-val="{{ false }}">
         <section data-screen-label="En camino" style="animation:matein .3s ease both;display:flex;flex-direction:column;gap:10px;padding-top:40px">
           <h1 style="margin:0;font-family:Fraunces,serif;font-weight:800;font-size:32px;letter-spacing:-0.02em">{{ otraTitulo }}</h1>
@@ -982,6 +1065,10 @@ class Component extends DCLogic {
     parForm: { mat:'', cat:'', tipo:'Parcial 1', anio:'2026', filename:'', base64:'', mime:'' },
     notasBuf: '',
     confirmDelId: null,
+    cuatri: null,
+    cuatriForm: { ini:'', fin:'' },
+    tlPop: null,
+    __cuatriErr: null,
     flashDeckId: 'amii', flashIdx: 0, flashFlipped: false,
     chatSel: 'amii',
     planMid: 'amii'
@@ -1011,6 +1098,8 @@ class Component extends DCLogic {
       const rawMats = localStorage.getItem(prefix + 'materias');
       const notas = JSON.parse(localStorage.getItem(prefix + 'notas') || '{}');
       const uploads = JSON.parse(localStorage.getItem(prefix + 'uploads') || '[]');
+      const cuatriRaw = localStorage.getItem(prefix + 'cuatri');
+      const cuatri = cuatriRaw ? JSON.parse(cuatriRaw) : null;
       let userMats;
       if (rawMats) {
         userMats = JSON.parse(rawMats);
@@ -1018,7 +1107,7 @@ class Component extends DCLogic {
         userMats = JSON.parse(JSON.stringify(this.MATERIAS));
         localStorage.setItem(prefix + 'materias', JSON.stringify(userMats));
       }
-      this.setState({ userMats, notas, uploads });
+      this.setState({ userMats, notas, uploads, cuatri, cuatriForm: cuatri ? { ini: cuatri.inicio, fin: cuatri.fin } : { ini:'', fin:'' } });
     } catch(e) {}
   }
   saveUserKey(key, val) {
@@ -1187,7 +1276,7 @@ class Component extends DCLogic {
       { titulo: 'Pomodoro', sub: 'Bloques de 25 y horas por materia', key: 'pomodoro' }
     ].map(a => ({ titulo: a.titulo, sub: a.sub, go: () => this.setState({ screen: a.key, otra: a.titulo }) }));
 
-    const conocidas = ['inicio','materias','calendario','detalle','horarios','plan','chatm','flash','examen','banco','grupos','pomo'];
+    const conocidas = ['inicio','materias','calendario','detalle','horarios','plan','chatm','flash','examen','banco','grupos','pomo','config'];
     const otraTitulo = S.otra || 'En camino';
 
     // --- AUTH derivations ---
@@ -1234,7 +1323,7 @@ class Component extends DCLogic {
     const navSecDef = [
       { titulo: 'Principal',    keys: [['inicio','Inicio'],['calendario','Calendario'],['materias','Mis materias']] },
       { titulo: 'Estudio',      keys: [['horarios','Horarios'],['plan','Plan de estudio'],['chatm','Chat'],['flash','Flashcards'],['examen','Modo examen'],['banco','Banco de parciales']] },
-      { titulo: 'Herramientas', keys: [['grupos','Grupos'],['pomo','Pomodoro']] }
+      { titulo: 'Herramientas', keys: [['grupos','Grupos'],['pomo','Pomodoro'],['config','Configuración']] }
     ];
     const navSections = navSecDef.map(sec => ({
       titulo: sec.titulo,
@@ -1532,6 +1621,115 @@ class Component extends DCLogic {
       { n:'Álgebra',              color:'#8C6E4A', pct:15, txt:'0.7 hs' }
     ];
     const pomoTotalH = pomoBars.reduce((s,p) => s + parseFloat(p.txt), 0).toFixed(1);
+
+    // ============ CUATRIMESTRE + TIMELINE ============
+    const _pad = (n) => (n<10?'0':'')+n;
+    const _fmtISO = (d) => d.getFullYear()+'-'+_pad(d.getMonth()+1)+'-'+_pad(d.getDate());
+    // Default: si hoy es entre marzo-julio => 1er cuatri, si no => 2do
+    const _mesHoy = hoy.getMonth(); // 0=ene
+    const _defaultCuatri = () => {
+      if (_mesHoy >= 2 && _mesHoy <= 6) {
+        return { inicio: hoy.getFullYear()+'-03-01', fin: hoy.getFullYear()+'-07-15' };
+      }
+      return { inicio: hoy.getFullYear()+'-08-01', fin: hoy.getFullYear()+'-12-15' };
+    };
+    const _defCuatri = _defaultCuatri();
+    const cuatriConfigurado = !!S.cuatri;
+    const cuatriVacio = !S.cuatri;
+    const cuatriActivo = S.cuatri || _defCuatri; // para calcular default view aunque no esté configurado
+    const _iniD = this.parse(cuatriActivo.inicio);
+    const _finD = this.parse(cuatriActivo.fin);
+    const _totalMs = Math.max(1, _finD - _iniD);
+    const _hoyMs = hoy - _iniD;
+    const cuatriPct = Math.max(0, Math.min(100, (_hoyMs / _totalMs) * 100));
+    const tlHoyPct = cuatriPct;
+    const _semanaTotal = Math.max(1, Math.ceil(_totalMs / (7*86400000)));
+    const _semanaActual = Math.min(_semanaTotal, Math.max(0, Math.ceil(_hoyMs / (7*86400000))));
+    const cuatriSemanaTxt = 'semana ' + _semanaActual + ' de ' + _semanaTotal;
+    const cuatriMidTxt = cuatriSemanaTxt;
+    const cuatriIniTxt = _iniD.getDate() + ' ' + this.MESES[_iniD.getMonth()].slice(0,3);
+    const cuatriFinTxt = _finD.getDate() + ' ' + this.MESES[_finD.getMonth()].slice(0,3);
+
+    // Eventos del cuatri con posición %
+    const evsCuatri = this.EVENTOS
+      .map(e => ({ ...e, d: this.parse(e.f) }))
+      .filter(e => e.d >= _iniD && e.d <= _finD)
+      .sort((a,b) => a.d - b.d)
+      .map(e => {
+        const m = _matAll(e.mid) || { n:'Materia', col:'#565B47' };
+        return { ...e, m, pct: ((e.d - _iniD) / _totalMs) * 100 };
+      });
+
+    // Agrupar los que caen a < 2% de distancia
+    const grupos = [];
+    for (const ev of evsCuatri) {
+      const last = grupos[grupos.length-1];
+      if (last && Math.abs(ev.pct - last.pct) < 2) {
+        last.events.push(ev);
+        last.pct = (last.pct + ev.pct) / 2; // promedio
+      } else {
+        grupos.push({ pct: ev.pct, events: [ev] });
+      }
+    }
+
+    const _abrirPop = (grupo) => () => this.setState({ tlPop: grupo });
+    const _cerrarPop = () => this.setState({ tlPop: null });
+    const _onKeyPop = (grupo) => (e) => {
+      if (e && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); this.setState({ tlPop: grupo }); }
+    };
+
+    const tlMarcadores = grupos.map(g => {
+      const primero = g.events[0];
+      const esGrupo = g.events.length > 1;
+      const color = esGrupo ? '#3B4A2F' : primero.m.col;
+      const aria = esGrupo
+        ? g.events.length + ' eventos entre el ' + this.fmtCorto(g.events[0].d) + ' y el ' + this.fmtCorto(g.events[g.events.length-1].d)
+        : primero.tipo + ' de ' + primero.m.n + ': ' + this.fmtCorto(primero.d);
+      return { pct: g.pct, color, esGrupo, count: g.events.length, aria, onClick: _abrirPop(g), onKey: _onKeyPop(g) };
+    });
+
+    const tlPopoverOn = !!S.tlPop;
+    const tlPopoverTitulo = S.tlPop
+      ? (S.tlPop.events.length === 1
+          ? S.tlPop.events[0].tipo + ' de ' + S.tlPop.events[0].m.n
+          : S.tlPop.events.length + ' eventos')
+      : '';
+    const tlPopoverEventos = S.tlPop
+      ? S.tlPop.events.map(ev => ({
+          fecha: this.fmtCorto(ev.d),
+          titulo: ev.titulo,
+          materia: ev.m.n,
+          color: ev.m.col,
+          irCal: () => this.setState({ tlPop: null, screen: 'calendario' })
+        }))
+      : [];
+    const tlPopCerrar = _cerrarPop;
+    const sinEventosCuatri = evsCuatri.length === 0 && cuatriConfigurado;
+
+    // Colores derivados para el "próximo evento" (soft bg + border)
+    const _hexSoft = (hex) => hex + '18'; // ~10% opacity
+    const _hexBd = (hex) => hex + '55';
+    const proxConColor = { ...prox, colorSoft: _hexSoft(prox.color), colorBd: _hexBd(prox.color) };
+
+    // Config: navegación y handlers
+    const irConfig = () => this.setState({ screen: 'config' });
+    const irCalendario = () => this.setState({ screen: 'calendario' });
+    const setCuatriIni = (e) => this.setState({ cuatriForm: { ...S.cuatriForm, ini: e.target.value }, __cuatriErr: null });
+    const setCuatriFin = (e) => this.setState({ cuatriForm: { ...S.cuatriForm, fin: e.target.value }, __cuatriErr: null });
+    const guardarCuatri = () => {
+      const f = S.cuatriForm;
+      if (!f.ini || !f.fin) return this.setState({ __cuatriErr: 'Elegí ambas fechas.' });
+      if (this.parse(f.ini) >= this.parse(f.fin)) return this.setState({ __cuatriErr: 'La fecha de inicio tiene que ser anterior al fin.' });
+      const cuatri = { inicio: f.ini, fin: f.fin };
+      this.saveUserKey('cuatri', cuatri);
+      this.setState({ cuatri, __cuatriErr: null });
+    };
+    const resetCuatri = () => {
+      const d = _defaultCuatri();
+      this.saveUserKey('cuatri', d);
+      this.setState({ cuatri: d, cuatriForm: { ini: d.inicio, fin: d.fin }, __cuatriErr: null });
+    };
+
     
 
     return {
@@ -1576,6 +1774,13 @@ class Component extends DCLogic {
       hayParError: !!S.__parErr, parError: S.__parErr || '',
       guardarParcial,
       notasBuf, setNotasBuf, guardarNotas, notasStatus,
+      esConfig: screen === 'config', irConfig, irCalendario,
+      cuatriConfigurado, cuatriVacio, cuatriPct, tlHoyPct, cuatriSemanaTxt, cuatriMidTxt, cuatriIniTxt, cuatriFinTxt,
+      tlMarcadores, tlPopoverOn, tlPopoverTitulo, tlPopoverEventos, tlPopCerrar, sinEventosCuatri,
+      cuatriFormIni: S.cuatriForm.ini, cuatriFormFin: S.cuatriForm.fin,
+      setCuatriIni, setCuatriFin, guardarCuatri, resetCuatri,
+      hayCuatriErr: !!S.__cuatriErr, cuatriErr: S.__cuatriErr || '',
+      perfilNombre: (user && user.nombre) || '—', perfilApodo: (user && user.apodo) || '—', perfilEmail: (user && user.email) || '—', perfilCarrera: (user && user.carrera) || '—', perfilUni: (user && user.universidad) || '—',
       padBottom: isMobile ? '96px' : 'clamp(18px,3.5vw,40px)',
       cardPad: dens === 'compacta' ? '13px' : '16px',
       celdaAlto: isMobile ? '46px' : '74px',
@@ -1584,7 +1789,8 @@ class Component extends DCLogic {
       esCalendario: screen === 'calendario', esOtra: !conocidas.includes(screen),
       otraTitulo, irInicio: go('inicio'),
       hoyTexto: 'miércoles 12 de agosto',
-      prox, proxDespues, accesos,
+      saludoTxt: ((user && (user.apodo || user.nombre)) ? 'Buenas, ' + (user.apodo || user.nombre) : 'Buenas'),
+      prox: proxConColor,
       resumen: [
         { valor: cursandoN, label: 'materias cursando' },
         { valor: promSin, label: 'promedio' },
