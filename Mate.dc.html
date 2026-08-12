@@ -575,10 +575,11 @@
               <sc-for list="{{ horFilas }}" as="row" hint-placeholder-count="12">
                 <div style="font-family:'Instrument Sans',sans-serif;font-size:10.5px;color:#565B47;text-align:right;padding:6px 8px 0 0">{{ row.hora }}</div>
                 <sc-for list="{{ row.celdas }}" as="c" hint-placeholder-count="6">
-                  <div style="min-height:44px;border-radius:8px;background:{{ c.bg }};color:{{ c.fg }};padding:{{ c.pad }};display:flex;flex-direction:column;gap:2px;border:1px solid {{ c.bd }}">
+                  <div style="min-height:44px;border-radius:8px;background:{{ c.bg }};color:{{ c.fg }};padding:{{ c.pad }};display:flex;flex-direction:column;gap:2px;border:1px solid {{ c.bd }};position:relative">
                     <sc-if value="{{ c.tieneMat }}" hint-placeholder-val="{{ true }}">
-                      <span style="font-size:12px;font-weight:600;line-height:1.15">{{ c.mat }}</span>
-                      <span style="font-size:10.5px;opacity:.8">{{ c.aula }}</span>
+                      <span style="font-size:12px;font-weight:600;line-height:1.15;padding-right:12px">{{ c.mat }}</span>
+                      <span style="font-size:10.5px;opacity:.8">{{ c.aulaTxt }}</span>
+                      <button type="button" onClick="{{ c.eliminar }}" aria-label="Eliminar bloque" style="position:absolute;top:2px;right:4px;background:none;border:0;color:currentColor;opacity:.5;cursor:pointer;font-size:14px;line-height:1;padding:0">×</button>
                     </sc-if>
                   </div>
                 </sc-for>
@@ -1185,11 +1186,7 @@
             </div>
             <div style="display:flex;flex-direction:column;gap:6px">
               <label style="font-size:12px;color:#565B47">Hora</label>
-              <select onChange="{{ setHorHora }}" value="{{ horForm.hora }}" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
-                <sc-for list="{{ horHorasOpts }}" as="h" hint-placeholder-count="12">
-                  <option value="{{ h }}">{{ h }}</option>
-                </sc-for>
-              </select>
+              <input type="time" value="{{ horForm.hora }}" onInput="{{ setHorHora }}" step="300" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
             </div>
           </div>
           <div style="display:flex;flex-direction:column;gap:6px">
@@ -1642,13 +1639,28 @@ class Component extends DCLogic {
     const horDias = [{n:'Lun'},{n:'Mar'},{n:'Mié'},{n:'Jue'},{n:'Vie'},{n:'Sáb'}];
     const horHoras = ['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00'];
     const horBloques = {};
-    (S.horarios || []).forEach(h => { horBloques[h.hora + '-' + h.dia] = { mat: h.mat, aula: h.aula, col: h.col || '#565B47', id: h.id }; });
+    (S.horarios || []).forEach(h => {
+      const bucket = (h.hora || '00:00').substring(0,2) + ':00-' + h.dia;
+      const exactTime = h.hora || '';
+      if (!horBloques[bucket]) horBloques[bucket] = { mat: h.mat, aula: h.aula, col: h.col || '#565B47', id: h.id, hora: exactTime };
+    });
+    const _horDefault = ['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00'];
+    const _horSet = new Set(_horDefault);
+    (S.horarios || []).forEach(h => { const bucket = (h.hora || '00:00').substring(0,2) + ':00'; _horSet.add(bucket); });
+    const horHoras = Array.from(_horSet).sort();
     const horFilas = horHoras.map(h => ({
       hora: h,
       celdas: [0,1,2,3,4,5].map(d => {
         const b = horBloques[h+'-'+d];
-        return b ? { tieneMat:true, mat:b.mat, aula:b.aula, bg:b.col+'22', bd:b.col+'55', fg:b.col, pad:'8px 10px' }
-                 : { tieneMat:false, mat:'', aula:'', bg:'rgba(0,0,0,0)', bd:'rgba(0,0,0,0.04)', fg:'#565B47', pad:'0' };
+        const _horaExact = b && b.hora && b.hora !== h ? b.hora + (b.aula ? '  ' + b.aula : '') : (b ? (b.aula || '') : '');
+        const _delHor = b ? (() => {
+          if (!window.confirm('Eliminar este bloque?')) return;
+          const updated = this.state.horarios.filter(x => x.id !== b.id);
+          this.saveUserKey('horarios', updated);
+          this.setState({ horarios: updated });
+        }) : (() => {});
+        return b ? { tieneMat:true, mat:b.mat, aula:b.aula, aulaTxt: _horaExact, bg:b.col+'22', bd:b.col+'55', fg:b.col, pad:'8px 10px', eliminar: _delHor }
+                 : { tieneMat:false, mat:'', aula:'', aulaTxt:'', bg:'rgba(0,0,0,0)', bd:'rgba(0,0,0,0.04)', fg:'#565B47', pad:'0', eliminar: () => {} };
       })
     }));
     const horLeyenda = [];
