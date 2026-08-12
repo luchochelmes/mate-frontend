@@ -1397,7 +1397,7 @@ class Component extends DCLogic {
     __cuatriErr: null,
     chatConvos: {}, chatInput: '', chatSending: false, chatPdfPending: null, chatError: null,
     backendUrlBuf: '', backendMsg: '', backendMsgKind: '',
-    backendUrl: '',
+    backendUrl: 'https://mate-backend.vercel.app/api/chat',
     flashCards: {}, flashDeckId: null, flashIdx: 0, flashFlipped: false,
     flashModal: false, flashFormP: '', flashFormR: '', flashFormMat: '', flashFormErr: null,
     chatSel: 'amii',
@@ -1451,8 +1451,8 @@ class Component extends DCLogic {
       const pomoHours = kv.pomoHours || {};
       const uploads = kv.uploads || [];
       const flashCards = kv.flashCards || {};
-      const backendUrl = kv.backendUrl || '';
-      if (backendUrl) this.setState({ backendUrl, backendUrlBuf: backendUrl });
+      const backendUrl = kv.backendUrl || 'https://mate-backend.vercel.app/api/chat';
+      this.setState({ backendUrl, backendUrlBuf: backendUrl });
       let userMats = kv.materias;
       if (!userMats) {
         userMats = JSON.parse(JSON.stringify(this.MATERIAS));
