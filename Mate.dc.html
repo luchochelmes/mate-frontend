@@ -11,6 +11,13 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="crossorigin" />
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..900&family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script>
+  window.mateSb = supabase.createClient(
+    'https://vaeirkdytpjgbbopbpsy.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhZWlya2R5dHBqZ2Jib3BicHN5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODY1NjQ0MDYsImV4cCI6MjEwMjE0MDQwNn0.PQhqx0Sc9W7jI9pmQ4PzhdA9Z9DbJJli6VNd7c8_Ikk'
+  );
+</script>
 <style>
   *{box-sizing:border-box}
   body{margin:0;background:#ECEEE3;color:#23281C;font-family:"Instrument Sans",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
@@ -477,7 +484,10 @@
           <div style="background:#F8F9F2;border:1px solid #DDE1D0;border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:10px">
             <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap">
               <div style="font-family:'Instrument Sans',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#565B47">Apuntes</div>
-              <span style="font-size:11.5px;color:#565B47">{{ notasStatus }}</span>
+              <div style="display:flex;align-items:center;gap:10px">
+                <span style="font-size:11.5px;color:#565B47">{{ notasStatus }}</span>
+                <button type="button" onClick="{{ abrirUpParcialMateriaActual }}" style="background:#EFF1E6;color:#3B4A2F;border:1px solid #C9CEB8;border-radius:7px;padding:5px 12px;font-size:12.5px;font-weight:600">+ Subir archivo</button>
+              </div>
             </div>
             <textarea placeholder="Anotá lo que quieras sobre la materia (bibliografía, teoremas, links...)" value="{{ notasBuf }}" onInput="{{ setNotasBuf }}" style="width:100%;min-height:180px;border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:12px 14px;font-size:14px;font-family:inherit;color:#23281C;line-height:1.5;resize:vertical"></textarea>
             <button type="button" onClick="{{ guardarNotas }}" style="align-self:flex-start;background:#3B4A2F;color:#EDF1E0;border-radius:8px;padding:8px 16px;font-size:13.5px;font-weight:600">Guardar apuntes</button>
@@ -515,7 +525,11 @@
                   <div style="min-height:{{ celdaAlto }};border-radius:8px;background:{{ c.bg }};border:1px solid {{ c.bd }};padding:5px 5px 6px;display:flex;flex-direction:column;gap:4px">
                     <span style="font-family:"Instrument Sans",sans-serif;font-size:11.5px;color:{{ c.numColor }};font-weight:{{ c.numPeso }}">{{ c.dia }}</span>
                     <sc-for list="{{ c.eventos }}" as="ev" hint-placeholder-count="0">
-                      <span style="display:block;height:5px;border-radius:3px;background:{{ ev.color }};opacity:{{ ev.op }}"></span>
+                      <div style="display:flex;align-items:center;gap:3px;padding:2px 5px;border-radius:4px;background:{{ ev.bgColor }};opacity:{{ ev.op }};overflow:hidden">
+                        <span style="width:5px;height:5px;border-radius:999px;flex:none;background:{{ ev.color }}"></span>
+                        <span style="font-family:'Instrument Sans',sans-serif;font-size:10px;font-weight:700;color:{{ ev.color }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.4">{{ ev.tipo }}</span>
+                        <span style="font-family:'Instrument Sans',sans-serif;font-size:10px;color:{{ ev.color }};opacity:.75;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.4;flex:1;min-width:0">· {{ ev.mat }}</span>
+                      </div>
                     </sc-for>
                   </div>
                 </sc-for>
@@ -594,37 +608,39 @@
           </sc-if>
           <sc-if value="{{ horLleno }}" hint-placeholder-val="{{ false }}">
           <div style="background:#F8F9F2;border:1px solid #DDE1D0;border-radius:14px;padding:14px;overflow-x:auto">
-            <div style="display:grid;grid-template-columns:60px repeat(6,minmax(120px,1fr));gap:6px;min-width:820px">
-              <div></div>
-              <sc-for list="{{ horDias }}" as="d" hint-placeholder-count="6">
-                <div style="font-family:'Instrument Sans',sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#565B47;text-align:center;padding:8px 0;font-weight:600">{{ d.n }}</div>
-              </sc-for>
-              <sc-for list="{{ horFilas }}" as="row" hint-placeholder-count="12">
-                <div style="font-family:'Instrument Sans',sans-serif;font-size:10.5px;color:#565B47;text-align:right;padding:6px 8px 0 0">{{ row.hora }}</div>
-                <sc-for list="{{ row.celdas }}" as="c" hint-placeholder-count="6">
-                  <sc-if value="{{ c.hidden }}" hint-placeholder-val="{{ false }}">
-                    <div style="display:none"></div>
-                  </sc-if>
-                  <sc-if value="{{ c.vacia }}" hint-placeholder-val="{{ false }}">
-                    <div style="min-height:44px;border-radius:8px;background:rgba(0,0,0,0);border:1px solid rgba(0,0,0,0.04)"></div>
-                  </sc-if>
-                  <sc-if value="{{ c.tieneMat }}" hint-placeholder-val="{{ true }}">
-                    <div style="display:flex;flex-direction:row;gap:3px;grid-row:span {{ c.span }};min-height:44px">
-                      <sc-for list="{{ c.blks }}" as="b" hint-placeholder-count="1">
-                        <div style="flex:1;min-width:0;border-radius:8px;background:{{ b.bg }};color:{{ b.fg }};padding:6px 8px;display:flex;flex-direction:column;gap:2px;border:1px solid {{ b.bd }};position:relative;overflow:hidden">
-                          <span style="font-size:12px;font-weight:600;line-height:1.15;padding-right:14px;overflow:hidden;text-overflow:ellipsis">{{ b.mat }}</span>
-                          <span style="font-size:10.5px;opacity:.85;line-height:1.2">{{ b.horaTxt }}</span>
-                          <span style="font-size:10.5px;opacity:.75;line-height:1.2">{{ b.aulaTxt }}</span>
-                          <button type="button" onClick="{{ b.eliminar }}" aria-label="Eliminar bloque" style="position:absolute;top:2px;right:4px;background:none;border:0;color:currentColor;opacity:.5;cursor:pointer;font-size:14px;line-height:1;padding:0">×</button>
+            <div style="display:flex;min-width:800px">
+              <div style="width:46px;flex:none;display:flex;flex-direction:column">
+                <div style="height:30px"></div>
+                <div style="position:relative;height:{{ horTotalH }}px">
+                  <sc-for list="{{ horTimeLabels }}" as="tl" hint-placeholder-count="16">
+                    <div style="position:absolute;top:{{ tl.top }}px;right:4px;font-family:'Instrument Sans',sans-serif;font-size:10px;color:#8C8C8C;white-space:nowrap;line-height:1;transform:translateY(-50%)">{{ tl.label }}</div>
+                  </sc-for>
+                </div>
+              </div>
+              <div style="flex:1;display:grid;grid-template-columns:repeat(6,minmax(100px,1fr));gap:4px">
+                <sc-for list="{{ horColumnas }}" as="col" hint-placeholder-count="6">
+                  <div style="display:flex;flex-direction:column;gap:4px">
+                    <div style="height:30px;display:flex;align-items:center;justify-content:center;font-family:'Instrument Sans',sans-serif;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#565B47;font-weight:600">{{ col.n }}</div>
+                    <div style="position:relative;height:{{ horTotalH }}px;background:#EFF1E6;border-radius:8px;overflow:hidden">
+                      <sc-for list="{{ horTimeLabels }}" as="tl" hint-placeholder-count="16">
+                        <div style="position:absolute;top:{{ tl.top }}px;left:0;right:0;height:1px;background:rgba(0,0,0,0.08)"></div>
+                      </sc-for>
+                      <sc-for list="{{ col.bloques }}" as="b" hint-placeholder-count="2">
+                        <div style="position:absolute;top:{{ b.top }}px;left:3px;right:3px;height:{{ b.height }}px;background:{{ b.bg }};border:1px solid {{ b.bd }};border-radius:7px;padding:5px 6px;overflow:hidden;box-sizing:border-box">
+                          <div style="font-family:'Instrument Sans',sans-serif;font-size:11px;font-weight:700;color:{{ b.fg }};line-height:1.2">{{ b.horaIni }}</div>
+                          <div style="font-size:11px;color:{{ b.fg }};overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:1.3;margin-top:2px">{{ b.mat }}</div>
+                          <div style="font-size:10px;color:{{ b.fg }};opacity:.75;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ b.aula }}</div>
+                          <div style="position:absolute;bottom:4px;left:6px;font-family:'Instrument Sans',sans-serif;font-size:11px;font-weight:600;color:{{ b.fg }}">{{ b.horaFin }}</div>
+                          <button type="button" onClick="{{ b.eliminar }}" aria-label="Eliminar bloque" style="position:absolute;top:2px;right:3px;background:none;border:0;color:{{ b.fg }};opacity:.5;cursor:pointer;font-size:14px;line-height:1;padding:0">×</button>
                         </div>
                       </sc-for>
                     </div>
-                  </sc-if>
+                  </div>
                 </sc-for>
-              </sc-for>
+              </div>
             </div>
           </div>
-          <div style="display:flex;flex-wrap:wrap;gap:12px">
+          <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:10px">
             <sc-for list="{{ horLeyenda }}" as="l" hint-placeholder-count="4">
               <div style="display:flex;align-items:center;gap:7px;font-size:12.5px;color:#565B47">
                 <span style="width:11px;height:11px;border-radius:3px;background:{{ l.color }}"></span>
@@ -765,46 +781,81 @@
 
       <sc-if value="{{ esFlash }}" hint-placeholder-val="{{ false }}">
         <section data-screen-label="Flashcards" style="animation:matein .3s ease both;display:flex;flex-direction:column;gap:18px">
-          <header style="display:flex;flex-direction:column;gap:4px">
-            <div style="font-family:'Instrument Sans',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#565B47">Repaso espaciado</div>
-            <h1 style="margin:0;font-family:Fraunces,serif;font-weight:800;font-size:clamp(26px,4vw,36px);letter-spacing:-0.02em">Flashcards</h1>
+          <header style="display:flex;align-items:flex-end;justify-content:space-between;gap:14px;flex-wrap:wrap">
+            <div style="display:flex;flex-direction:column;gap:4px">
+              <div style="font-family:'Instrument Sans',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#565B47">Repaso espaciado</div>
+              <h1 style="margin:0;font-family:Fraunces,serif;font-weight:800;font-size:clamp(26px,4vw,36px);letter-spacing:-0.02em">Flashcards</h1>
+            </div>
+            <button type="button" onClick="{{ abrirAddFlash }}" style="background:#3B4A2F;color:#EDF1E0;border-radius:9px;padding:10px 16px;font-size:14.5px;font-weight:600;border:0;cursor:pointer">+ Nueva tarjeta</button>
           </header>
           <sc-if value="{{ flashVacio }}" hint-placeholder-val="{{ true }}">
-            <div style="background:#F8F9F2;border:1px dashed #C9CEB8;border-radius:14px;padding:44px 24px;text-align:center;color:#565B47;display:flex;flex-direction:column;gap:8px;align-items:center">
-              <span style="font-family:Fraunces,serif;font-weight:700;font-size:17px;color:#33392A">Todavía no cargaste flashcards</span>
-              <span style="font-size:14px;max-width:44ch">Pronto vas a poder crear tus propios mazos de repaso espaciado. Estamos preparando la función.</span>
+            <div style="background:#F8F9F2;border:1px dashed #C9CEB8;border-radius:14px;padding:44px 24px;text-align:center;color:#565B47;display:flex;flex-direction:column;gap:12px;align-items:center">
+              <span style="font-family:Fraunces,serif;font-weight:700;font-size:17px;color:#33392A">Todavía no tenés flashcards</span>
+              <span style="font-size:14px;max-width:44ch">Creá tu primera tarjeta con una pregunta y su respuesta para empezar a repasar.</span>
+              <button type="button" onClick="{{ abrirAddFlash }}" style="background:#3B4A2F;color:#EDF1E0;border-radius:9px;padding:10px 18px;font-size:14px;font-weight:600;margin-top:4px;border:0;cursor:pointer">+ Crear primera tarjeta</button>
             </div>
           </sc-if>
           <sc-if value="{{ flashLleno }}" hint-placeholder-val="{{ false }}">
-          <div style="display:flex;flex-wrap:wrap;gap:7px">
-            <sc-for list="{{ flashDecks }}" as="d" hint-placeholder-count="4">
-              <button type="button" onClick="{{ d.pick }}" style="font-size:13.5px;border:1px solid {{ d.bd }};background:{{ d.bg }};color:{{ d.fg }};border-radius:999px;padding:6px 12px">{{ d.n }} <span style="font-size:11px;opacity:.7">· {{ d.cantidad }}</span></button>
-            </sc-for>
-          </div>
-          <div style="display:flex;flex-direction:column;align-items:center;gap:16px">
-            <div style="font-family:'Instrument Sans',sans-serif;font-size:12px;color:#565B47">Tarjeta {{ flashActN }} de {{ flashActTotal }}</div>
-            <div style="width:100%;max-width:520px;min-height:280px;background:#F8F9F2;border:1px solid #DDE1D0;border-radius:16px;padding:36px 30px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:16px;text-wrap:pretty">
-              <sc-if value="{{ flashFrente }}" hint-placeholder-val="{{ true }}">
-                <div style="font-family:'Instrument Sans',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#565B47">Pregunta</div>
-                <div style="font-family:Fraunces,serif;font-weight:700;font-size:22px;line-height:1.3">{{ flashPregunta }}</div>
-              </sc-if>
-              <sc-if value="{{ flashDorso }}" hint-placeholder-val="{{ false }}">
-                <div style="font-family:'Instrument Sans',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#565B47">Respuesta</div>
-                <div style="font-family:Fraunces,serif;font-weight:600;font-size:18px;line-height:1.4;color:#3B4A2F">{{ flashRespuesta }}</div>
-              </sc-if>
+            <div style="display:flex;flex-wrap:wrap;gap:7px">
+              <sc-for list="{{ flashDecks }}" as="d" hint-placeholder-count="4">
+                <button type="button" onClick="{{ d.pick }}" style="font-size:13.5px;border:1px solid {{ d.bd }};background:{{ d.bg }};color:{{ d.fg }};border-radius:999px;padding:6px 14px">{{ d.n }} <span style="font-size:11px;opacity:.7">· {{ d.cantidad }}</span></button>
+              </sc-for>
             </div>
-            <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
-              <button type="button" onClick="{{ flashPrev }}" style="border:1px solid #DDE1D0;background:#F8F9F2;border-radius:8px;padding:10px 16px;font-size:13.5px;color:#23281C">← Anterior</button>
-              <button type="button" onClick="{{ flashFlip }}" style="background:#3B4A2F;color:#EDF1E0;border-radius:8px;padding:10px 20px;font-size:13.5px;font-weight:600">Voltear</button>
-              <button type="button" onClick="{{ flashNext }}" style="border:1px solid #DDE1D0;background:#F8F9F2;border-radius:8px;padding:10px 16px;font-size:13.5px;color:#23281C">Siguiente →</button>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:16px">
+              <div style="font-family:'Instrument Sans',sans-serif;font-size:12px;color:#565B47">Tarjeta {{ flashActN }} de {{ flashActTotal }}</div>
+              <div onClick="{{ flashFlip }}" style="width:100%;max-width:520px;min-height:260px;background:#F8F9F2;border:1px solid #DDE1D0;border-radius:16px;padding:36px 30px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;gap:16px;cursor:pointer;user-select:none">
+                <sc-if value="{{ flashFrente }}" hint-placeholder-val="{{ true }}">
+                  <div style="font-family:'Instrument Sans',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#9B9B8A">Pregunta — tocá para ver respuesta</div>
+                  <div style="font-family:Fraunces,serif;font-weight:700;font-size:22px;line-height:1.3;color:#23281C">{{ flashPregunta }}</div>
+                </sc-if>
+                <sc-if value="{{ flashDorso }}" hint-placeholder-val="{{ false }}">
+                  <div style="font-family:'Instrument Sans',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#3B4A2F">Respuesta</div>
+                  <div style="font-family:Fraunces,serif;font-weight:600;font-size:18px;line-height:1.4;color:#3B4A2F">{{ flashRespuesta }}</div>
+                </sc-if>
+              </div>
+              <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center">
+                <button type="button" onClick="{{ flashPrev }}" style="border:1px solid #DDE1D0;background:#F8F9F2;border-radius:8px;padding:10px 16px;font-size:13.5px;color:#23281C;cursor:pointer">← Anterior</button>
+                <button type="button" onClick="{{ flashFlip }}" style="background:#3B4A2F;color:#EDF1E0;border-radius:8px;padding:10px 20px;font-size:13.5px;font-weight:600;border:0;cursor:pointer">Voltear</button>
+                <button type="button" onClick="{{ flashNext }}" style="border:1px solid #DDE1D0;background:#F8F9F2;border-radius:8px;padding:10px 16px;font-size:13.5px;color:#23281C;cursor:pointer">Siguiente →</button>
+              </div>
+              <button type="button" onClick="{{ flashBorrar }}" style="background:none;color:#9B3B28;border:1px solid #E2CBAE;border-radius:8px;padding:7px 14px;font-size:12.5px;cursor:pointer">Eliminar esta tarjeta</button>
             </div>
-            <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">
-              <button type="button" style="background:#F3E1DC;color:#9B3B28;border:1px solid #E2CBAE;border-radius:8px;padding:8px 14px;font-size:12.5px">Difícil</button>
-              <button type="button" style="background:#E9EBDD;color:#4B5240;border:1px solid #D3D8C2;border-radius:8px;padding:8px 14px;font-size:12.5px">Normal</button>
-              <button type="button" style="background:#E1E7D2;color:#3B4A2F;border:1px solid #C5CFB0;border-radius:8px;padding:8px 14px;font-size:12.5px">Fácil</button>
-            </div>
-          </div>
           </sc-if>
+
+          <sc-if value="{{ flashModalOn }}" hint-placeholder-val="{{ false }}">
+            <div onClick="{{ flashCerrarOverlay }}" style="position:fixed;inset:0;background:rgba(35,40,28,.45);z-index:200;display:flex;align-items:center;justify-content:center;padding:20px">
+              <div onClick="{{ flashStopProp }}" style="background:#F8F9F2;border-radius:16px;padding:26px 24px;width:100%;max-width:480px;display:flex;flex-direction:column;gap:14px;max-height:90vh;overflow-y:auto">
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                  <div style="font-family:Fraunces,serif;font-weight:700;font-size:18px">Nueva flashcard</div>
+                  <button type="button" onClick="{{ cerrarFlashModal }}" style="background:none;border:0;font-size:20px;color:#565B47;cursor:pointer;padding:0 4px">×</button>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:6px">
+                  <label style="font-size:12px;color:#565B47">Materia</label>
+                  <select onChange="{{ setFlashMat }}" value="{{ flashFormMat }}" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
+                    <sc-for list="{{ flashMatOpts }}" as="o" hint-placeholder-count="4">
+                      <option value="{{ o.v }}">{{ o.n }}</option>
+                    </sc-for>
+                  </select>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:6px">
+                  <label style="font-size:12px;color:#565B47">Frente — pregunta o concepto</label>
+                  <textarea placeholder="Ej: ¿Qué es una derivada?" value="{{ flashFormP }}" onInput="{{ setFlashP }}" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C;min-height:90px;resize:vertical"></textarea>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:6px">
+                  <label style="font-size:12px;color:#565B47">Dorso — respuesta o definición</label>
+                  <textarea placeholder="Ej: La tasa de cambio instantánea de una función." value="{{ flashFormR }}" onInput="{{ setFlashR }}" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C;min-height:90px;resize:vertical"></textarea>
+                </div>
+                <sc-if value="{{ flashHayErr }}" hint-placeholder-val="{{ false }}">
+                  <div style="font-size:13px;color:#9B3B28;background:#F3E1DC;border:1px solid #E2CBAE;border-radius:8px;padding:8px 12px">{{ flashErr }}</div>
+                </sc-if>
+                <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:4px">
+                  <button type="button" onClick="{{ cerrarFlashModal }}" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 16px;font-size:14px;color:#565B47;cursor:pointer">Cancelar</button>
+                  <button type="button" onClick="{{ guardarFlash }}" style="background:#3B4A2F;color:#EDF1E0;border-radius:8px;padding:10px 18px;font-size:14px;font-weight:600;border:0;cursor:pointer">Guardar tarjeta</button>
+                </div>
+              </div>
+            </div>
+          </sc-if>
+
         </section>
       </sc-if>
 
@@ -1265,8 +1316,8 @@
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
             <div style="display:flex;flex-direction:column;gap:6px">
-              <label style="font-size:12px;color:#565B47">Cátedra</label>
-              <input type="text" placeholder="Ej: Cátedra Ferrari" value="{{ parForm.cat }}" onInput="{{ setParCat }}" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
+              <label style="font-size:12px;color:#565B47">Cátedra <span style="color:#9B9B8A">(opcional)</span></label>
+              <input type="text" placeholder="Ej: Ferrari" value="{{ parForm.cat }}" onInput="{{ setParCat }}" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
             </div>
             <div style="display:flex;flex-direction:column;gap:6px">
               <label style="font-size:12px;color:#565B47">Año</label>
@@ -1282,8 +1333,8 @@
             </div>
           </div>
           <div style="display:flex;flex-direction:column;gap:6px">
-            <label style="font-size:12px;color:#565B47">Archivo (PDF o imagen, hasta ~4 MB)</label>
-            <input type="file" onChange="{{ setParFile }}" accept=".pdf,image/*" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:13px;font-family:inherit;color:#23281C">
+            <label style="font-size:12px;color:#565B47">Archivo (PDF, imagen, Word, hasta ~4 MB)</label>
+            <input type="file" onChange="{{ setParFile }}" accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.txt,image/*" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:13px;font-family:inherit;color:#23281C">
             <sc-if value="{{ parTieneArchivo }}" hint-placeholder-val="{{ false }}">
               <span style="font-size:12px;color:#565B47">Archivo cargado: <strong>{{ parForm.filename }}</strong></span>
             </sc-if>
@@ -1346,8 +1397,9 @@ class Component extends DCLogic {
     __cuatriErr: null,
     chatConvos: {}, chatInput: '', chatSending: false, chatPdfPending: null, chatError: null,
     backendUrlBuf: '', backendMsg: '', backendMsgKind: '',
-    backendUrl: (typeof localStorage !== 'undefined' && localStorage.getItem('mate_backend_url')) || '',
-    flashDeckId: 'amii', flashIdx: 0, flashFlipped: false,
+    backendUrl: '',
+    flashCards: {}, flashDeckId: null, flashIdx: 0, flashFlipped: false,
+    flashModal: false, flashFormP: '', flashFormR: '', flashFormMat: '', flashFormErr: null,
     chatSel: 'amii',
     planMid: 'amii'
   };
@@ -1355,55 +1407,67 @@ class Component extends DCLogic {
   componentDidMount() {
     this._r = () => this.setState({ w: window.innerWidth });
     window.addEventListener('resize', this._r);
-    try {
-      const cur = localStorage.getItem('lucho_current_email');
-      if (cur) {
-        const accs = JSON.parse(localStorage.getItem('lucho_accounts') || '[]');
-        const u = accs.find(a => a.email === cur);
-        if (u) { this.setState({ user: u }); this.loadUserData(u); }
+    const sb = window.mateSb;
+    if (!sb) return;
+    sb.auth.getSession().then(({ data: { session } }) => {
+      if (session && session.user) {
+        const u = this._sbUserToState(session.user);
+        this.setState({ user: u });
+        this.loadUserData(session.user);
       }
-      const url = localStorage.getItem('mate_backend_url') || '';
-      if (url) this.setState({ backendUrl: url, backendUrlBuf: url });
-    } catch(e) {}
+    });
+    this._authSub = sb.auth.onAuthStateChange((event, session) => {
+      if (event === 'SIGNED_IN' && session) {
+        const u = this._sbUserToState(session.user);
+        this.setState({ user: u });
+        this.loadUserData(session.user);
+      } else if (event === 'SIGNED_OUT') {
+        this.setState({ user: null, screen: null });
+      }
+    });
   }
-  componentDidUpdate(pp, ps) {
-    if (this.state.user && (!ps.user || ps.user.email !== this.state.user.email)) {
-      this.loadUserData(this.state.user);
-    }
+  _sbUserToState(sbUser) {
+    const m = sbUser.user_metadata || {};
+    return { id: sbUser.id, email: sbUser.email, nombre: m.nombre || '', apellido: m.apellido || '', apodo: m.apodo || '', carrera: m.carrera || '', universidad: m.universidad || '' };
   }
-  userKey(k) { return 'mate_' + (this.state.user ? this.state.user.email : 'anon') + '_' + k; }
-  loadUserData(u) {
+  async loadUserData(sbUser) {
+    const sb = window.mateSb;
+    if (!sb || !sbUser) return;
     try {
-      const prefix = 'mate_' + u.email + '_';
-      const rawMats = localStorage.getItem(prefix + 'materias');
-      const notas = JSON.parse(localStorage.getItem(prefix + 'notas') || '{}');
-      const uploads = JSON.parse(localStorage.getItem(prefix + 'uploads') || '[]');
-      const cuatriRaw = localStorage.getItem(prefix + 'cuatri');
-      const eventos = JSON.parse(localStorage.getItem(prefix + 'eventos') || '[]');
-      const horarios = (JSON.parse(localStorage.getItem(prefix + 'horarios') || '[]') || []).map(h => {
+      const { data: rows } = await sb.from('user_kv').select('key, value').eq('user_id', sbUser.id);
+      const kv = {};
+      (rows || []).forEach(r => { kv[r.key] = r.value; });
+      const cuatri = kv.cuatri || null;
+      const eventos = kv.eventos || [];
+      const horarios = (kv.horarios || []).map(h => {
         if (h.horaIni && h.horaFin) return h;
-        // migración: viejo formato con solo 'hora'
         const ini = h.horaIni || h.hora || '08:00';
         const hh = parseInt(ini.substring(0,2), 10) || 8;
         const fin = h.horaFin || (String(Math.min(23, hh+1)).padStart(2,'0') + ':' + ini.substring(3,5));
         return Object.assign({}, h, { horaIni: ini, horaFin: fin });
       });
-      const pomoHours = JSON.parse(localStorage.getItem(prefix + 'pomoHours') || '{}');
-      const chatConvos = JSON.parse(localStorage.getItem(prefix + 'chatConvos') || '{}');
-      const cuatri = cuatriRaw ? JSON.parse(cuatriRaw) : null;
-      let userMats;
-      if (rawMats) {
-        userMats = JSON.parse(rawMats);
-      } else {
+      const notas = kv.notas || {};
+      const chatConvos = kv.chatConvos || {};
+      const pomoHours = kv.pomoHours || {};
+      const uploads = kv.uploads || [];
+      const flashCards = kv.flashCards || {};
+      const backendUrl = kv.backendUrl || '';
+      if (backendUrl) this.setState({ backendUrl, backendUrlBuf: backendUrl });
+      let userMats = kv.materias;
+      if (!userMats) {
         userMats = JSON.parse(JSON.stringify(this.MATERIAS));
-        localStorage.setItem(prefix + 'materias', JSON.stringify(userMats));
+        this.saveUserKey('materias', userMats);
       }
-      this.setState({ userMats, notas, uploads, chatConvos, cuatri, eventos, horarios, pomoHours, cuatriForm: cuatri ? { ini: cuatri.inicio, fin: cuatri.fin } : { ini:'', fin:'' } });
-    } catch(e) {}
+      this.setState({ userMats, notas, uploads, flashCards, chatConvos, cuatri, eventos, horarios, pomoHours, cuatriForm: cuatri ? { ini: cuatri.inicio, fin: cuatri.fin } : { ini:'', fin:'' } });
+    } catch(e) { console.error('loadUserData:', e); }
   }
   saveUserKey(key, val) {
-    if (!this.state.user) return;
-    try { localStorage.setItem('mate_' + this.state.user.email + '_' + key, JSON.stringify(val)); } catch(e){}
+    const sb = window.mateSb;
+    const u = this.state.user;
+    if (!sb || !u || !u.id) return;
+    sb.from('user_kv').upsert({ user_id: u.id, key, value: val, updated_at: new Date().toISOString() }, { onConflict: 'user_id,key' }).then(({ error }) => {
+      if (error) console.error('saveUserKey:', key, error);
+    });
   }
   componentWillUnmount() { window.removeEventListener('resize', this._r); if (this._pomoTimer) { clearInterval(this._pomoTimer); this._pomoTimer = null; } }
 
@@ -1471,8 +1535,26 @@ class Component extends DCLogic {
 
   renderVals() {
     const S = this.state, E = this.ESTADOS, hoy = this.HOY;
-    const MATS = S.userMats || MATS;
-    const _matAll = (id) => MATS.find(m => m.id === id) || MATS.find(m => m.id === id);
+    const MATS = S.userMats || this.MATERIAS;
+    const _MAT_FALLBACK = { id: '', n: '—', col: '#8C8C8C', cat: '', est: 'cursando', notas: [], final: null, asis: { on: false, p: 0, t: 0, min: 75 }, reg: null, hab: [] };
+    const _matAll = (id) => MATS.find(m => m.id === id) || _MAT_FALLBACK;
+    const descargarSubido = (b) => () => {
+      try {
+        const link = document.createElement('a');
+        link.href = 'data:' + (b.mime || 'application/octet-stream') + ';base64,' + b.base64;
+        link.download = b.filename || (b.matNombre + '_' + b.tipo + '.pdf');
+        document.body.appendChild(link); link.click(); document.body.removeChild(link);
+        const updated = S.uploads.map(u => u.id === b.id ? Object.assign({}, u, { descargas: (u.descargas||0)+1 }) : u);
+        this.saveUserKey('uploads', updated);
+        this.setState({ uploads: updated });
+      } catch(e){}
+    };
+    const eliminarSubido = (b) => () => {
+      if (!confirm('¿Eliminar este parcial subido?')) return;
+      const updated = S.uploads.filter(u => u.id !== b.id);
+      this.saveUserKey('uploads', updated);
+      this.setState({ uploads: updated });
+    };
     const dens = this.props.densidad || 'cómoda';
     const screen = S.screen || this.props.pantallaInicial || 'inicio';
     const isMobile = S.w < 860;
@@ -1587,7 +1669,7 @@ class Component extends DCLogic {
       const dnum = i - primerDia + 1;
       if (dnum < 1 || dnum > totalDias) { mesCeldas.push({ dia: '', bg: 'rgba(0,0,0,0)', bd: 'rgba(0,0,0,0)', numColor: '#C6CBB6', numPeso: 400, eventos: [] }); continue; }
       const iso = y + '-' + String(mo + 1).padStart(2, '0') + '-' + String(dnum).padStart(2, '0');
-      const evs = S.eventos.filter(e => e.f === iso).map(e => { const m = _matAll(e.mid); const pasado = this.parse(e.f) < hoy; return { color: m.col, op: pasado ? 0.32 : 1 }; });
+      const evs = S.eventos.filter(e => e.f === iso).map(e => { const m = _matAll(e.mid); const pasado = this.parse(e.f) < hoy; const matCorta = m.n !== '—' ? m.n.split(' ')[0] : ''; return { color: m.col, bgColor: m.col + '1A', op: pasado ? 0.45 : 1, tipo: e.tipo || 'Evento', mat: matCorta }; });
       const esHoy = y === hoy.getFullYear() && mo === hoy.getMonth() && dnum === hoy.getDate();
       mesCeldas.push({ dia: dnum, bg: esHoy ? '#3B4A2F' : '#EFF1E6', bd: esHoy ? '#3B4A2F' : '#E4E7D8', numColor: esHoy ? '#EDF1E0' : '#5B6151', numPeso: esHoy ? 600 : 400, eventos: evs });
     }
@@ -1652,30 +1734,33 @@ class Component extends DCLogic {
       return { label: t.label, pick: () => this.setState({ authMode: t.key, authError: null }), bg: on ? '#F8F9F2' : 'rgba(0,0,0,0)', fg: on ? '#23281C' : '#565B47', peso: on ? 700 : 500 };
     });
     const setField = k => e => this.setState({ form: Object.assign({}, S.form, { [k]: (e && e.target ? e.target.value : '') }), authError: null });
-    const doAuth = () => {
+    const doAuth = async () => {
       const f = S.form;
-      const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email);
+      const sb = window.mateSb;
+      if (!sb) return this.setState({ authError: 'Error: cliente no disponible. Recargá la página.' });
+      const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(f.email || '');
+      if (!emailOk) return this.setState({ authError: 'El email no parece válido.' });
       try {
-        const accs = JSON.parse(localStorage.getItem('lucho_accounts') || '[]');
         if (S.authMode === 'register') {
           if (!f.nombre || !f.apellido || !f.email || !f.password) return this.setState({ authError: 'Completá al menos nombre, apellido, email y contraseña.' });
-          if (!emailOk) return this.setState({ authError: 'El email no parece válido.' });
-          if (f.password.length < 4) return this.setState({ authError: 'La contraseña tiene que tener al menos 4 caracteres.' });
-          if (accs.find(a => a.email === f.email)) return this.setState({ authError: 'Ese email ya está registrado. Iniciá sesión.' });
-          accs.push(Object.assign({}, f));
-          localStorage.setItem('lucho_accounts', JSON.stringify(accs));
-          localStorage.setItem('lucho_current_email', f.email);
-          this.setState({ user: Object.assign({}, f), authError: null, form: { nombre:'', apellido:'', apodo:'', email:'', carrera:'', universidad:'', password:'' } });
+          if (f.password.length < 6) return this.setState({ authError: 'La contraseña tiene que tener al menos 6 caracteres.' });
+          const { error } = await sb.auth.signUp({
+            email: f.email,
+            password: f.password,
+            options: { data: { nombre: f.nombre, apellido: f.apellido, apodo: f.apodo, carrera: f.carrera, universidad: f.universidad } }
+          });
+          if (error) return this.setState({ authError: error.message });
         } else {
-          const u = accs.find(a => a.email === f.email && a.password === f.password);
-          if (!u) return this.setState({ authError: 'Email o contraseña incorrectos.' });
-          localStorage.setItem('lucho_current_email', u.email);
-          this.setState({ user: u, authError: null, form: { nombre:'', apellido:'', apodo:'', email:'', carrera:'', universidad:'', password:'' } });
+          if (!f.email || !f.password) return this.setState({ authError: 'Completá email y contraseña.' });
+          const { error } = await sb.auth.signInWithPassword({ email: f.email, password: f.password });
+          if (error) return this.setState({ authError: 'Email o contraseña incorrectos.' });
         }
-      } catch (err) { this.setState({ authError: 'No pudimos acceder al almacenamiento del navegador.' }); }
+        this.setState({ authError: null, form: { nombre:'', apellido:'', apodo:'', email:'', carrera:'', universidad:'', password:'' } });
+      } catch (err) { this.setState({ authError: 'Hubo un error de conexión. Intentá de nuevo.' }); }
     };
-    const doLogout = () => {
-      try { localStorage.removeItem('lucho_current_email'); } catch(e) {}
+    const doLogout = async () => {
+      const sb = window.mateSb;
+      if (sb) await sb.auth.signOut();
       this.setState({ user: null, screen: null });
     };
 
@@ -1694,63 +1779,34 @@ class Component extends DCLogic {
     }));
 
     // --- HORARIOS ---
-    const horDias = [{n:'Lun'},{n:'Mar'},{n:'Mié'},{n:'Jue'},{n:'Vie'},{n:'Sáb'}];
-    // Bloques con horaIni/horaFin: agrupamos por celda de inicio (día + hora entera de inicio)
-    // y calculamos el span (cuántas filas ocupa el bloque).
-    const horBloques = {}; // key = 'HH:00-dia' -> array de bloques que arrancan ahí
-    const horOcupados = new Set(); // celdas que están cubiertas por un bloque (no de inicio)
-    (S.horarios || []).forEach(h => {
-      const iniHH = parseInt((h.horaIni || '08:00').substring(0,2), 10) || 8;
-      const finHH = parseInt((h.horaFin || '09:00').substring(0,2), 10) || 9;
-      const finMM = parseInt((h.horaFin || '09:00').substring(3,5), 10) || 0;
-      const spanBase = finHH - iniHH + (finMM > 0 ? 1 : 0); // filas que ocupa
-      const span = Math.max(1, spanBase);
-      const bucket = String(iniHH).padStart(2,'0') + ':00-' + h.dia;
-      if (!horBloques[bucket]) horBloques[bucket] = [];
-      horBloques[bucket].push({ mat: h.mat, aula: h.aula, col: h.col || '#565B47', id: h.id, horaIni: h.horaIni, horaFin: h.horaFin, span });
-      // Marcar como ocupadas las filas siguientes (para no dibujar celda vacía tapando el span)
-      for (let k = 1; k < span; k++) {
-        horOcupados.add(String(iniHH + k).padStart(2,'0') + ':00-' + h.dia);
-      }
-    });
-    const _horDefault = ['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00'];
-    const _horSet = new Set(_horDefault);
-    (S.horarios || []).forEach(h => { const bucket = (h.hora || '00:00').substring(0,2) + ':00'; _horSet.add(bucket); });
-    const horHoras = Array.from(_horSet).sort();
+    const HOR_START_MIN = 8 * 60;
+    const HOR_END_MIN   = 23 * 60 + 15;
+    const PX_PER_MIN = 1;
+    const horTotalH = (HOR_END_MIN - HOR_START_MIN) * PX_PER_MIN;
+    const _tMin = (t) => { const p = (t || '08:00').split(':'); return parseInt(p[0],10)*60+(parseInt(p[1],10)||0); };
+    const horTimeLabels = [];
+    for (let _h = 8; _h <= 23; _h++) horTimeLabels.push({ label: String(_h).padStart(2,'0') + ':00', top: (_h*60 - HOR_START_MIN) * PX_PER_MIN });
     const _mkDelHor = (id) => () => {
-      if (!window.confirm('Eliminar este bloque?')) return;
+      if (!window.confirm('¿Eliminar este bloque?')) return;
       const updated = this.state.horarios.filter(x => x.id !== id);
       this.saveUserKey('horarios', updated);
       this.setState({ horarios: updated });
     };
-    const horFilas = horHoras.map(h => ({
-      hora: h,
-      celdas: [0,1,2,3,4,5].map(d => {
-        const key = h + '-' + d;
-        const arr = horBloques[key] || [];
-        const cubierta = horOcupados.has(key);
-        if (arr.length === 0 && cubierta) {
-          return { tieneMat:false, hidden:true, blks: [] };
-        }
-        if (arr.length === 0) {
-          return { tieneMat:false, hidden:false, blks: [] };
-        }
-        const blks = arr.map(b => ({
-          mat: b.mat, aula: b.aula,
-          horaTxt: b.horaIni + (b.horaFin ? ' – ' + b.horaFin : ''),
-          aulaTxt: b.aula || '',
-          bg: b.col + '22', bd: b.col + '55', fg: b.col,
-          span: b.span,
-          eliminar: _mkDelHor(b.id)
-        }));
-        // El span de la celda es el máximo del array (los bloques que arrancan en la misma celda pueden solapar)
-        const span = Math.max(1, ...blks.map(b => b.span));
-        return { tieneMat:true, hidden:false, vacia:false, blks, span };
-      })
-    }));
+    const _DIAS_N = ['Lun','Mar','Mié','Jue','Vie','Sáb'];
+    const horColumnas = [0,1,2,3,4,5].map((dia, idx) => {
+      const bloques = (S.horarios || []).filter(h => h.dia === dia).map(h => {
+        const iniMin = _tMin(h.horaIni), finMin = _tMin(h.horaFin);
+        const top = (iniMin - HOR_START_MIN) * PX_PER_MIN;
+        const height = Math.max(28, (finMin - iniMin) * PX_PER_MIN);
+        const mx = MATS.find(m => m.n === h.mat);
+        const col = (mx && mx.col) || h.col || '#4E6B33';
+        return { top, height, mat: h.mat, aula: h.aula || '', horaIni: h.horaIni || '', horaFin: h.horaFin || '', bg: col+'28', bd: col+'66', fg: col, eliminar: _mkDelHor(h.id) };
+      });
+      return { n: _DIAS_N[idx], bloques };
+    });
     const horLeyenda = [];
     const _horLeySet = new Set();
-    (S.horarios || []).forEach(h => { if (!_horLeySet.has(h.mat)) { _horLeySet.add(h.mat); horLeyenda.push({ n: h.mat, color: h.col || '#565B47' }); } });
+    (S.horarios || []).forEach(h => { if (!_horLeySet.has(h.mat)) { _horLeySet.add(h.mat); const mx = MATS.find(m => m.n === h.mat); horLeyenda.push({ n: h.mat, color: (mx && mx.col) || h.col || '#565B47' }); } });
 
     // --- PLAN DE ESTUDIO ---
     const cursandoList = MATS.filter(m => this.estadoDe(m) === 'cursando');
@@ -1871,16 +1927,47 @@ class Component extends DCLogic {
     };
 
     // --- FLASHCARDS ---
-    const flashDecksData = {};
-    const flashDecks = [].map(d => {
-      const on = S.flashDeckId === d.id;
-      const cant = (flashDecksData[d.id] || []).length;
-      return { n: d.n, cantidad: cant, pick: () => this.setState({ flashDeckId: d.id, flashIdx: 0, flashFlipped: false }), bd: on ? '#3B4A2F' : '#D3D8C2', bg: on ? '#3B4A2F' : '#F8F9F2', fg: on ? '#F2F5E6' : '#4B5240' };
+    const flashCardsAll = S.flashCards || {};
+    const flashDecksRaw = MATS.filter(m => (flashCardsAll[m.id] || []).length > 0);
+    const flashActDeckId = flashDecksRaw.find(m => m.id === S.flashDeckId) ? S.flashDeckId : (flashDecksRaw[0] ? flashDecksRaw[0].id : null);
+    const flashDecks = flashDecksRaw.map(m => {
+      const on = flashActDeckId === m.id;
+      const cant = (flashCardsAll[m.id] || []).length;
+      return { n: m.n, cantidad: cant, pick: () => this.setState({ flashDeckId: m.id, flashIdx: 0, flashFlipped: false }), bd: on ? '#3B4A2F' : '#D3D8C2', bg: on ? '#3B4A2F' : '#F8F9F2', fg: on ? '#F2F5E6' : '#4B5240' };
     });
-    const flashCards = flashDecksData[S.flashDeckId] || [];
-    const flashCard = flashCards[S.flashIdx] || { p: 'Todavía no cargaste flashcards', r: '' };
-    const flashActTotal = flashCards.length || 1;
-    const flashActN = flashCards.length ? (S.flashIdx + 1) : 0;
+    const flashDeckCards = flashCardsAll[flashActDeckId] || [];
+    const flashCard = flashDeckCards[S.flashIdx] || null;
+    const flashActTotal = flashDeckCards.length;
+    const flashActN = flashDeckCards.length ? (S.flashIdx + 1) : 0;
+    const flashPrev = () => this.setState({ flashIdx: Math.max(0, S.flashIdx - 1), flashFlipped: false });
+    const flashNext = () => this.setState({ flashIdx: S.flashIdx + 1 < flashDeckCards.length ? S.flashIdx + 1 : 0, flashFlipped: false });
+    const flashBorrar = () => {
+      if (!confirm('¿Eliminar esta flashcard?')) return;
+      const deck = flashDeckCards.filter((_, i) => i !== S.flashIdx);
+      const updated = Object.assign({}, flashCardsAll, { [flashActDeckId]: deck });
+      this.saveUserKey('flashCards', updated);
+      this.setState({ flashCards: updated, flashIdx: Math.max(0, Math.min(S.flashIdx, deck.length - 1)), flashFlipped: false });
+    };
+    const abrirAddFlash = () => this.setState({ flashModal: true, flashFormP: '', flashFormR: '', flashFormMat: flashActDeckId || (MATS[0] && MATS[0].id) || '', flashFormErr: null });
+    const cerrarFlashModal = () => this.setState({ flashModal: false, flashFormErr: null });
+    const setFlashP = e => this.setState({ flashFormP: e.target.value });
+    const setFlashR = e => this.setState({ flashFormR: e.target.value });
+    const setFlashMat = e => this.setState({ flashFormMat: e.target.value });
+    const guardarFlash = () => {
+      const p = (S.flashFormP || '').trim(), r = (S.flashFormR || '').trim(), mid = S.flashFormMat;
+      if (!p) return this.setState({ flashFormErr: 'Escribí el frente de la tarjeta.' });
+      if (!r) return this.setState({ flashFormErr: 'Escribí el dorso de la tarjeta.' });
+      if (!mid) return this.setState({ flashFormErr: 'Elegí una materia.' });
+      const nueva = { id: 'fc' + Date.now().toString(36), p, r };
+      const deck = [...(flashCardsAll[mid] || []), nueva];
+      const updated = Object.assign({}, flashCardsAll, { [mid]: deck });
+      this.saveUserKey('flashCards', updated);
+      const newIdx = deck.length - 1;
+      this.setState({ flashCards: updated, flashDeckId: mid, flashModal: false, flashFormErr: null, flashIdx: newIdx, flashFlipped: false });
+    };
+    const flashMatOpts = MATS.map(m => ({ v: m.id, n: m.n }));
+    const flashCerrarOverlay = (e) => { if (e.target === e.currentTarget) cerrarFlashModal(); };
+    const flashStopProp = (e) => e.stopPropagation();
 
     // --- EXAMEN ---
     const examOpc = [];
@@ -1977,7 +2064,7 @@ class Component extends DCLogic {
     const setParMat = e => this.setState({ parForm: Object.assign({}, S.parForm, { mat: e.target.value }) });
     const setParCat = e => this.setState({ parForm: Object.assign({}, S.parForm, { cat: e.target.value }) });
     const setParAnio = e => this.setState({ parForm: Object.assign({}, S.parForm, { anio: e.target.value }) });
-    const parTipoLista = ['Parcial 1','Parcial 2','Recuperatorio','Final','TP','Resumen'];
+    const parTipoLista = ['Parcial 1','Parcial 2','Recuperatorio','Final','TP','Resumen','Apunte','Bibliografía','Otro'];
     const parTipoOpts = parTipoLista.map(t => {
       const on = S.parForm.tipo === t;
       return { label: t, pick: () => this.setState({ parForm: Object.assign({}, S.parForm, { tipo: t }) }), bd: on ? '#3B4A2F' : '#D3D8C2', bg: on ? '#3B4A2F' : '#F8F9F2', fg: on ? '#F2F5E6' : '#4B5240' };
@@ -2002,25 +2089,12 @@ class Component extends DCLogic {
     const guardarParcial = () => {
       const f = S.parForm;
       if (!f.mat) { this.setState({ __parErr:'Elegí una materia.' }); return; }
-      if (!f.cat.trim()) { this.setState({ __parErr:'Poné el nombre de la cátedra.' }); return; }
       if (!f.base64) { this.setState({ __parErr:'Adjuntá un archivo.' }); return; }
       const materia = _matAll(f.mat);
       const nuevo = { id: 'p' + Date.now().toString(36), matId: f.mat, matNombre: materia ? materia.n : 'Materia', col: materia ? materia.col : '#565B47', cat: f.cat.trim(), tipo: f.tipo, anio: f.anio.trim() || '2026', filename: f.filename, base64: f.base64, mime: f.mime, descargas: 0, subidoPor: (S.user && (S.user.apodo || S.user.nombre)) || 'vos' };
       const updated = [nuevo, ...S.uploads];
       this.saveUserKey('uploads', updated);
       this.setState({ uploads: updated, modal:null, __parErr:null });
-    };
-    const descargarSubido = (b) => () => {
-      try {
-        const link = document.createElement('a');
-        link.href = 'data:' + (b.mime || 'application/octet-stream') + ';base64,' + b.base64;
-        link.download = b.filename || (b.matNombre + '_' + b.tipo + '.pdf');
-        document.body.appendChild(link); link.click(); document.body.removeChild(link);
-        // Aumentar contador de descargas
-        const updated = S.uploads.map(u => u.id === b.id ? Object.assign({}, u, { descargas: (u.descargas||0)+1 }) : u);
-        this.saveUserKey('uploads', updated);
-        this.setState({ uploads: updated });
-      } catch(e){}
     };
     // --- EVENTOS: acciones ---
     const abrirAddEv = () => this.setState({ modal: 'addEv', evForm: { id:'', mid: (MATS[0] && MATS[0].id) || '', f: (function(){const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');})(), tipo:'Parcial', titulo:'' } });
@@ -2114,13 +2188,6 @@ class Component extends DCLogic {
       this.setState({ matForm: Object.assign({}, S.matForm, { notas: arr }) });
     };
     const matFormNotas = (S.matForm.notas || []).map((nt, i) => ({ n: nt.n, v: nt.v, setN: setNotaMatN(i), setV: setNotaMatV(i), remove: removeNotaMat(i) }));
-
-        const eliminarSubido = (b) => () => {
-      if (!confirm('¿Eliminar este parcial subido?')) return;
-      const updated = S.uploads.filter(u => u.id !== b.id);
-      this.saveUserKey('uploads', updated);
-      this.setState({ uploads: updated });
-    };
 
     // --- POMODORO ---
     const pomoBars = [];
@@ -2224,21 +2291,21 @@ class Component extends DCLogic {
     // Config: navegación y handlers
     const irConfig = () => this.setState({ screen: 'config' });
     const irCalendario = () => this.setState({ screen: 'calendario' });
-    const resetTodo = () => {
+    const resetTodo = async () => {
       if (!S.user) return;
       if (!confirm('¿Seguro que querés borrar TODOS tus datos? Esta acción no se puede deshacer.')) return;
       const confirm2 = prompt('Escribí BORRAR para confirmar:');
       if (confirm2 !== 'BORRAR') return;
-      try {
-        const prefix = 'mate_' + S.user.email + '_';
-        ['materias','notas','uploads','chatConvos','cuatri','eventos','horarios','pomoHours'].forEach(k => localStorage.removeItem(prefix + k));
-      } catch(e){}
+      const sb = window.mateSb;
+      if (sb && S.user.id) {
+        await sb.from('user_kv').delete().eq('user_id', S.user.id);
+      }
       this.setState({ userMats: [], notas: {}, uploads: [], chatConvos: {}, cuatri: null, eventos: [], horarios: [], pomoHours: {}, cuatriForm: { ini:'', fin:'' }, screen: 'inicio', materiaId: null });
     };
     const setBackendUrl = (e) => this.setState({ backendUrlBuf: e.target.value, backendMsg: '', backendMsgKind: '' });
     const guardarBackendUrl = () => {
       const url = (S.backendUrlBuf || '').trim().replace(/\/+$/, '');
-      try { localStorage.setItem('mate_backend_url', url); } catch(e){}
+      this.saveUserKey('backendUrl', url);
       this.setState({ backendUrl: url, backendMsg: 'Guardado ✓', backendMsgKind: 'ok' });
     };
     const probarBackend = async () => {
@@ -2294,7 +2361,7 @@ class Component extends DCLogic {
       esHorarios: screen === 'horarios', esPlan: screen === 'plan', esChat: screen === 'chatm',
       esFlash: screen === 'flash', esExamen: screen === 'examen', esBanco: screen === 'banco',
       esGrupos: screen === 'grupos', esPomo: screen === 'pomo',
-      horDias, horFilas, horLeyenda,
+      horTotalH, horTimeLabels, horColumnas, horLeyenda,
       planMat, planFecha, planDias, planMaterias, planSemanas,
       chatMaterias, chatActMat, chatMensajes,
       chatInput: S.chatInput, chatSetInput, chatSetPdf, chatQuitarPdf, chatLimpiar, chatEnviar, chatOnKey,
@@ -2304,8 +2371,8 @@ class Component extends DCLogic {
       chatEnviarDisabled: S.chatSending || (!(S.chatInput || '').trim() && !S.chatPdfPending),
       chatEnviarBg: S.chatSending ? '#8F887F' : '#3B4A2F',
       chatEnviarCursor: S.chatSending ? 'wait' : 'pointer',
-      horVacio: Object.keys(horBloques).length === 0,
-      horLleno: Object.keys(horBloques).length > 0,
+      horVacio: (S.horarios || []).length === 0,
+      horLleno: (S.horarios || []).length > 0,
       planVacio: planSemanas.length === 0 || (planSemanas[0] && planSemanas[0].temas.length === 0),
       flashVacio: flashDecks.length === 0,
       flashLleno: flashDecks.length > 0,
@@ -2321,7 +2388,7 @@ class Component extends DCLogic {
       esModalHor: S.modal === 'addHor',
       evForm: S.evForm, setEvMid, setEvF, setEvTitulo, evTipoOpts, evMatOpts, guardarEv,
       hayEvError: !!S.__evErr, evError: S.__evErr || '',
-      horForm: S.horForm, setHorDia, setHorHora, setHorMat, setHorAula, horDiasOpts, horHorasOpts, horMatOpts, guardarHor,
+      horForm: S.horForm, setHorDia, setHorIni, setHorFin, setHorMat, setHorAula, horDiasOpts, horHorasOpts, horMatOpts, guardarHor,
       hayHorError: !!S.__horErr, horError: S.__horErr || '',
       pomoTiempo, pomoRunning: S.pomoState.running, pomoStopped: !S.pomoState.running,
       pomoTiempoColor: S.pomoState.running ? '#3B4A2F' : '#565B47',
@@ -2339,9 +2406,14 @@ class Component extends DCLogic {
       setMatFinal, toggleAsis, setAsisP, setAsisT, setAsisMin,
       addNotaMat, matFormNotas,
       hayProx, noHayProx: !hayProx,
-      flashDecks, flashPregunta: flashCard.p, flashRespuesta: flashCard.r,
+      flashDecks, flashPregunta: flashCard ? flashCard.p : '', flashRespuesta: flashCard ? flashCard.r : '',
       flashFrente: !S.flashFlipped, flashDorso: S.flashFlipped, flashActN, flashActTotal,
       flashFlip: () => this.setState({ flashFlipped: !S.flashFlipped }),
+      flashPrev, flashNext, flashBorrar,
+      abrirAddFlash, cerrarFlashModal, setFlashP, setFlashR, setFlashMat, guardarFlash,
+      flashModalOn: S.flashModal, flashFormP: S.flashFormP, flashFormR: S.flashFormR, flashFormMat: S.flashFormMat,
+      flashMatOpts, flashHayErr: !!S.flashFormErr, flashErr: S.flashFormErr || '',
+      flashCerrarOverlay, flashStopProp,
       flashNext: () => this.setState({ flashIdx: (S.flashIdx + 1) % Math.max(1, flashCards.length), flashFlipped: false }),
       flashPrev: () => this.setState({ flashIdx: (S.flashIdx - 1 + flashCards.length) % Math.max(1, flashCards.length), flashFlipped: false }),
       examOpc, bancoItems, gruposItems, pomoBars, pomoTotal: pomoTotalH + ' hs',
@@ -2376,7 +2448,7 @@ class Component extends DCLogic {
       backendMsgBd:    S.backendMsgKind === 'err' ? '#E2CBAE' : (S.backendMsgKind === 'ok' ? '#C5CFB0' : '#DDE1D0'),
       padBottom: isMobile ? '96px' : 'clamp(18px,3.5vw,40px)',
       cardPad: dens === 'compacta' ? '13px' : '16px',
-      celdaAlto: isMobile ? '46px' : '74px',
+      celdaAlto: isMobile ? '52px' : '82px',
       mostrarAvisos: this.props.mostrarAvisos !== false && avisos.length > 0,
       esInicio: screen === 'inicio', esMaterias: screen === 'materias', esDetalle: screen === 'detalle',
       esCalendario: screen === 'calendario', esOtra: !conocidas.includes(screen),
