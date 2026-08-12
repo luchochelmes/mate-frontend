@@ -1661,14 +1661,14 @@ class Component extends DCLogic {
       });
 
     // Agrupar los que caen a < 2% de distancia
-    const grupos = [];
+    const tlGrupos = [];
     for (const ev of evsCuatri) {
-      const last = grupos[grupos.length-1];
+      const last = tlGrupos[tlGrupos.length-1];
       if (last && Math.abs(ev.pct - last.pct) < 2) {
         last.events.push(ev);
         last.pct = (last.pct + ev.pct) / 2; // promedio
       } else {
-        grupos.push({ pct: ev.pct, events: [ev] });
+        tlGrupos.push({ pct: ev.pct, events: [ev] });
       }
     }
 
@@ -1678,7 +1678,7 @@ class Component extends DCLogic {
       if (e && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); this.setState({ tlPop: grupo }); }
     };
 
-    const tlMarcadores = grupos.map(g => {
+    const tlMarcadores = tlGrupos.map(g => {
       const primero = g.events[0];
       const esGrupo = g.events.length > 1;
       const color = esGrupo ? '#3B4A2F' : primero.m.col;
