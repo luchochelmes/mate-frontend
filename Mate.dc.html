@@ -30,6 +30,7 @@
   @keyframes matein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
   @keyframes matepop{0%{transform:scale(1)}45%{transform:scale(1.18)}100%{transform:scale(1)}}
   @media (prefers-reduced-motion: reduce){*{animation-duration:.01ms !important;transition-duration:.01ms !important}}
+  @media (max-width:860px){input,select,textarea{font-size:16px !important}}
 </style>
 </helmet>
 <sc-if value="{{ noHayUsuario }}" hint-placeholder-val="{{ false }}">
@@ -115,7 +116,7 @@
     </nav>
   </sc-if>
 
-  <main style="flex:1;min-width:0;padding:clamp(18px,3.5vw,40px);padding-bottom:{{ padBottom }}">
+  <main style="flex:1;min-width:0;padding:clamp(18px,3.5vw,40px);padding-bottom:{{ padBottom }};padding-top:{{ padTop }}">
     <div style="max-width:1120px;margin:0 auto">
 
       <sc-if value="{{ esInicio }}" hint-placeholder-val="{{ true }}">
@@ -1118,14 +1119,46 @@
   </main>
 
   <sc-if value="{{ esMobile }}" hint-placeholder-val="{{ false }}">
-    <nav style="position:fixed;left:0;right:0;bottom:0;background:#3B4A2F;display:flex;padding:8px 8px calc(8px + env(safe-area-inset-bottom));gap:4px;z-index:20">
-      <sc-for list="{{ navPrincipal }}" as="it" hint-placeholder-count="3">
-        <button type="button" onClick="{{ it.go }}" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:5px;padding:8px 4px;border-radius:9px;background:{{ it.bg }};color:{{ it.fg }};font-size:12.5px;font-weight:{{ it.peso }}">
-          <span style="width:7px;height:7px;border-radius:999px;background:{{ it.punto }}"></span>
-          {{ it.label }}
-        </button>
-      </sc-for>
+    <nav style="position:fixed;left:0;right:0;top:0;background:#3B4A2F;color:#E7EBDA;display:flex;align-items:center;padding:0 14px;height:52px;z-index:20;gap:10px">
+      <button type="button" onClick="{{ abrirMenu }}" style="background:none;border:0;color:#E7EBDA;cursor:pointer;padding:6px 4px;display:flex;flex-direction:column;gap:5px;border-radius:6px" aria-label="Menú">
+        <span style="width:22px;height:2px;background:#C9D3A9;border-radius:2px;display:block"></span>
+        <span style="width:22px;height:2px;background:#C9D3A9;border-radius:2px;display:block"></span>
+        <span style="width:22px;height:2px;background:#C9D3A9;border-radius:2px;display:block"></span>
+      </button>
+      <span style="font-family:Fraunces,serif;font-weight:800;font-size:20px;letter-spacing:-0.01em">Mate</span>
+      <div style="margin-left:auto;width:30px;height:30px;border-radius:999px;background:#5C6E48;display:flex;align-items:center;justify-content:center;font-family:Fraunces,serif;font-weight:700;font-size:13px;color:#EDF1E0">{{ userInitials }}</div>
     </nav>
+    <sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+      <div style="position:fixed;inset:0;z-index:50;background:rgba(20,25,15,.5)" onClick="{{ cerrarMenu }}">
+        <div style="position:absolute;top:0;left:0;bottom:0;width:280px;background:#3B4A2F;color:#E7EBDA;display:flex;flex-direction:column;overflow:hidden" onClick="{{ menuStopProp }}">
+          <div style="display:flex;align-items:center;gap:10px;padding:14px 16px 12px;border-bottom:1px solid #4C5C3D">
+            <span style="font-family:Fraunces,serif;font-weight:800;font-size:22px">Mate</span>
+            <button type="button" onClick="{{ cerrarMenu }}" style="margin-left:auto;background:none;border:0;color:#B4C39A;font-size:26px;cursor:pointer;padding:0 4px;line-height:1">×</button>
+          </div>
+          <div style="flex:1;padding:8px 10px;display:flex;flex-direction:column;gap:2px;overflow-y:auto">
+            <sc-for list="{{ navMenuMobile }}" as="sec" hint-placeholder-count="3">
+              <div style="font-family:'Instrument Sans',sans-serif;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#AEBE90;padding:10px 12px 4px">{{ sec.titulo }}</div>
+              <sc-for list="{{ sec.items }}" as="it" hint-placeholder-count="3">
+                <button type="button" onClick="{{ it.go }}" style="display:flex;align-items:center;gap:10px;text-align:left;padding:11px 12px;border-radius:9px;background:{{ it.bg }};color:{{ it.fg }};font-size:14.5px;font-weight:{{ it.peso }};border:0;cursor:pointer;width:100%">
+                  <span style="width:6px;height:6px;border-radius:999px;background:{{ it.punto }};flex-shrink:0"></span>
+                  {{ it.label }}
+                </button>
+              </sc-for>
+            </sc-for>
+          </div>
+          <div style="border-top:1px solid #4C5C3D;padding:14px 16px;display:flex;flex-direction:column;gap:8px">
+            <div style="display:flex;align-items:center;gap:10px">
+              <div style="width:32px;height:32px;border-radius:999px;background:#5C6E48;display:flex;align-items:center;justify-content:center;font-family:Fraunces,serif;font-weight:700;font-size:14px;color:#EDF1E0;flex-shrink:0">{{ userInitials }}</div>
+              <div style="display:flex;flex-direction:column;min-width:0;flex:1">
+                <span style="font-size:13.5px;font-weight:600;color:#EDF1E0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ userDisplayName }}</span>
+                <span style="font-size:11.5px;color:#AEBE90;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ userCarrera }}</span>
+              </div>
+            </div>
+            <button type="button" onClick="{{ doLogout }}" style="display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:8px;font-size:13px;color:#B4C39A;border:0;cursor:pointer;background:none">↩ Cerrar sesión</button>
+          </div>
+        </div>
+      </div>
+    </sc-if>
   </sc-if>
 </div>
 </sc-if>
@@ -1133,7 +1166,7 @@
 
 <sc-if value="{{ modalOpen }}" hint-placeholder-val="{{ false }}">
   <div style="position:fixed;inset:0;background:rgba(20,25,15,.55);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px" onClick="{{ modalOverlayClick }}">
-    <div style="background:#F8F9F2;border-radius:16px;padding:28px 28px 24px;max-width:520px;width:100%;max-height:90vh;overflow-y:auto;display:flex;flex-direction:column;gap:16px">
+    <div style="background:#F8F9F2;border-radius:16px;padding:{{ modalPad }};max-width:520px;width:100%;max-height:90vh;overflow-y:auto;display:flex;flex-direction:column;gap:16px">
 
       <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
         <h2 style="margin:0;font-family:Fraunces,serif;font-weight:800;font-size:22px;letter-spacing:-0.01em">{{ modalTitle }}</h2>
@@ -1398,7 +1431,8 @@ class Component extends DCLogic {
     flashCards: {}, flashDeckId: null, flashIdx: 0, flashFlipped: false,
     flashModal: false, flashFormP: '', flashFormR: '', flashFormMat: '', flashFormErr: null,
     chatSel: 'amii',
-    planMid: 'amii'
+    planMid: 'amii',
+    menuOpen: false
   };
 
   componentDidMount() {
@@ -1767,6 +1801,14 @@ class Component extends DCLogic {
       { titulo: 'Estudio',      keys: [['horarios','Horarios'],['plan','Plan de estudio'],['chatm','Chat'],['flash','Flashcards'],['examen','Modo examen'],['banco','Banco de parciales']] },
       { titulo: 'Herramientas', keys: [['grupos','Grupos'],['pomo','Pomodoro'],['config','Configuración']] }
     ];
+    const goMenu = s => () => this.setState({ screen: s, materiaId: null, menuOpen: false });
+    const navMenuMobile = navSecDef.map(sec => ({
+      titulo: sec.titulo,
+      items: sec.keys.map(([k, label]) => {
+        const on = screen === k || (k === 'materias' && screen === 'detalle');
+        return { label, go: goMenu(k), bg: on ? '#4A5B3B' : 'rgba(0,0,0,0)', fg: on ? '#F2F5E6' : '#B9C7A0', peso: on ? 700 : 500, punto: on ? '#C9D3A9' : 'rgba(201,211,169,.35)' };
+      })
+    }));
     const navSections = navSecDef.map(sec => ({
       titulo: sec.titulo,
       items: sec.keys.map(([k, label]) => {
@@ -2346,8 +2388,13 @@ class Component extends DCLogic {
       chatMatDir: isMobile ? 'row' : 'column',
       chatMatOverflow: isMobile ? 'auto' : 'visible',
       chatMatLabelVis: isMobile ? 'none' : 'block',
-      navPrincipal, // legacy: mobile bottom nav
-      navSections,  // desktop grouped nav
+      navPrincipal, navSections, navMenuMobile,
+      menuOpen: S.menuOpen,
+      abrirMenu: () => this.setState({ menuOpen: true }),
+      cerrarMenu: () => this.setState({ menuOpen: false }),
+      menuStopProp: e => e.stopPropagation(),
+      padTop: isMobile ? '52px' : '0px',
+      modalPad: isMobile ? '16px 16px 20px' : '28px 28px 24px',
       hayUsuario, noHayUsuario: !hayUsuario,
       modoLogin: S.authMode === 'login', modoRegister: S.authMode === 'register',
       form: S.form, authTabs, doAuth, doLogout,
@@ -2447,7 +2494,7 @@ class Component extends DCLogic {
       backendMsgColor: S.backendMsgKind === 'err' ? '#9B3B28' : (S.backendMsgKind === 'ok' ? '#3B4A2F' : '#565B47'),
       backendMsgBg:    S.backendMsgKind === 'err' ? '#F3E1DC' : (S.backendMsgKind === 'ok' ? '#E1E7D2' : '#EFF1E6'),
       backendMsgBd:    S.backendMsgKind === 'err' ? '#E2CBAE' : (S.backendMsgKind === 'ok' ? '#C5CFB0' : '#DDE1D0'),
-      padBottom: isMobile ? '96px' : 'clamp(18px,3.5vw,40px)',
+      padBottom: 'clamp(18px,3.5vw,40px)',
       cardPad: dens === 'compacta' ? '13px' : '16px',
       celdaAlto: isMobile ? '52px' : '82px',
       mostrarAvisos: this.props.mostrarAvisos !== false && avisos.length > 0,
