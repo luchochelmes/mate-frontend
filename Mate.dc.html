@@ -462,7 +462,7 @@
         <section data-screen-label="Calendario" style="animation:matein .3s ease both;display:flex;flex-direction:column;gap:20px">
           <header style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:14px">
             <h1 style="margin:0;font-family:Fraunces,serif;font-weight:800;font-size:clamp(26px,4vw,36px);letter-spacing:-0.02em">Calendario</h1>
-            <button type="button" style="background:#3B4A2F;color:#EDF1E0;border-radius:9px;padding:10px 16px;font-size:14.5px;font-weight:600;transition:background .18s ease" style-hover="background:#2E3A25">Agregá un evento</button>
+            <button type="button" onClick="{{ abrirAddEv }}" style="background:#3B4A2F;color:#EDF1E0;border-radius:9px;padding:10px 16px;font-size:14.5px;font-weight:600;transition:background .18s ease;cursor:pointer;border:0" style-hover="background:#2E3A25">+ Agregá un evento</button>
           </header>
 
           <div style="display:flex;gap:4px;background:#E3E6D6;border-radius:10px;padding:4px;align-self:flex-start">
@@ -557,7 +557,7 @@
               <div style="font-family:'Instrument Sans',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#565B47">Semana en curso</div>
               <h1 style="margin:0;font-family:Fraunces,serif;font-weight:800;font-size:clamp(26px,4vw,36px);letter-spacing:-0.02em">Tu grilla semanal</h1>
             </div>
-            <button type="button" style="background:#3B4A2F;color:#EDF1E0;border-radius:9px;padding:10px 16px;font-size:14.5px;font-weight:600">Agregar bloque</button>
+            <button type="button" onClick="{{ abrirAddHor }}" style="background:#3B4A2F;color:#EDF1E0;border-radius:9px;padding:10px 16px;font-size:14.5px;font-weight:600;cursor:pointer;border:0">+ Agregar bloque</button>
           </header>
           <sc-if value="{{ horVacio }}" hint-placeholder-val="{{ true }}">
             <div style="background:#F8F9F2;border:1px dashed #C9CEB8;border-radius:14px;padding:44px 24px;text-align:center;color:#565B47;display:flex;flex-direction:column;gap:8px;align-items:center">
@@ -905,16 +905,29 @@
           </header>
           <div style="background:#F8F9F2;border:1px solid #DDE1D0;border-radius:16px;padding:36px;display:flex;flex-direction:column;align-items:center;gap:22px">
             <div style="display:flex;gap:4px;background:#E3E6D6;border-radius:10px;padding:4px">
-              <button type="button" style="font-size:13.5px;font-weight:700;border-radius:7px;padding:7px 14px;background:#F8F9F2;color:#23281C">Foco 25</button>
-              <button type="button" style="font-size:13.5px;font-weight:500;border-radius:7px;padding:7px 14px;color:#565B47">Descanso 5</button>
-              <button type="button" style="font-size:13.5px;font-weight:500;border-radius:7px;padding:7px 14px;color:#565B47">Descanso largo 15</button>
+              <button type="button" onClick="{{ pomoSetModeFoco }}" style="font-size:13.5px;font-weight:{{ pomoBtnFocoPeso }};border-radius:7px;padding:7px 14px;background:{{ pomoBtnFocoBg }};color:{{ pomoBtnFocoFg }};cursor:pointer;border:0">Foco 25</button>
+              <button type="button" onClick="{{ pomoSetModeDescanso }}" style="font-size:13.5px;font-weight:{{ pomoBtnDescPeso }};border-radius:7px;padding:7px 14px;background:{{ pomoBtnDescBg }};color:{{ pomoBtnDescFg }};cursor:pointer;border:0">Descanso 5</button>
+              <button type="button" onClick="{{ pomoSetModeLargo }}" style="font-size:13.5px;font-weight:{{ pomoBtnLargoPeso }};border-radius:7px;padding:7px 14px;background:{{ pomoBtnLargoBg }};color:{{ pomoBtnLargoFg }};cursor:pointer;border:0">Descanso largo 15</button>
             </div>
-            <div style="font-family:Fraunces,serif;font-weight:800;font-size:clamp(96px,15vw,140px);letter-spacing:-0.04em;line-height:1;color:#3B4A2F">25:00</div>
-            <div style="display:flex;gap:12px">
-              <button type="button" style="background:#3B4A2F;color:#EDF1E0;border-radius:10px;padding:14px 30px;font-size:15px;font-weight:600">▶ Iniciar</button>
-              <button type="button" style="border:1px solid #DDE1D0;background:#F8F9F2;color:#23281C;border-radius:10px;padding:14px 24px;font-size:15px">Reiniciar</button>
+            <div style="font-family:Fraunces,serif;font-weight:800;font-size:clamp(96px,15vw,140px);letter-spacing:-0.04em;line-height:1;color:{{ pomoTiempoColor }}">{{ pomoTiempo }}</div>
+            <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center">
+              <sc-if value="{{ pomoRunning }}" hint-placeholder-val="{{ false }}">
+                <button type="button" onClick="{{ pomoPause }}" style="background:#8A5A3B;color:#EDF1E0;border-radius:10px;padding:14px 30px;font-size:15px;font-weight:600;cursor:pointer;border:0">⏸ Pausar</button>
+              </sc-if>
+              <sc-if value="{{ pomoStopped }}" hint-placeholder-val="{{ true }}">
+                <button type="button" onClick="{{ pomoStart }}" style="background:#3B4A2F;color:#EDF1E0;border-radius:10px;padding:14px 30px;font-size:15px;font-weight:600;cursor:pointer;border:0">▶ Iniciar</button>
+              </sc-if>
+              <button type="button" onClick="{{ pomoReset }}" style="border:1px solid #DDE1D0;background:#F8F9F2;color:#23281C;border-radius:10px;padding:14px 24px;font-size:15px;cursor:pointer">Reiniciar</button>
             </div>
-            <div style="font-size:13px;color:#565B47">Estudiando: <strong style="color:#23281C">Análisis Matemático II</strong></div>
+            <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center">
+              <label style="font-size:13px;color:#565B47">Estudiando:</label>
+              <select onChange="{{ pomoSetMat }}" value="{{ pomoActMatId }}" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:8px 10px;font-size:13.5px;font-family:inherit;color:#23281C">
+                <option value="">— elegí materia —</option>
+                <sc-for list="{{ pomoMatOpts }}" as="o" hint-placeholder-count="3">
+                  <option value="{{ o.v }}">{{ o.n }}</option>
+                </sc-for>
+              </select>
+            </div>
           </div>
           <div style="background:#F8F9F2;border:1px solid #DDE1D0;border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:14px">
             <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
@@ -1060,6 +1073,47 @@
               </sc-for>
             </div>
           </div>
+          <div style="border-top:1px solid #E2E5D5;padding-top:14px;display:flex;flex-direction:column;gap:10px">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
+              <div style="font-family:'Instrument Sans',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#565B47">Notas</div>
+              <button type="button" onClick="{{ addNotaMat }}" style="background:none;border:0;color:#8A5A3B;text-decoration:underline;cursor:pointer;font-size:13px;padding:0">+ Agregar nota</button>
+            </div>
+            <sc-for list="{{ matFormNotas }}" as="nt" hint-placeholder-count="2">
+              <div style="display:flex;gap:6px;align-items:center">
+                <input type="text" placeholder="Nombre (ej: Parcial 1)" value="{{ nt.n }}" onInput="{{ nt.setN }}" style="flex:2;border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:8px 10px;font-size:13.5px;font-family:inherit;color:#23281C">
+                <input type="number" step="0.5" min="0" max="10" placeholder="Nota" value="{{ nt.v }}" onInput="{{ nt.setV }}" style="width:80px;border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:8px 10px;font-size:13.5px;font-family:inherit;color:#23281C">
+                <button type="button" onClick="{{ nt.remove }}" style="background:none;border:0;color:#9B3B28;cursor:pointer;font-size:16px;padding:0 8px" aria-label="Quitar nota">×</button>
+              </div>
+            </sc-for>
+            <div style="display:flex;gap:6px;align-items:center">
+              <label style="flex:2;font-size:13px;color:#565B47">Nota final (opcional)</label>
+              <input type="number" step="0.5" min="0" max="10" placeholder="—" value="{{ matForm.final }}" onInput="{{ setMatFinal }}" style="width:80px;border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:8px 10px;font-size:13.5px;font-family:inherit;color:#23281C">
+            </div>
+          </div>
+
+          <div style="border-top:1px solid #E2E5D5;padding-top:14px;display:flex;flex-direction:column;gap:10px">
+            <label style="display:flex;align-items:center;gap:10px;cursor:pointer">
+              <input type="checkbox" checked="{{ matForm.asisOn }}" onChange="{{ toggleAsis }}" style="width:16px;height:16px;accent-color:#3B4A2F;cursor:pointer">
+              <span style="font-family:'Instrument Sans',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#565B47">Llevar asistencia</span>
+            </label>
+            <sc-if value="{{ matForm.asisOn }}" hint-placeholder-val="{{ false }}">
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+                <div style="display:flex;flex-direction:column;gap:4px">
+                  <label style="font-size:12px;color:#565B47">Presentes</label>
+                  <input type="number" min="0" value="{{ matForm.asisP }}" onInput="{{ setAsisP }}" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:8px 10px;font-size:13.5px;font-family:inherit;color:#23281C">
+                </div>
+                <div style="display:flex;flex-direction:column;gap:4px">
+                  <label style="font-size:12px;color:#565B47">Totales</label>
+                  <input type="number" min="0" value="{{ matForm.asisT }}" onInput="{{ setAsisT }}" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:8px 10px;font-size:13.5px;font-family:inherit;color:#23281C">
+                </div>
+                <div style="display:flex;flex-direction:column;gap:4px">
+                  <label style="font-size:12px;color:#565B47">Mínimo %</label>
+                  <input type="number" min="0" max="100" value="{{ matForm.asisMin }}" onInput="{{ setAsisMin }}" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:8px 10px;font-size:13.5px;font-family:inherit;color:#23281C">
+                </div>
+              </div>
+            </sc-if>
+          </div>
+
           <sc-if value="{{ hayMatError }}" hint-placeholder-val="{{ false }}">
             <div style="font-size:13px;color:#9B3B28;background:#F3E1DC;border:1px solid #E2CBAE;border-radius:8px;padding:8px 12px">{{ matError }}</div>
           </sc-if>
@@ -1076,6 +1130,86 @@
           <div style="display:flex;gap:10px;justify-content:flex-end">
             <button type="button" onClick="{{ cerrarModal }}" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 16px;font-size:14px;color:#565B47">Cancelar</button>
             <button type="button" onClick="{{ confirmarDelMat }}" style="background:#9B3B28;color:#F8F9F2;border-radius:8px;padding:10px 18px;font-size:14px;font-weight:600">Eliminar</button>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ esModalEv }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <label style="font-size:12px;color:#565B47">Materia</label>
+            <select onChange="{{ setEvMid }}" value="{{ evForm.mid }}" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
+              <sc-for list="{{ evMatOpts }}" as="o" hint-placeholder-count="4">
+                <option value="{{ o.v }}">{{ o.n }}</option>
+              </sc-for>
+            </select>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <label style="font-size:12px;color:#565B47">Fecha</label>
+              <input type="date" value="{{ evForm.f }}" onInput="{{ setEvF }}" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <label style="font-size:12px;color:#565B47">Tipo</label>
+              <div style="display:flex;flex-wrap:wrap;gap:5px">
+                <sc-for list="{{ evTipoOpts }}" as="t" hint-placeholder-count="4">
+                  <button type="button" onClick="{{ t.pick }}" style="font-size:12px;border:1px solid {{ t.bd }};background:{{ t.bg }};color:{{ t.fg }};border-radius:999px;padding:4px 10px">{{ t.label }}</button>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <label style="font-size:12px;color:#565B47">Título</label>
+            <input type="text" placeholder="Ej: Parcial 1, TP integrador..." value="{{ evForm.titulo }}" onInput="{{ setEvTitulo }}" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
+          </div>
+          <sc-if value="{{ hayEvError }}" hint-placeholder-val="{{ false }}">
+            <div style="font-size:13px;color:#9B3B28;background:#F3E1DC;border:1px solid #E2CBAE;border-radius:8px;padding:8px 12px">{{ evError }}</div>
+          </sc-if>
+          <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:6px">
+            <button type="button" onClick="{{ cerrarModal }}" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 16px;font-size:14px;color:#565B47">Cancelar</button>
+            <button type="button" onClick="{{ guardarEv }}" style="background:#3B4A2F;color:#EDF1E0;border-radius:8px;padding:10px 18px;font-size:14px;font-weight:600">Guardar evento</button>
+          </div>
+        </div>
+      </sc-if>
+
+      <sc-if value="{{ esModalHor }}" hint-placeholder-val="{{ false }}">
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <label style="font-size:12px;color:#565B47">Día</label>
+              <select onChange="{{ setHorDia }}" value="{{ horForm.dia }}" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
+                <sc-for list="{{ horDiasOpts }}" as="d" hint-placeholder-count="6">
+                  <option value="{{ d.v }}">{{ d.n }}</option>
+                </sc-for>
+              </select>
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <label style="font-size:12px;color:#565B47">Hora</label>
+              <select onChange="{{ setHorHora }}" value="{{ horForm.hora }}" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
+                <sc-for list="{{ horHorasOpts }}" as="h" hint-placeholder-count="12">
+                  <option value="{{ h }}">{{ h }}</option>
+                </sc-for>
+              </select>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <label style="font-size:12px;color:#565B47">Materia</label>
+            <select onChange="{{ setHorMat }}" value="{{ horForm.mat }}" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
+              <sc-for list="{{ horMatOpts }}" as="o" hint-placeholder-count="4">
+                <option value="{{ o.v }}">{{ o.n }}</option>
+              </sc-for>
+            </select>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <label style="font-size:12px;color:#565B47">Aula (opcional)</label>
+            <input type="text" placeholder="Ej: Aula 12, Lab 3" value="{{ horForm.aula }}" onInput="{{ setHorAula }}" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
+          </div>
+          <sc-if value="{{ hayHorError }}" hint-placeholder-val="{{ false }}">
+            <div style="font-size:13px;color:#9B3B28;background:#F3E1DC;border:1px solid #E2CBAE;border-radius:8px;padding:8px 12px">{{ horError }}</div>
+          </sc-if>
+          <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:6px">
+            <button type="button" onClick="{{ cerrarModal }}" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 16px;font-size:14px;color:#565B47">Cancelar</button>
+            <button type="button" onClick="{{ guardarHor }}" style="background:#3B4A2F;color:#EDF1E0;border-radius:8px;padding:10px 18px;font-size:14px;font-weight:600">Agregar bloque</button>
           </div>
         </div>
       </sc-if>
@@ -1159,11 +1293,15 @@ class Component extends DCLogic {
     authError: null, showPass: false,
     modal: null,
     userMats: null, notas: {}, uploads: [],
-    matForm: { id:'', n:'', cat:'', col:'#4E6B33', est:'cursando' },
+    matForm: { id:'', n:'', cat:'', col:'#4E6B33', est:'cursando', notas:[], final:'', asisOn:false, asisP:0, asisT:0, asisMin:75 },
     parForm: { mat:'', cat:'', tipo:'Parcial 1', anio:'2026', filename:'', base64:'', mime:'' },
     notasBuf: '',
     confirmDelId: null,
     cuatri: null,
+    eventos: [], horarios: [],
+    pomoHours: {}, pomoState: { running: false, secLeft: 25*60, mode: 'foco', matId: null, sessionStart: null },
+    evForm: { id:'', mid:'', f:'', tipo:'Parcial', titulo:'' },
+    horForm: { id:'', dia: 0, hora: '08:00', mat:'', aula:'' },
     cuatriForm: { ini:'', fin:'' },
     tlPop: null,
     __cuatriErr: null,
@@ -1202,6 +1340,9 @@ class Component extends DCLogic {
       const notas = JSON.parse(localStorage.getItem(prefix + 'notas') || '{}');
       const uploads = JSON.parse(localStorage.getItem(prefix + 'uploads') || '[]');
       const cuatriRaw = localStorage.getItem(prefix + 'cuatri');
+      const eventos = JSON.parse(localStorage.getItem(prefix + 'eventos') || '[]');
+      const horarios = JSON.parse(localStorage.getItem(prefix + 'horarios') || '[]');
+      const pomoHours = JSON.parse(localStorage.getItem(prefix + 'pomoHours') || '{}');
       const chatConvos = JSON.parse(localStorage.getItem(prefix + 'chatConvos') || '{}');
       const cuatri = cuatriRaw ? JSON.parse(cuatriRaw) : null;
       let userMats;
@@ -1211,14 +1352,14 @@ class Component extends DCLogic {
         userMats = JSON.parse(JSON.stringify(this.MATERIAS));
         localStorage.setItem(prefix + 'materias', JSON.stringify(userMats));
       }
-      this.setState({ userMats, notas, uploads, chatConvos, cuatri, cuatriForm: cuatri ? { ini: cuatri.inicio, fin: cuatri.fin } : { ini:'', fin:'' } });
+      this.setState({ userMats, notas, uploads, chatConvos, cuatri, eventos, horarios, pomoHours, cuatriForm: cuatri ? { ini: cuatri.inicio, fin: cuatri.fin } : { ini:'', fin:'' } });
     } catch(e) {}
   }
   saveUserKey(key, val) {
     if (!this.state.user) return;
     try { localStorage.setItem('mate_' + this.state.user.email + '_' + key, JSON.stringify(val)); } catch(e){}
   }
-  componentWillUnmount() { window.removeEventListener('resize', this._r); }
+  componentWillUnmount() { window.removeEventListener('resize', this._r); if (this._pomoTimer) { clearInterval(this._pomoTimer); this._pomoTimer = null; } }
 
   estadoDe(m) { return this.state.estados[m.id] || m.est; }
   marca(estKey, op) {
@@ -1228,6 +1369,59 @@ class Component extends DCLogic {
   parse(s) { const p = s.split('-'); return new Date(+p[0], +p[1] - 1, +p[2]); }
   fmtCorto(d) { return d.getDate() + ' ' + this.MESES[d.getMonth()].slice(0, 3); }
   mat(id) { return this.MATERIAS.find(m => m.id === id); }
+
+  pomoStart() {
+    const S = this.state;
+    if (S.pomoState.running) return;
+    this.setState({ pomoState: Object.assign({}, S.pomoState, { running: true, sessionStart: Date.now() }) });
+    this._pomoTimer = setInterval(() => this.pomoTick(), 1000);
+  }
+  pomoPause() {
+    if (this._pomoTimer) { clearInterval(this._pomoTimer); this._pomoTimer = null; }
+    this.setState({ pomoState: Object.assign({}, this.state.pomoState, { running: false, sessionStart: null }) });
+  }
+  pomoReset() {
+    if (this._pomoTimer) { clearInterval(this._pomoTimer); this._pomoTimer = null; }
+    const mode = this.state.pomoState.mode;
+    const dur = mode === 'foco' ? 25*60 : (mode === 'descanso' ? 5*60 : 15*60);
+    this.setState({ pomoState: Object.assign({}, this.state.pomoState, { running: false, secLeft: dur, sessionStart: null }) });
+  }
+  pomoSetMode(mode) {
+    if (this._pomoTimer) { clearInterval(this._pomoTimer); this._pomoTimer = null; }
+    const dur = mode === 'foco' ? 25*60 : (mode === 'descanso' ? 5*60 : 15*60);
+    this.setState({ pomoState: Object.assign({}, this.state.pomoState, { running: false, secLeft: dur, mode, sessionStart: null }) });
+  }
+  pomoSetMat(matId) {
+    this.setState({ pomoState: Object.assign({}, this.state.pomoState, { matId }) });
+  }
+  pomoTick() {
+    const S = this.state, ps = S.pomoState;
+    if (!ps.running) return;
+    const newSec = ps.secLeft - 1;
+    if (newSec <= 0) {
+      // Sesión completada
+      if (this._pomoTimer) { clearInterval(this._pomoTimer); this._pomoTimer = null; }
+      const wasFoco = ps.mode === 'foco';
+      const nextMode = wasFoco ? 'descanso' : 'foco';
+      const nextDur = nextMode === 'foco' ? 25*60 : 5*60;
+      let newHours = S.pomoHours;
+      if (wasFoco && ps.matId) {
+        newHours = Object.assign({}, S.pomoHours);
+        newHours[ps.matId] = (newHours[ps.matId] || 0) + (25/60);
+        this.saveUserKey('pomoHours', newHours);
+      }
+      this.setState({ pomoHours: newHours, pomoState: { running: false, secLeft: nextDur, mode: nextMode, matId: ps.matId, sessionStart: null } });
+      try {
+        if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
+          new Notification(wasFoco ? '¡Sesión de foco completada!' : '¡Descanso terminado!', { body: wasFoco ? 'Tomate un descanso de 5 min.' : 'Volvé al foco 25 min.' });
+        } else if (typeof Notification !== 'undefined' && Notification.permission !== 'denied') {
+          Notification.requestPermission();
+        }
+      } catch(e) {}
+    } else {
+      this.setState({ pomoState: Object.assign({}, ps, { secLeft: newSec }) });
+    }
+  }
 
   renderVals() {
     const S = this.state, E = this.ESTADOS, hoy = this.HOY;
@@ -1246,7 +1440,7 @@ class Component extends DCLogic {
     const navFuturo = ['Horarios','Plan de estudio','Chat','Flashcards','Modo examen','Banco de parciales','Grupos','Pomodoro'].map(label => ({ label }));
 
     // --- próximos eventos ---
-    const futuros = this.EVENTOS.filter(e => this.parse(e.f) >= hoy).sort((a, b) => a.f < b.f ? -1 : 1);
+    const futuros = S.eventos.filter(e => this.parse(e.f) >= hoy).sort((a, b) => a.f < b.f ? -1 : 1);
     const p0 = futuros[0];
     const m0 = p0 ? _matAll(p0.mid) : null;
     const d0 = p0 ? this.parse(p0.f) : null;
@@ -1268,7 +1462,7 @@ class Component extends DCLogic {
     const promCon = (aprobadas.length + aplazoN) > 0 ? ((suma + aplazoV) / (aprobadas.length + aplazoN)).toFixed(2) : '—';
     const carreraPct = this.PLAN_TOTAL > 0 ? +(aprobadas.length / this.PLAN_TOTAL * 100).toFixed(1) : 0;
     const cursandoN = MATS.filter(m => this.estadoDe(m) === 'cursando').length;
-    const estaSemana = this.EVENTOS.filter(e => { const d = this.parse(e.f); const diff = (d - hoy) / 86400000; return diff >= 0 && diff < 14; }).length;
+    const estaSemana = S.eventos.filter(e => { const d = this.parse(e.f); const diff = (d - hoy) / 86400000; return diff >= 0 && diff < 14; }).length;
 
     // --- materias ---
     const conteo = {};
@@ -1310,7 +1504,7 @@ class Component extends DCLogic {
         const on = k === key, mk = this.marca(key);
         return { label: E[key].label, pick: () => this.setState({ estados: Object.assign({}, S.estados, { [m.id]: key }) }), bd: on ? E[key].color : '#D3D8C2', bg: on ? E[key].color : '#ECEEE3', fg: on ? '#F8F9F2' : '#4B5240', peso: on ? 700 : 500, marca: on ? '#F8F9F2' : mk.color, marcaBg: on ? 'rgba(248,249,242,.35)' : mk.bg, anim: on ? 'matepop .3s ease' : 'none' };
       });
-      const fechas = this.EVENTOS.filter(e => e.mid === m.id && this.parse(e.f) >= hoy).map(e => ({ fecha: this.fmtCorto(this.parse(e.f)), titulo: e.titulo, tipo: e.tipo }));
+      const fechas = S.eventos.filter(e => e.mid === m.id && this.parse(e.f) >= hoy).map(e => ({ fecha: this.fmtCorto(this.parse(e.f)), titulo: e.titulo, tipo: e.tipo }));
       const asisPct = m.asis.on ? Math.round(m.asis.p / m.asis.t * 100) : 0;
       const regDias = m.reg ? Math.round((this.parse(m.reg) - hoy) / 86400000) : 0;
       const regCerca = m.reg && regDias <= 45;
@@ -1338,15 +1532,15 @@ class Component extends DCLogic {
       const dnum = i - primerDia + 1;
       if (dnum < 1 || dnum > totalDias) { mesCeldas.push({ dia: '', bg: 'rgba(0,0,0,0)', bd: 'rgba(0,0,0,0)', numColor: '#C6CBB6', numPeso: 400, eventos: [] }); continue; }
       const iso = y + '-' + String(mo + 1).padStart(2, '0') + '-' + String(dnum).padStart(2, '0');
-      const evs = this.EVENTOS.filter(e => e.f === iso).map(e => { const m = _matAll(e.mid); const pasado = this.parse(e.f) < hoy; return { color: m.col, op: pasado ? 0.32 : 1 }; });
+      const evs = S.eventos.filter(e => e.f === iso).map(e => { const m = _matAll(e.mid); const pasado = this.parse(e.f) < hoy; return { color: m.col, op: pasado ? 0.32 : 1 }; });
       const esHoy = y === hoy.getFullYear() && mo === hoy.getMonth() && dnum === hoy.getDate();
       mesCeldas.push({ dia: dnum, bg: esHoy ? '#3B4A2F' : '#EFF1E6', bd: esHoy ? '#3B4A2F' : '#E4E7D8', numColor: esHoy ? '#EDF1E0' : '#5B6151', numPeso: esHoy ? 600 : 400, eventos: evs });
     }
-    const leyenda = [...new Set(this.EVENTOS.filter(e => { const d = this.parse(e.f); return d.getMonth() === mo && d.getFullYear() === y; }).map(e => e.mid))].map(id => { const m = _matAll(id); return { n: m.n, color: m.col }; });
+    const leyenda = [...new Set(S.eventos.filter(e => { const d = this.parse(e.f); return d.getMonth() === mo && d.getFullYear() === y; }).map(e => e.mid))].map(id => { const m = _matAll(id); return { n: m.n, color: m.col }; });
 
     // --- calendario lista ---
     const grupos = {};
-    this.EVENTOS.filter(e => this.parse(e.f) >= hoy).forEach(e => {
+    S.eventos.filter(e => this.parse(e.f) >= hoy).forEach(e => {
       const d = this.parse(e.f), key = this.MESES[d.getMonth()] + ' ' + d.getFullYear();
       (grupos[key] = grupos[key] || []).push({ e, d });
     });
@@ -1362,7 +1556,7 @@ class Component extends DCLogic {
     let cur = new Date(2026, 7, 3);
     for (let i = 0; i < 8; i++) {
       const fin = new Date(cur.getTime() + 6 * 86400000);
-      const n = this.EVENTOS.filter(e => { const d = this.parse(e.f); return d >= cur && d <= fin; }).length;
+      const n = S.eventos.filter(e => { const d = this.parse(e.f); return d >= cur && d <= fin; }).length;
       const color = n >= 3 ? '#8A5A3B' : n === 2 ? '#6E8B3D' : n === 1 ? '#A9BC8A' : '#DCE0CE';
       semanas.push({ rango: cur.getDate() + ' – ' + this.fmtCorto(fin), pct: Math.min(100, n * 28 + (n ? 12 : 0)), color, txt: n === 0 ? 'libre' : n === 1 ? '1 fecha' : n + ' fechas', n });
       cur = new Date(cur.getTime() + 7 * 86400000);
@@ -1448,6 +1642,7 @@ class Component extends DCLogic {
     const horDias = [{n:'Lun'},{n:'Mar'},{n:'Mié'},{n:'Jue'},{n:'Vie'},{n:'Sáb'}];
     const horHoras = ['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00'];
     const horBloques = {};
+    (S.horarios || []).forEach(h => { horBloques[h.hora + '-' + h.dia] = { mat: h.mat, aula: h.aula, col: h.col || '#565B47', id: h.id }; });
     const horFilas = horHoras.map(h => ({
       hora: h,
       celdas: [0,1,2,3,4,5].map(d => {
@@ -1457,6 +1652,8 @@ class Component extends DCLogic {
       })
     }));
     const horLeyenda = [];
+    const _horLeySet = new Set();
+    (S.horarios || []).forEach(h => { if (!_horLeySet.has(h.mat)) { _horLeySet.add(h.mat); horLeyenda.push({ n: h.mat, color: h.col || '#565B47' }); } });
 
     // --- PLAN DE ESTUDIO ---
     const cursandoList = MATS.filter(m => this.estadoDe(m) === 'cursando');
@@ -1465,7 +1662,7 @@ class Component extends DCLogic {
       const on = S.planMid === m.id;
       return { n: m.n, pick: () => this.setState({ planMid: m.id }), bd: on ? '#3B4A2F' : '#D3D8C2', bg: on ? '#3B4A2F' : '#F8F9F2', fg: on ? '#F2F5E6' : '#4B5240' };
     });
-    const planEventoFinal = this.EVENTOS.filter(e => e.mid === planMat.id && (e.tipo === 'Parcial' || e.tipo === 'Final')).sort((a,b)=>a.f<b.f?-1:1).pop();
+    const planEventoFinal = S.eventos.filter(e => e.mid === planMat.id && (e.tipo === 'Parcial' || e.tipo === 'Final')).sort((a,b)=>a.f<b.f?-1:1).pop();
     const planFechaDate = planEventoFinal ? this.parse(planEventoFinal.f) : new Date(hoy.getTime() + 30*86400000);
     const planFecha = planFechaDate.getDate() + ' ' + this.MESES[planFechaDate.getMonth()];
     const planDias = Math.max(0, Math.round((planFechaDate - hoy) / 86400000));
@@ -1604,11 +1801,19 @@ class Component extends DCLogic {
     const gruposItems = [];
 
     // --- MATERIAS: acciones ---
-    const abrirAddMat = () => this.setState({ modal:'addMat', matForm:{ id:'', n:'', cat:'', col:'#4E6B33', est:'cursando' } });
+    const abrirAddMat = () => this.setState({ modal:'addMat', matForm:{ id:'', n:'', cat:'', col:'#4E6B33', est:'cursando', notas:[], final:'', asisOn:false, asisP:0, asisT:0, asisMin:75 } });
     const abrirEditMat = () => {
       if (S.materiaId) {
         const m = _matAll(S.materiaId);
-        if (m) this.setState({ modal:'editMat', matForm:{ id:m.id, n:m.n, cat:m.cat, col:m.col, est: this.estadoDe(m) } });
+        if (m) this.setState({ modal:'editMat', matForm:{
+          id: m.id, n: m.n, cat: m.cat, col: m.col, est: this.estadoDe(m),
+          notas: (m.notas || []).map(n => ({ n: n.n, v: n.v })),
+          final: m.final == null ? '' : String(m.final),
+          asisOn: !!(m.asis && m.asis.on),
+          asisP: (m.asis && m.asis.p) || 0,
+          asisT: (m.asis && m.asis.t) || 0,
+          asisMin: (m.asis && m.asis.min) || 75
+        }});
       }
     };
     const pedirDelMat = () => this.setState({ modal:'delMat', confirmDelId: S.materiaId });
@@ -1629,7 +1834,12 @@ class Component extends DCLogic {
       const isEdit = !!f.id;
       const newId = isEdit ? f.id : ('u' + Date.now().toString(36));
       const seed = isEdit ? _matAll(f.id) : { id:newId, n:'', cat:'', est:'cursando', col:'#4E6B33', notas:[], final:null, asis:{on:false}, reg:null, hab:[] };
-      const nuevo = Object.assign({}, seed, { id:newId, n:f.n.trim(), cat:f.cat.trim(), est:f.est, col:f.col });
+      const notasClean = (f.notas || []).filter(n => n.n && n.n.trim()).map(n => ({ n: n.n.trim(), v: Number(n.v) || 0 }));
+      const finalNum = f.final === '' || f.final == null ? null : (Number(f.final) || 0);
+      const asisObj = f.asisOn
+        ? { on: true, p: Number(f.asisP) || 0, t: Number(f.asisT) || 0, min: Number(f.asisMin) || 75 }
+        : { on: false };
+      const nuevo = Object.assign({}, seed, { id:newId, n:f.n.trim(), cat:f.cat.trim(), est:f.est, col:f.col, notas: notasClean, final: finalNum, asis: asisObj });
       let updated;
       if (isEdit && MATS.some(m => m.id === f.id)) {
         updated = MATS.map(m => m.id === f.id ? nuevo : m);
@@ -1714,7 +1924,97 @@ class Component extends DCLogic {
         this.setState({ uploads: updated });
       } catch(e){}
     };
-    const eliminarSubido = (b) => () => {
+    // --- EVENTOS: acciones ---
+    const abrirAddEv = () => this.setState({ modal: 'addEv', evForm: { id:'', mid: (MATS[0] && MATS[0].id) || '', f: (function(){const d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');})(), tipo:'Parcial', titulo:'' } });
+    const setEvMid = (e) => this.setState({ evForm: Object.assign({}, S.evForm, { mid: e.target.value }) });
+    const setEvF = (e) => this.setState({ evForm: Object.assign({}, S.evForm, { f: e.target.value }) });
+    const setEvTitulo = (e) => this.setState({ evForm: Object.assign({}, S.evForm, { titulo: e.target.value }) });
+    const evTiposLista = ['Parcial','Final','TP','Entrega','Presentación','Regularidad','Otro'];
+    const evTipoOpts = evTiposLista.map(t => {
+      const on = S.evForm.tipo === t;
+      return { label: t, pick: () => this.setState({ evForm: Object.assign({}, S.evForm, { tipo: t }) }), bd: on ? '#3B4A2F' : '#D3D8C2', bg: on ? '#3B4A2F' : '#F8F9F2', fg: on ? '#F2F5E6' : '#4B5240' };
+    });
+    const evMatOpts = MATS.map(m => ({ v: m.id, n: m.n }));
+    const guardarEv = () => {
+      const f = S.evForm;
+      if (!f.mid) { this.setState({ __evErr:'Elegí una materia.' }); return; }
+      if (!f.f) { this.setState({ __evErr:'Elegí una fecha.' }); return; }
+      if (!f.titulo.trim()) { this.setState({ __evErr:'Ponele un título al evento.' }); return; }
+      const nuevo = { id: f.id || ('ev' + Date.now().toString(36)), mid: f.mid, f: f.f, tipo: f.tipo, titulo: f.titulo.trim() };
+      const isEdit = !!f.id;
+      const updated = isEdit ? S.eventos.map(e => e.id === f.id ? nuevo : e) : [...S.eventos, nuevo];
+      this.saveUserKey('eventos', updated);
+      this.setState({ eventos: updated, modal: null, __evErr: null, tlPop: null });
+    };
+    const eliminarEv = (id) => () => {
+      if (!confirm('¿Eliminar este evento?')) return;
+      const updated = S.eventos.filter(e => e.id !== id);
+      this.saveUserKey('eventos', updated);
+      this.setState({ eventos: updated });
+    };
+
+    // --- HORARIOS: acciones ---
+    const abrirAddHor = () => this.setState({ modal: 'addHor', horForm: { id:'', dia: 0, hora: '08:00', mat: (MATS[0] && MATS[0].n) || '', aula: '' } });
+    const setHorDia = (e) => this.setState({ horForm: Object.assign({}, S.horForm, { dia: parseInt(e.target.value, 10) }) });
+    const setHorHora = (e) => this.setState({ horForm: Object.assign({}, S.horForm, { hora: e.target.value }) });
+    const setHorMat = (e) => this.setState({ horForm: Object.assign({}, S.horForm, { mat: e.target.value }) });
+    const setHorAula = (e) => this.setState({ horForm: Object.assign({}, S.horForm, { aula: e.target.value }) });
+    const horDiasOpts = [{v:0,n:'Lunes'},{v:1,n:'Martes'},{v:2,n:'Miércoles'},{v:3,n:'Jueves'},{v:4,n:'Viernes'},{v:5,n:'Sábado'}];
+    const horHorasOpts = ['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00'];
+    const horMatOpts = MATS.map(m => ({ v: m.n, n: m.n, col: m.col }));
+    const guardarHor = () => {
+      const f = S.horForm;
+      if (!f.mat) { this.setState({ __horErr:'Elegí una materia.' }); return; }
+      const materiaObj = MATS.find(m => m.n === f.mat);
+      const nuevo = { id: f.id || ('hor' + Date.now().toString(36)), dia: f.dia, hora: f.hora, mat: f.mat, aula: f.aula.trim(), col: (materiaObj && materiaObj.col) || '#565B47' };
+      const updated = f.id ? S.horarios.map(h => h.id === f.id ? nuevo : h) : [...S.horarios, nuevo];
+      this.saveUserKey('horarios', updated);
+      this.setState({ horarios: updated, modal: null, __horErr: null });
+    };
+    const eliminarHor = (id) => () => {
+      if (!confirm('¿Eliminar este bloque?')) return;
+      const updated = S.horarios.filter(h => h.id !== id);
+      this.saveUserKey('horarios', updated);
+      this.setState({ horarios: updated });
+    };
+
+    // --- POMODORO: bindings ---
+    const pomoStart = () => this.pomoStart();
+    const pomoPause = () => this.pomoPause();
+    const pomoReset = () => this.pomoReset();
+    const pomoSetModeFoco = () => this.pomoSetMode('foco');
+    const pomoSetModeDescanso = () => this.pomoSetMode('descanso');
+    const pomoSetModeLargo = () => this.pomoSetMode('largo');
+    const pomoSetMat = (e) => this.pomoSetMat(e.target.value);
+    const _mm = Math.floor(S.pomoState.secLeft / 60);
+    const _ss = S.pomoState.secLeft % 60;
+    const pomoTiempo = String(_mm).padStart(2,'0') + ':' + String(_ss).padStart(2,'0');
+    const pomoMatOpts = MATS.map(m => ({ v: m.id, n: m.n }));
+    const pomoActMat = MATS.find(m => m.id === S.pomoState.matId);
+    const pomoActMatNombre = pomoActMat ? pomoActMat.n : '';
+
+    // --- MATERIA MODAL EXTENDIDO: notas + asistencia + nota final ---
+    const setMatFinal = (e) => this.setState({ matForm: Object.assign({}, S.matForm, { final: e.target.value }) });
+    const toggleAsis = () => this.setState({ matForm: Object.assign({}, S.matForm, { asisOn: !S.matForm.asisOn }) });
+    const setAsisP = (e) => this.setState({ matForm: Object.assign({}, S.matForm, { asisP: parseInt(e.target.value, 10) || 0 }) });
+    const setAsisT = (e) => this.setState({ matForm: Object.assign({}, S.matForm, { asisT: parseInt(e.target.value, 10) || 0 }) });
+    const setAsisMin = (e) => this.setState({ matForm: Object.assign({}, S.matForm, { asisMin: parseInt(e.target.value, 10) || 0 }) });
+    const addNotaMat = () => this.setState({ matForm: Object.assign({}, S.matForm, { notas: [...(S.matForm.notas||[]), { n:'', v:0 }] }) });
+    const removeNotaMat = (i) => () => {
+      const arr = [...(S.matForm.notas||[])]; arr.splice(i, 1);
+      this.setState({ matForm: Object.assign({}, S.matForm, { notas: arr }) });
+    };
+    const setNotaMatN = (i) => (e) => {
+      const arr = [...(S.matForm.notas||[])]; arr[i] = Object.assign({}, arr[i], { n: e.target.value });
+      this.setState({ matForm: Object.assign({}, S.matForm, { notas: arr }) });
+    };
+    const setNotaMatV = (i) => (e) => {
+      const arr = [...(S.matForm.notas||[])]; arr[i] = Object.assign({}, arr[i], { v: parseFloat(e.target.value) || 0 });
+      this.setState({ matForm: Object.assign({}, S.matForm, { notas: arr }) });
+    };
+    const matFormNotas = (S.matForm.notas || []).map((nt, i) => ({ n: nt.n, v: nt.v, setN: setNotaMatN(i), setV: setNotaMatV(i), remove: removeNotaMat(i) }));
+
+        const eliminarSubido = (b) => () => {
       if (!confirm('¿Eliminar este parcial subido?')) return;
       const updated = S.uploads.filter(u => u.id !== b.id);
       this.saveUserKey('uploads', updated);
@@ -1723,7 +2023,13 @@ class Component extends DCLogic {
 
     // --- POMODORO ---
     const pomoBars = [];
-    const pomoTotalH = '0.0';
+    const _hrs = S.pomoHours || {};
+    const _maxH = Math.max(1, ...Object.values(_hrs).map(v => Number(v) || 0));
+    MATS.forEach(m => {
+      const h = Number(_hrs[m.id]) || 0;
+      if (h > 0) pomoBars.push({ n: m.n, color: m.col, pct: Math.round((h / _maxH) * 100), txt: h.toFixed(1) + ' hs' });
+    });
+    const pomoTotalH = Object.values(_hrs).reduce((s,v) => s + (Number(v)||0), 0).toFixed(1);
 
     // ============ CUATRIMESTRE + TIMELINE ============
     const _pad = (n) => (n<10?'0':'')+n;
@@ -1754,7 +2060,7 @@ class Component extends DCLogic {
     const cuatriFinTxt = _finD.getDate() + ' ' + this.MESES[_finD.getMonth()].slice(0,3);
 
     // Eventos del cuatri con posición %
-    const evsCuatri = this.EVENTOS
+    const evsCuatri = S.eventos
       .map(e => ({ ...e, d: this.parse(e.f) }))
       .filter(e => e.d >= _iniD && e.d <= _finD)
       .sort((a,b) => a.d - b.d)
@@ -1824,9 +2130,9 @@ class Component extends DCLogic {
       if (confirm2 !== 'BORRAR') return;
       try {
         const prefix = 'mate_' + S.user.email + '_';
-        ['materias','notas','uploads','chatConvos','cuatri'].forEach(k => localStorage.removeItem(prefix + k));
+        ['materias','notas','uploads','chatConvos','cuatri','eventos','horarios','pomoHours'].forEach(k => localStorage.removeItem(prefix + k));
       } catch(e){}
-      this.setState({ userMats: [], notas: {}, uploads: [], chatConvos: {}, cuatri: null, cuatriForm: { ini:'', fin:'' }, screen: 'inicio', materiaId: null });
+      this.setState({ userMats: [], notas: {}, uploads: [], chatConvos: {}, cuatri: null, eventos: [], horarios: [], pomoHours: {}, cuatriForm: { ini:'', fin:'' }, screen: 'inicio', materiaId: null });
     };
     const setBackendUrl = (e) => this.setState({ backendUrlBuf: e.target.value, backendMsg: '', backendMsgKind: '' });
     const guardarBackendUrl = () => {
@@ -1909,6 +2215,28 @@ class Component extends DCLogic {
       gruposLleno: gruposItems.length > 0,
       pomoVacio: pomoBars.length === 0,
       pomoLleno: pomoBars.length > 0,
+      abrirAddEv, abrirAddHor,
+      esModalEv: S.modal === 'addEv',
+      esModalHor: S.modal === 'addHor',
+      evForm: S.evForm, setEvMid, setEvF, setEvTitulo, evTipoOpts, evMatOpts, guardarEv,
+      hayEvError: !!S.__evErr, evError: S.__evErr || '',
+      horForm: S.horForm, setHorDia, setHorHora, setHorMat, setHorAula, horDiasOpts, horHorasOpts, horMatOpts, guardarHor,
+      hayHorError: !!S.__horErr, horError: S.__horErr || '',
+      pomoTiempo, pomoRunning: S.pomoState.running, pomoStopped: !S.pomoState.running,
+      pomoTiempoColor: S.pomoState.running ? '#3B4A2F' : '#565B47',
+      pomoStart, pomoPause, pomoReset, pomoSetModeFoco, pomoSetModeDescanso, pomoSetModeLargo, pomoSetMat,
+      pomoBtnFocoBg: S.pomoState.mode === 'foco' ? '#F8F9F2' : 'rgba(0,0,0,0)',
+      pomoBtnFocoFg: S.pomoState.mode === 'foco' ? '#23281C' : '#565B47',
+      pomoBtnFocoPeso: S.pomoState.mode === 'foco' ? 700 : 500,
+      pomoBtnDescBg: S.pomoState.mode === 'descanso' ? '#F8F9F2' : 'rgba(0,0,0,0)',
+      pomoBtnDescFg: S.pomoState.mode === 'descanso' ? '#23281C' : '#565B47',
+      pomoBtnDescPeso: S.pomoState.mode === 'descanso' ? 700 : 500,
+      pomoBtnLargoBg: S.pomoState.mode === 'largo' ? '#F8F9F2' : 'rgba(0,0,0,0)',
+      pomoBtnLargoFg: S.pomoState.mode === 'largo' ? '#23281C' : '#565B47',
+      pomoBtnLargoPeso: S.pomoState.mode === 'largo' ? 700 : 500,
+      pomoMatOpts, pomoActMatId: S.pomoState.matId || '',
+      setMatFinal, toggleAsis, setAsisP, setAsisT, setAsisMin,
+      addNotaMat, matFormNotas,
       hayProx, noHayProx: !hayProx,
       flashDecks, flashPregunta: flashCard.p, flashRespuesta: flashCard.r,
       flashFrente: !S.flashFlipped, flashDorso: S.flashFlipped, flashActN, flashActTotal,
@@ -1920,7 +2248,7 @@ class Component extends DCLogic {
       esModalMat: S.modal === 'addMat' || S.modal === 'editMat',
       esModalDel: S.modal === 'delMat',
       esModalParcial: S.modal === 'upParcial',
-      modalTitle: S.modal === 'addMat' ? 'Nueva materia' : (S.modal === 'editMat' ? 'Editar materia' : (S.modal === 'delMat' ? 'Eliminar materia' : (S.modal === 'upParcial' ? 'Subir parcial' : ''))),
+      modalTitle: S.modal === 'addMat' ? 'Nueva materia' : (S.modal === 'editMat' ? 'Editar materia' : (S.modal === 'delMat' ? 'Eliminar materia' : (S.modal === 'upParcial' ? 'Subir parcial' : (S.modal === 'addEv' ? 'Nuevo evento' : (S.modal === 'addHor' ? 'Nuevo bloque de horario' : ''))))),
       abrirAddMat, abrirEditMat, pedirDelMat, cerrarModal, modalOverlayClick,
       matForm: S.matForm, setMatN, setMatCat, matColors, matEstOpts, guardarMat,
       hayMatError: !!S.__matErr, matError: S.__matErr || '',
