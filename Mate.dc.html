@@ -43,24 +43,24 @@
       <sc-if value="{{ modoRegister }}" hint-placeholder-val="{{ false }}">
         <div style="display:flex;flex-direction:column;gap:10px">
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-            <input type="text" placeholder="Nombre" value="{{ form.nombre }}" onInput="{{ setNombre }}" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
-            <input type="text" placeholder="Apellido" value="{{ form.apellido }}" onInput="{{ setApellido }}" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
+            <input type="text" placeholder="Nombre" value="{{ form.nombre }}" onInput="{{ setNombre }}" style="width:100%;min-width:0;box-sizing:border-box;border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
+            <input type="text" placeholder="Apellido" value="{{ form.apellido }}" onInput="{{ setApellido }}" style="width:100%;min-width:0;box-sizing:border-box;border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
           </div>
-          <input type="text" placeholder="Apodo (como te digan tus amigos)" value="{{ form.apodo }}" onInput="{{ setApodo }}" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
-          <input type="email" placeholder="Email" value="{{ form.email }}" onInput="{{ setEmail }}" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
-          <input type="text" placeholder="Carrera (ej: Ingeniería en Sistemas)" value="{{ form.carrera }}" onInput="{{ setCarrera }}" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
-          <input type="text" placeholder="Universidad (ej: UTN FRC)" value="{{ form.universidad }}" onInput="{{ setUniversidad }}" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
+          <input type="text" placeholder="Apodo (como te digan tus amigos)" value="{{ form.apodo }}" onInput="{{ setApodo }}" style="width:100%;min-width:0;box-sizing:border-box;border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
+          <input type="email" placeholder="Email" value="{{ form.email }}" onInput="{{ setEmail }}" style="width:100%;min-width:0;box-sizing:border-box;border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
+          <input type="text" placeholder="Carrera (ej: Ingeniería en Sistemas)" value="{{ form.carrera }}" onInput="{{ setCarrera }}" style="width:100%;min-width:0;box-sizing:border-box;border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
+          <input type="text" placeholder="Universidad (ej: UTN FRC)" value="{{ form.universidad }}" onInput="{{ setUniversidad }}" style="width:100%;min-width:0;box-sizing:border-box;border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
           <div style="position:relative;display:flex">
-            <input type="{{ passType }}" placeholder="Contraseña" value="{{ form.password }}" onInput="{{ setPassword }}" style="flex:1;border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 44px 10px 12px;font-size:14px;font-family:inherit;color:#23281C">
+            <input type="{{ passType }}" placeholder="Contraseña" value="{{ form.password }}" onInput="{{ setPassword }}" style="flex:1;width:100%;min-width:0;box-sizing:border-box;border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 44px 10px 12px;font-size:14px;font-family:inherit;color:#23281C">
             <button type="button" onClick="{{ toggleShowPass }}" aria-label="Mostrar contraseña" style="position:absolute;right:6px;top:50%;transform:translateY(-50%);background:none;border:0;padding:6px 8px;color:#565B47;font-size:12.5px;cursor:pointer">{{ showPassLabel }}</button>
           </div>
         </div>
       </sc-if>
       <sc-if value="{{ modoLogin }}" hint-placeholder-val="{{ true }}">
         <div style="display:flex;flex-direction:column;gap:10px">
-          <input type="email" placeholder="Email" value="{{ form.email }}" onInput="{{ setEmail }}" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
+          <input type="email" placeholder="Email" value="{{ form.email }}" onInput="{{ setEmail }}" style="width:100%;min-width:0;box-sizing:border-box;border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
           <div style="position:relative;display:flex">
-            <input type="{{ passType }}" placeholder="Contraseña" value="{{ form.password }}" onInput="{{ setPassword }}" style="flex:1;border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 44px 10px 12px;font-size:14px;font-family:inherit;color:#23281C">
+            <input type="{{ passType }}" placeholder="Contraseña" value="{{ form.password }}" onInput="{{ setPassword }}" style="flex:1;width:100%;min-width:0;box-sizing:border-box;border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 44px 10px 12px;font-size:14px;font-family:inherit;color:#23281C">
             <button type="button" onClick="{{ toggleShowPass }}" aria-label="Mostrar contraseña" style="position:absolute;right:6px;top:50%;transform:translateY(-50%);background:none;border:0;padding:6px 8px;color:#565B47;font-size:12.5px;cursor:pointer">{{ showPassLabel }}</button>
           </div>
         </div>
@@ -430,6 +430,33 @@
           </div>
 
           <div style="background:#F8F9F2;border:1px solid #DDE1D0;border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:12px">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
+              <div style="font-family:'Instrument Sans',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#565B47">Archivos de esta materia</div>
+              <button type="button" onClick="{{ abrirUpParcialMateriaActual }}" style="background:#3B4A2F;color:#EDF1E0;border-radius:7px;padding:7px 14px;font-size:12.5px;font-weight:600;border:0;cursor:pointer">+ Subir archivo</button>
+            </div>
+            <sc-if value="{{ archivosMatVacio }}" hint-placeholder-val="{{ true }}">
+              <div style="font-size:13px;color:#565B47;text-align:center;padding:12px;border:1px dashed #C9CEB8;border-radius:10px">Todavía no hay archivos para esta materia. Subí el primero con el botón de arriba.</div>
+            </sc-if>
+            <sc-if value="{{ archivosMatLleno }}" hint-placeholder-val="{{ false }}">
+              <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px">
+                <sc-for list="{{ archivosMat }}" as="a" hint-placeholder-count="2">
+                  <div style="background:#EFF1E6;border:1px solid #DDE1D0;border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:6px">
+                    <span style="font-size:13px;font-weight:600;color:#23281C;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ a.filename }}</span>
+                    <div style="display:flex;flex-wrap:wrap;gap:4px">
+                      <span style="font-family:'Instrument Sans',sans-serif;font-size:10.5px;color:#4B5240;background:#E9EBDD;border-radius:5px;padding:2px 6px">{{ a.tipo }}</span>
+                      <span style="font-family:'Instrument Sans',sans-serif;font-size:10.5px;color:#4B5240;background:#E9EBDD;border-radius:5px;padding:2px 6px">{{ a.anio }}</span>
+                    </div>
+                    <div style="display:flex;gap:6px;margin-top:4px">
+                      <button type="button" onClick="{{ a.download }}" style="flex:1;background:#3B4A2F;color:#EDF1E0;border-radius:6px;padding:5px 10px;font-size:11.5px;font-weight:600;border:0;cursor:pointer">Descargar</button>
+                      <button type="button" onClick="{{ a.eliminar }}" style="background:#fff;color:#9B3B28;border:1px solid #E2CBAE;border-radius:6px;padding:5px 10px;font-size:11.5px;cursor:pointer">Eliminar</button>
+                    </div>
+                  </div>
+                </sc-for>
+              </div>
+            </sc-if>
+          </div>
+
+          <div style="background:#F8F9F2;border:1px solid #DDE1D0;border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:12px">
             <div style="font-family:"Instrument Sans",sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#565B47">Próximas fechas</div>
             <sc-if value="{{ det.tieneFechas }}" hint-placeholder-val="{{ true }}">
               <div style="display:flex;flex-direction:column;gap:10px">
@@ -575,13 +602,24 @@
               <sc-for list="{{ horFilas }}" as="row" hint-placeholder-count="12">
                 <div style="font-family:'Instrument Sans',sans-serif;font-size:10.5px;color:#565B47;text-align:right;padding:6px 8px 0 0">{{ row.hora }}</div>
                 <sc-for list="{{ row.celdas }}" as="c" hint-placeholder-count="6">
-                  <div style="min-height:44px;border-radius:8px;background:{{ c.bg }};color:{{ c.fg }};padding:{{ c.pad }};display:flex;flex-direction:column;gap:2px;border:1px solid {{ c.bd }};position:relative">
-                    <sc-if value="{{ c.tieneMat }}" hint-placeholder-val="{{ true }}">
-                      <span style="font-size:12px;font-weight:600;line-height:1.15;padding-right:12px">{{ c.mat }}</span>
-                      <span style="font-size:10.5px;opacity:.8">{{ c.aulaTxt }}</span>
-                      <button type="button" onClick="{{ c.eliminar }}" aria-label="Eliminar bloque" style="position:absolute;top:2px;right:4px;background:none;border:0;color:currentColor;opacity:.5;cursor:pointer;font-size:14px;line-height:1;padding:0">×</button>
-                    </sc-if>
-                  </div>
+                  <sc-if value="{{ c.hidden }}" hint-placeholder-val="{{ false }}">
+                    <div style="display:none"></div>
+                  </sc-if>
+                  <sc-if value="{{ c.vacia }}" hint-placeholder-val="{{ false }}">
+                    <div style="min-height:44px;border-radius:8px;background:rgba(0,0,0,0);border:1px solid rgba(0,0,0,0.04)"></div>
+                  </sc-if>
+                  <sc-if value="{{ c.tieneMat }}" hint-placeholder-val="{{ true }}">
+                    <div style="display:flex;flex-direction:row;gap:3px;grid-row:span {{ c.span }};min-height:44px">
+                      <sc-for list="{{ c.blks }}" as="b" hint-placeholder-count="1">
+                        <div style="flex:1;min-width:0;border-radius:8px;background:{{ b.bg }};color:{{ b.fg }};padding:6px 8px;display:flex;flex-direction:column;gap:2px;border:1px solid {{ b.bd }};position:relative;overflow:hidden">
+                          <span style="font-size:12px;font-weight:600;line-height:1.15;padding-right:14px;overflow:hidden;text-overflow:ellipsis">{{ b.mat }}</span>
+                          <span style="font-size:10.5px;opacity:.85;line-height:1.2">{{ b.horaTxt }}</span>
+                          <span style="font-size:10.5px;opacity:.75;line-height:1.2">{{ b.aulaTxt }}</span>
+                          <button type="button" onClick="{{ b.eliminar }}" aria-label="Eliminar bloque" style="position:absolute;top:2px;right:4px;background:none;border:0;color:currentColor;opacity:.5;cursor:pointer;font-size:14px;line-height:1;padding:0">×</button>
+                        </div>
+                      </sc-for>
+                    </div>
+                  </sc-if>
                 </sc-for>
               </sc-for>
             </div>
@@ -1175,18 +1213,22 @@
 
       <sc-if value="{{ esModalHor }}" hint-placeholder-val="{{ false }}">
         <div style="display:flex;flex-direction:column;gap:10px">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+          <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
             <div style="display:flex;flex-direction:column;gap:6px">
               <label style="font-size:12px;color:#565B47">Día</label>
-              <select onChange="{{ setHorDia }}" value="{{ horForm.dia }}" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
+              <select onChange="{{ setHorDia }}" value="{{ horForm.dia }}" style="width:100%;min-width:0;box-sizing:border-box;border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
                 <sc-for list="{{ horDiasOpts }}" as="d" hint-placeholder-count="6">
                   <option value="{{ d.v }}">{{ d.n }}</option>
                 </sc-for>
               </select>
             </div>
             <div style="display:flex;flex-direction:column;gap:6px">
-              <label style="font-size:12px;color:#565B47">Hora</label>
-              <input type="time" value="{{ horForm.hora }}" onInput="{{ setHorHora }}" step="300" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
+              <label style="font-size:12px;color:#565B47">Desde</label>
+              <input type="time" value="{{ horForm.horaIni }}" onInput="{{ setHorIni }}" step="300" style="width:100%;min-width:0;box-sizing:border-box;border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
+            </div>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <label style="font-size:12px;color:#565B47">Hasta</label>
+              <input type="time" value="{{ horForm.horaFin }}" onInput="{{ setHorFin }}" step="300" style="width:100%;min-width:0;box-sizing:border-box;border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
             </div>
           </div>
           <div style="display:flex;flex-direction:column;gap:6px">
@@ -1298,7 +1340,7 @@ class Component extends DCLogic {
     eventos: [], horarios: [],
     pomoHours: {}, pomoState: { running: false, secLeft: 25*60, mode: 'foco', matId: null, sessionStart: null },
     evForm: { id:'', mid:'', f:'', tipo:'Parcial', titulo:'' },
-    horForm: { id:'', dia: 0, hora: '08:00', mat:'', aula:'' },
+    horForm: { id:'', dia: 0, horaIni: '08:00', horaFin: '09:00', mat:'', aula:'' },
     cuatriForm: { ini:'', fin:'' },
     tlPop: null,
     __cuatriErr: null,
@@ -1338,7 +1380,14 @@ class Component extends DCLogic {
       const uploads = JSON.parse(localStorage.getItem(prefix + 'uploads') || '[]');
       const cuatriRaw = localStorage.getItem(prefix + 'cuatri');
       const eventos = JSON.parse(localStorage.getItem(prefix + 'eventos') || '[]');
-      const horarios = JSON.parse(localStorage.getItem(prefix + 'horarios') || '[]');
+      const horarios = (JSON.parse(localStorage.getItem(prefix + 'horarios') || '[]') || []).map(h => {
+        if (h.horaIni && h.horaFin) return h;
+        // migración: viejo formato con solo 'hora'
+        const ini = h.horaIni || h.hora || '08:00';
+        const hh = parseInt(ini.substring(0,2), 10) || 8;
+        const fin = h.horaFin || (String(Math.min(23, hh+1)).padStart(2,'0') + ':' + ini.substring(3,5));
+        return Object.assign({}, h, { horaIni: ini, horaFin: fin });
+      });
       const pomoHours = JSON.parse(localStorage.getItem(prefix + 'pomoHours') || '{}');
       const chatConvos = JSON.parse(localStorage.getItem(prefix + 'chatConvos') || '{}');
       const cuatri = cuatriRaw ? JSON.parse(cuatriRaw) : null;
@@ -1458,12 +1507,12 @@ class Component extends DCLogic {
     const aplazoN = (this.APLAZO && this.APLAZO.v != null) ? 1 : 0;
     const promCon = (aprobadas.length + aplazoN) > 0 ? ((suma + aplazoV) / (aprobadas.length + aplazoN)).toFixed(2) : '—';
     const carreraPct = this.PLAN_TOTAL > 0 ? +(aprobadas.length / this.PLAN_TOTAL * 100).toFixed(1) : 0;
-    const cursandoN = MATS.filter(m => this.estadoDe(m) === 'cursando').length;
     const estaSemana = S.eventos.filter(e => { const d = this.parse(e.f); const diff = (d - hoy) / 86400000; return diff >= 0 && diff < 14; }).length;
 
     // --- materias ---
     const conteo = {};
-    MATS.forEach(m => { const k = this.estadoDe(m); conteo[k] = (conteo[k] || 0) + 1; });
+    MATS.forEach(m => { const k = this.estadoDe(m); if (k) conteo[k] = (conteo[k] || 0) + 1; });
+    const cursandoN = conteo['cursando'] || 0;
     const filtros = [{ key: 'todas', label: 'Todas', n: MATS.length, marcaKey: null }]
       .concat(this.ORDEN.filter(k => conteo[k]).map(k => ({ key: k, label: E[k].label, n: conteo[k], marcaKey: k })))
       .map(f => {
@@ -1517,6 +1566,15 @@ class Component extends DCLogic {
         habOn: m.hab.length > 0, hab: m.hab.map(n => ({ n })),
         fechas, tieneFechas: fechas.length > 0, sinFechas: fechas.length === 0
       };
+      // Archivos filtrados por esta materia (reutiliza uploads del banco)
+      var _archivosMat = (S.uploads || []).filter(u => u.matId === m.id).map(u => ({
+        filename: u.filename, tipo: u.tipo, anio: u.anio,
+        download: descargarSubido(u),
+        eliminar: eliminarSubido(u)
+      }));
+      det.archivosMat = _archivosMat;
+      det.archivosMatVacio = _archivosMat.length === 0;
+      det.archivosMatLleno = _archivosMat.length > 0;
     }
 
     // --- calendario mes ---
@@ -1637,29 +1695,57 @@ class Component extends DCLogic {
 
     // --- HORARIOS ---
     const horDias = [{n:'Lun'},{n:'Mar'},{n:'Mié'},{n:'Jue'},{n:'Vie'},{n:'Sáb'}];
-    const horBloques = {};
+    // Bloques con horaIni/horaFin: agrupamos por celda de inicio (día + hora entera de inicio)
+    // y calculamos el span (cuántas filas ocupa el bloque).
+    const horBloques = {}; // key = 'HH:00-dia' -> array de bloques que arrancan ahí
+    const horOcupados = new Set(); // celdas que están cubiertas por un bloque (no de inicio)
     (S.horarios || []).forEach(h => {
-      const bucket = (h.hora || '00:00').substring(0,2) + ':00-' + h.dia;
-      const exactTime = h.hora || '';
-      if (!horBloques[bucket]) horBloques[bucket] = { mat: h.mat, aula: h.aula, col: h.col || '#565B47', id: h.id, hora: exactTime };
+      const iniHH = parseInt((h.horaIni || '08:00').substring(0,2), 10) || 8;
+      const finHH = parseInt((h.horaFin || '09:00').substring(0,2), 10) || 9;
+      const finMM = parseInt((h.horaFin || '09:00').substring(3,5), 10) || 0;
+      const spanBase = finHH - iniHH + (finMM > 0 ? 1 : 0); // filas que ocupa
+      const span = Math.max(1, spanBase);
+      const bucket = String(iniHH).padStart(2,'0') + ':00-' + h.dia;
+      if (!horBloques[bucket]) horBloques[bucket] = [];
+      horBloques[bucket].push({ mat: h.mat, aula: h.aula, col: h.col || '#565B47', id: h.id, horaIni: h.horaIni, horaFin: h.horaFin, span });
+      // Marcar como ocupadas las filas siguientes (para no dibujar celda vacía tapando el span)
+      for (let k = 1; k < span; k++) {
+        horOcupados.add(String(iniHH + k).padStart(2,'0') + ':00-' + h.dia);
+      }
     });
     const _horDefault = ['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00'];
     const _horSet = new Set(_horDefault);
     (S.horarios || []).forEach(h => { const bucket = (h.hora || '00:00').substring(0,2) + ':00'; _horSet.add(bucket); });
     const horHoras = Array.from(_horSet).sort();
+    const _mkDelHor = (id) => () => {
+      if (!window.confirm('Eliminar este bloque?')) return;
+      const updated = this.state.horarios.filter(x => x.id !== id);
+      this.saveUserKey('horarios', updated);
+      this.setState({ horarios: updated });
+    };
     const horFilas = horHoras.map(h => ({
       hora: h,
       celdas: [0,1,2,3,4,5].map(d => {
-        const b = horBloques[h+'-'+d];
-        const _horaExact = b && b.hora && b.hora !== h ? b.hora + (b.aula ? '  ' + b.aula : '') : (b ? (b.aula || '') : '');
-        const _delHor = b ? (() => {
-          if (!window.confirm('Eliminar este bloque?')) return;
-          const updated = this.state.horarios.filter(x => x.id !== b.id);
-          this.saveUserKey('horarios', updated);
-          this.setState({ horarios: updated });
-        }) : (() => {});
-        return b ? { tieneMat:true, mat:b.mat, aula:b.aula, aulaTxt: _horaExact, bg:b.col+'22', bd:b.col+'55', fg:b.col, pad:'8px 10px', eliminar: _delHor }
-                 : { tieneMat:false, mat:'', aula:'', aulaTxt:'', bg:'rgba(0,0,0,0)', bd:'rgba(0,0,0,0.04)', fg:'#565B47', pad:'0', eliminar: () => {} };
+        const key = h + '-' + d;
+        const arr = horBloques[key] || [];
+        const cubierta = horOcupados.has(key);
+        if (arr.length === 0 && cubierta) {
+          return { tieneMat:false, hidden:true, blks: [] };
+        }
+        if (arr.length === 0) {
+          return { tieneMat:false, hidden:false, blks: [] };
+        }
+        const blks = arr.map(b => ({
+          mat: b.mat, aula: b.aula,
+          horaTxt: b.horaIni + (b.horaFin ? ' – ' + b.horaFin : ''),
+          aulaTxt: b.aula || '',
+          bg: b.col + '22', bd: b.col + '55', fg: b.col,
+          span: b.span,
+          eliminar: _mkDelHor(b.id)
+        }));
+        // El span de la celda es el máximo del array (los bloques que arrancan en la misma celda pueden solapar)
+        const span = Math.max(1, ...blks.map(b => b.span));
+        return { tieneMat:true, hidden:false, vacia:false, blks, span };
       })
     }));
     const horLeyenda = [];
@@ -1850,7 +1936,7 @@ class Component extends DCLogic {
       const asisObj = f.asisOn
         ? { on: true, p: Number(f.asisP) || 0, t: Number(f.asisT) || 0, min: Number(f.asisMin) || 75 }
         : { on: false };
-      const nuevo = Object.assign({}, seed, { id:newId, n:f.n.trim(), cat:f.cat.trim(), est:f.est, col:f.col, notas: notasClean, final: finalNum, asis: asisObj });
+      const nuevo = Object.assign({}, seed, { id:newId, n:f.n.trim(), cat:f.cat.trim(), est: (f.est || 'cursando'), col:f.col, notas: notasClean, final: finalNum, asis: asisObj });
       let updated;
       if (isEdit && MATS.some(m => m.id === f.id)) {
         updated = MATS.map(m => m.id === f.id ? nuevo : m);
@@ -1886,7 +1972,8 @@ class Component extends DCLogic {
     const notasStatus = (S.notasBuf && S.notasBuf !== notasSaved) ? '● Sin guardar' : (notasSaved ? '✓ Guardado' : '');
 
     // --- PARCIALES: acciones ---
-    const abrirUpParcial = () => this.setState({ modal:'upParcial', parForm:{ mat:(MATS[0] && MATS[0].id) || '', cat:'', tipo:'Parcial 1', anio:'2026', filename:'', base64:'', mime:'' } });
+    const abrirUpParcial = (preMatId) => this.setState({ modal:'upParcial', parForm:{ mat: preMatId || (MATS[0] && MATS[0].id) || '', cat:'', tipo:'Parcial 1', anio:'2026', filename:'', base64:'', mime:'' } });
+    const abrirUpParcialMateriaActual = () => this.setState({ modal:'upParcial', parForm:{ mat: S.materiaId || (MATS[0] && MATS[0].id) || '', cat:'', tipo:'Parcial 1', anio:'2026', filename:'', base64:'', mime:'' } });
     const setParMat = e => this.setState({ parForm: Object.assign({}, S.parForm, { mat: e.target.value }) });
     const setParCat = e => this.setState({ parForm: Object.assign({}, S.parForm, { cat: e.target.value }) });
     const setParAnio = e => this.setState({ parForm: Object.assign({}, S.parForm, { anio: e.target.value }) });
@@ -1965,9 +2052,10 @@ class Component extends DCLogic {
     };
 
     // --- HORARIOS: acciones ---
-    const abrirAddHor = () => this.setState({ modal: 'addHor', horForm: { id:'', dia: 0, hora: '08:00', mat: (MATS[0] && MATS[0].n) || '', aula: '' } });
+    const abrirAddHor = () => this.setState({ modal: 'addHor', horForm: { id:'', dia: 0, horaIni: '08:00', horaFin: '09:00', mat: (MATS[0] && MATS[0].n) || '', aula: '' } });
     const setHorDia = (e) => this.setState({ horForm: Object.assign({}, S.horForm, { dia: parseInt(e.target.value, 10) }) });
-    const setHorHora = (e) => this.setState({ horForm: Object.assign({}, S.horForm, { hora: e.target.value }) });
+    const setHorIni = (e) => this.setState({ horForm: Object.assign({}, S.horForm, { horaIni: e.target.value }) });
+    const setHorFin = (e) => this.setState({ horForm: Object.assign({}, S.horForm, { horaFin: e.target.value }) });
     const setHorMat = (e) => this.setState({ horForm: Object.assign({}, S.horForm, { mat: e.target.value }) });
     const setHorAula = (e) => this.setState({ horForm: Object.assign({}, S.horForm, { aula: e.target.value }) });
     const horDiasOpts = [{v:0,n:'Lunes'},{v:1,n:'Martes'},{v:2,n:'Miércoles'},{v:3,n:'Jueves'},{v:4,n:'Viernes'},{v:5,n:'Sábado'}];
@@ -1976,8 +2064,10 @@ class Component extends DCLogic {
     const guardarHor = () => {
       const f = S.horForm;
       if (!f.mat) { this.setState({ __horErr:'Elegí una materia.' }); return; }
+      if (!f.horaIni || !f.horaFin) { this.setState({ __horErr:'Elegí las horas de inicio y fin.' }); return; }
+      if (f.horaFin <= f.horaIni) { this.setState({ __horErr:'La hora de fin tiene que ser posterior al inicio.' }); return; }
       const materiaObj = MATS.find(m => m.n === f.mat);
-      const nuevo = { id: f.id || ('hor' + Date.now().toString(36)), dia: f.dia, hora: f.hora, mat: f.mat, aula: f.aula.trim(), col: (materiaObj && materiaObj.col) || '#565B47' };
+      const nuevo = { id: f.id || ('hor' + Date.now().toString(36)), dia: f.dia, horaIni: f.horaIni, horaFin: f.horaFin, mat: f.mat, aula: f.aula.trim(), col: (materiaObj && materiaObj.col) || '#565B47' };
       const updated = f.id ? S.horarios.map(h => h.id === f.id ? nuevo : h) : [...S.horarios, nuevo];
       this.saveUserKey('horarios', updated);
       this.setState({ horarios: updated, modal: null, __horErr: null });
@@ -2308,6 +2398,10 @@ class Component extends DCLogic {
       simToggleTxt: S.simOpen ? 'Cerrar' : 'Probar',
       simMaterias, simNotas, simTexto,
       det, volver: () => this.setState({ screen: 'materias', materiaId: null }),
+      archivosMat: (det && det.archivosMat) || [],
+      archivosMatVacio: !det || det.archivosMatVacio,
+      archivosMatLleno: !!(det && det.archivosMatLleno),
+      abrirUpParcialMateriaActual,
       vistas: ['mes','lista','carga'].map(v => { const on = S.calView === v; return { label: v === 'mes' ? 'Mes' : v === 'lista' ? 'Lista' : 'Carga semanal', pick: () => this.setState({ calView: v }), bg: on ? '#F8F9F2' : 'rgba(0,0,0,0)', fg: on ? '#23281C' : '#565B47', peso: on ? 700 : 500 }; }),
       vistaMes: S.calView === 'mes', vistaLista: S.calView === 'lista', vistaCarga: S.calView === 'carga',
       mesNombre: this.MESES[mo] + ' ' + y, mesCeldas, leyenda,
