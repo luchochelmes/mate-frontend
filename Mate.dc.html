@@ -174,8 +174,15 @@
             </div>
           </sc-if>
 
+          <sc-if value="{{ noHayProx }}" hint-placeholder-val="{{ false }}">
+            <div style="background:#F8F9F2;border:1px dashed #C9CEB8;border-radius:16px;padding:24px;text-align:center;color:#565B47;display:flex;flex-direction:column;gap:8px;align-items:center">
+              <span style="font-family:Fraunces,serif;font-weight:700;font-size:17px;color:#33392A">Sin eventos próximos</span>
+              <span style="font-size:14px;max-width:44ch">Cuando cargues fechas (parciales, finales, TPs) vas a ver acá el próximo que tenes.</span>
+            </div>
+          </sc-if>
+          <sc-if value="{{ hayProx }}" hint-placeholder-val="{{ true }}">
           <div style="background:#F8F9F2;border:1px solid #DDE1D0;border-radius:16px;padding:clamp(16px,2.6vw,26px);display:flex;flex-direction:column;gap:18px">
-            <div style="font-family:"Instrument Sans",sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#565B47">Lo que viene</div>
+            <div style="font-family:'Instrument Sans',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#565B47">Lo que viene</div>
             <div style="display:flex;flex-wrap:wrap;align-items:center;gap:clamp(16px,3vw,30px)">
               <div style="flex:none;width:148px;border-radius:13px;overflow:hidden;background:#3B4A2F;color:#EDF1E0;box-shadow:0 10px 24px -16px rgba(35,40,28,.7)">
                 <div style="height:26px;background:#2E3A25;display:flex;align-items:center;justify-content:center;gap:26px">
@@ -201,6 +208,7 @@
               </div>
             </div>
           </div>
+          </sc-if>
 
           <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;align-items:start">
             <div style="background:#F8F9F2;border:1px solid #DDE1D0;border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:14px">
@@ -551,6 +559,13 @@
             </div>
             <button type="button" style="background:#3B4A2F;color:#EDF1E0;border-radius:9px;padding:10px 16px;font-size:14.5px;font-weight:600">Agregar bloque</button>
           </header>
+          <sc-if value="{{ horVacio }}" hint-placeholder-val="{{ true }}">
+            <div style="background:#F8F9F2;border:1px dashed #C9CEB8;border-radius:14px;padding:44px 24px;text-align:center;color:#565B47;display:flex;flex-direction:column;gap:8px;align-items:center">
+              <span style="font-family:Fraunces,serif;font-weight:700;font-size:17px;color:#33392A">Todavía no cargaste tu grilla</span>
+              <span style="font-size:14px;max-width:44ch">Pronto vas a poder agregar bloques con día, hora, materia y aula. Estamos preparando la función.</span>
+            </div>
+          </sc-if>
+          <sc-if value="{{ horLleno }}" hint-placeholder-val="{{ false }}">
           <div style="background:#F8F9F2;border:1px solid #DDE1D0;border-radius:14px;padding:14px;overflow-x:auto">
             <div style="display:grid;grid-template-columns:60px repeat(6,minmax(120px,1fr));gap:6px;min-width:820px">
               <div></div>
@@ -578,6 +593,7 @@
               </div>
             </sc-for>
           </div>
+          </sc-if>
         </section>
       </sc-if>
 
@@ -606,6 +622,12 @@
               <button type="button" onClick="{{ m.pick }}" style="font-size:13.5px;border:1px solid {{ m.bd }};background:{{ m.bg }};color:{{ m.fg }};border-radius:999px;padding:6px 12px">{{ m.n }}</button>
             </sc-for>
           </div>
+          <sc-if value="{{ planVacio }}" hint-placeholder-val="{{ false }}">
+            <div style="background:#F8F9F2;border:1px dashed #C9CEB8;border-radius:14px;padding:44px 24px;text-align:center;color:#565B47;display:flex;flex-direction:column;gap:8px;align-items:center">
+              <span style="font-family:Fraunces,serif;font-weight:700;font-size:17px;color:#33392A">Todavía no hay plan para armar</span>
+              <span style="font-size:14px;max-width:52ch">Necesitás materias cursando y una fecha de examen cerca. Cuando cargues materias y eventos, vas a ver los temas repartidos por semana.</span>
+            </div>
+          </sc-if>
           <div style="display:flex;flex-direction:column;gap:12px">
             <sc-for list="{{ planSemanas }}" as="s" hint-placeholder-count="4">
               <div style="background:#F8F9F2;border:1px solid #DDE1D0;border-left:4px solid {{ s.color }};border-radius:12px;padding:14px 18px;display:flex;flex-direction:column;gap:8px">
@@ -708,6 +730,13 @@
             <div style="font-family:'Instrument Sans',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#565B47">Repaso espaciado</div>
             <h1 style="margin:0;font-family:Fraunces,serif;font-weight:800;font-size:clamp(26px,4vw,36px);letter-spacing:-0.02em">Flashcards</h1>
           </header>
+          <sc-if value="{{ flashVacio }}" hint-placeholder-val="{{ true }}">
+            <div style="background:#F8F9F2;border:1px dashed #C9CEB8;border-radius:14px;padding:44px 24px;text-align:center;color:#565B47;display:flex;flex-direction:column;gap:8px;align-items:center">
+              <span style="font-family:Fraunces,serif;font-weight:700;font-size:17px;color:#33392A">Todavía no cargaste flashcards</span>
+              <span style="font-size:14px;max-width:44ch">Pronto vas a poder crear tus propios mazos de repaso espaciado. Estamos preparando la función.</span>
+            </div>
+          </sc-if>
+          <sc-if value="{{ flashLleno }}" hint-placeholder-val="{{ false }}">
           <div style="display:flex;flex-wrap:wrap;gap:7px">
             <sc-for list="{{ flashDecks }}" as="d" hint-placeholder-count="4">
               <button type="button" onClick="{{ d.pick }}" style="font-size:13.5px;border:1px solid {{ d.bd }};background:{{ d.bg }};color:{{ d.fg }};border-radius:999px;padding:6px 12px">{{ d.n }} <span style="font-size:11px;opacity:.7">· {{ d.cantidad }}</span></button>
@@ -736,6 +765,7 @@
               <button type="button" style="background:#E1E7D2;color:#3B4A2F;border:1px solid #C5CFB0;border-radius:8px;padding:8px 14px;font-size:12.5px">Fácil</button>
             </div>
           </div>
+          </sc-if>
         </section>
       </sc-if>
 
@@ -754,6 +784,13 @@
           <div style="height:6px;border-radius:999px;background:#E2E5D5;overflow:hidden">
             <div style="height:100%;border-radius:999px;background:#3B4A2F;width:35%"></div>
           </div>
+          <sc-if value="{{ examVacio }}" hint-placeholder-val="{{ true }}">
+            <div style="background:#F8F9F2;border:1px dashed #C9CEB8;border-radius:14px;padding:44px 24px;text-align:center;color:#565B47;display:flex;flex-direction:column;gap:8px;align-items:center">
+              <span style="font-family:Fraunces,serif;font-weight:700;font-size:17px;color:#33392A">Todavía no hay preguntas cargadas</span>
+              <span style="font-size:14px;max-width:44ch">Pronto vas a poder armar tus simulacros con preguntas y opciones. Estamos preparando la función.</span>
+            </div>
+          </sc-if>
+          <sc-if value="{{ examLleno }}" hint-placeholder-val="{{ false }}">
           <div style="background:#F8F9F2;border:1px solid #DDE1D0;border-radius:14px;padding:24px;display:flex;flex-direction:column;gap:18px">
             <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
               <span style="font-family:'Instrument Sans',sans-serif;font-size:12px;color:#565B47">Pregunta 4 de 10 · Análisis Matemático II</span>
@@ -773,6 +810,7 @@
               <button type="button" style="background:#3B4A2F;color:#EDF1E0;border-radius:8px;padding:10px 20px;font-size:14px;font-weight:600">Siguiente →</button>
             </div>
           </div>
+          </sc-if>
         </section>
       </sc-if>
 
@@ -786,6 +824,12 @@
             <input type="text" placeholder="Buscar por materia o cátedra..." style="flex:1;min-width:220px;border:1px solid #DDE1D0;background:#F8F9F2;border-radius:8px;padding:10px 14px;font-size:14px;font-family:inherit;color:#23281C">
             <button type="button" onClick="{{ abrirUpParcial }}" style="background:#3B4A2F;color:#EDF1E0;border-radius:8px;padding:10px 18px;font-size:14px;font-weight:600">+ Subir parcial</button>
           </div>
+          <sc-if value="{{ bancoVacio }}" hint-placeholder-val="{{ true }}">
+            <div style="background:#F8F9F2;border:1px dashed #C9CEB8;border-radius:14px;padding:44px 24px;text-align:center;color:#565B47;display:flex;flex-direction:column;gap:8px;align-items:center">
+              <span style="font-family:Fraunces,serif;font-weight:700;font-size:17px;color:#33392A">Todavía no hay parciales</span>
+              <span style="font-size:14px;max-width:44ch">Subí tu primer parcial con el botón “Subir parcial”. Los parciales que subas aparecen acá para descargar después.</span>
+            </div>
+          </sc-if>
           <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px">
             <sc-for list="{{ bancoItems }}" as="b" hint-placeholder-count="6">
               <div style="background:#F8F9F2;border:1px solid #DDE1D0;border-left:4px solid {{ b.col }};border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:8px">
@@ -816,6 +860,13 @@
             </div>
             <button type="button" style="background:#3B4A2F;color:#EDF1E0;border-radius:9px;padding:10px 16px;font-size:14.5px;font-weight:600">Crear grupo</button>
           </header>
+          <sc-if value="{{ gruposVacio }}" hint-placeholder-val="{{ true }}">
+            <div style="background:#F8F9F2;border:1px dashed #C9CEB8;border-radius:14px;padding:44px 24px;text-align:center;color:#565B47;display:flex;flex-direction:column;gap:8px;align-items:center">
+              <span style="font-family:Fraunces,serif;font-weight:700;font-size:17px;color:#33392A">Todavía no hay grupos</span>
+              <span style="font-size:14px;max-width:44ch">Pronto vas a poder crear grupos de estudio con tus compañeros. Estamos preparando la función.</span>
+            </div>
+          </sc-if>
+          <sc-if value="{{ gruposLleno }}" hint-placeholder-val="{{ false }}">
           <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px">
             <sc-for list="{{ gruposItems }}" as="g" hint-placeholder-count="4">
               <div style="background:#F8F9F2;border:1px solid #DDE1D0;border-radius:14px;padding:18px;display:flex;flex-direction:column;gap:12px">
@@ -842,6 +893,7 @@
               </div>
             </sc-for>
           </div>
+          </sc-if>
         </section>
       </sc-if>
 
@@ -869,6 +921,10 @@
               <span style="font-family:Fraunces,serif;font-weight:700;font-size:17px">Horas por materia · esta semana</span>
               <span style="font-size:12.5px;color:#565B47">Total: {{ pomoTotal }}</span>
             </div>
+            <sc-if value="{{ pomoVacio }}" hint-placeholder-val="{{ true }}">
+              <div style="color:#565B47;font-size:14px;text-align:center;padding:16px">Todavía no hay datos de estudio. Cuando arranques a usar el Pomodoro, vas a ver acá las horas por materia.</div>
+            </sc-if>
+            <sc-if value="{{ pomoLleno }}" hint-placeholder-val="{{ false }}">
             <div style="display:flex;flex-direction:column;gap:10px">
               <sc-for list="{{ pomoBars }}" as="p" hint-placeholder-count="5">
                 <div style="display:flex;align-items:center;gap:12px">
@@ -880,6 +936,7 @@
                 </div>
               </sc-for>
             </div>
+            </sc-if>
           </div>
         </section>
       </sc-if>
@@ -939,6 +996,12 @@
               <div><strong>Carrera:</strong> {{ perfilCarrera }}</div>
               <div><strong>Universidad:</strong> {{ perfilUni }}</div>
             </div>
+          </div>
+
+          <div style="background:#F8F9F2;border:1px solid #E2CBAE;border-radius:14px;padding:22px;display:flex;flex-direction:column;gap:12px">
+            <div style="font-family:'Instrument Sans',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#9B3B28">Zona peligrosa</div>
+            <p style="margin:0;font-size:14px;color:#33392A;line-height:1.5">Borrar todos los datos de tu cuenta en este navegador: materias, apuntes, parciales subidos, conversaciones del chat y configuración del cuatrimestre. Tu usuario y contraseña se mantienen; solo se limpian los datos.</p>
+            <button type="button" onClick="{{ resetTodo }}" style="align-self:flex-start;background:#fff;color:#9B3B28;border:1px solid #E2CBAE;border-radius:8px;padding:10px 16px;font-size:14px;font-weight:600;cursor:pointer">Borrar todos mis datos</button>
           </div>
         </section>
       </sc-if>
@@ -1079,37 +1142,11 @@ class Component extends DCLogic {
     abandonada:   { label: 'Abandonada',   color: '#84806F', fill: 0 }
   };
   ORDEN = ['cursando','regular','promocionada','aprobada','libre','recursando','abandonada'];
-  MATERIAS = [
-    { id:'amii', n:'Análisis Matemático II', cat:'Cátedra Ferrari', est:'cursando', col:'#4E6B33', notas:[{n:'Parcial 1',v:7}], final:null, asis:{on:true,p:9,t:11,min:75}, reg:null, hab:['Análisis Matemático III','Física III'] },
-    { id:'fis2', n:'Física II', cat:'Cátedra Sosa', est:'cursando', col:'#2F6B63', notas:[{n:'Parcial 1',v:4}], final:null, asis:{on:true,p:6,t:10,min:75}, reg:null, hab:['Electrotecnia'] },
-    { id:'bd', n:'Bases de Datos', cat:'Cátedra Iriarte', est:'cursando', col:'#9B4A2A', notas:[{n:'TP 1',v:8}], final:null, asis:{on:false}, reg:null, hab:['Sistemas de Información'] },
-    { id:'so', n:'Sistemas Operativos', cat:'Cátedra Peralta', est:'regular', col:'#3E5C7E', notas:[{n:'Parcial 1',v:7},{n:'Parcial 2',v:6}], final:null, asis:{on:false}, reg:'2026-09-05', hab:['Redes de Datos'] },
-    { id:'alg', n:'Álgebra y Geometría Analítica', cat:'Cátedra Duarte', est:'regular', col:'#8C6E4A', notas:[{n:'Parcial 1',v:6},{n:'Parcial 2',v:8}], final:null, asis:{on:false}, reg:'2027-03-20', hab:['Análisis Matemático II'] },
-    { id:'poo', n:'Programación Orientada a Objetos', cat:'Cátedra Molina', est:'promocionada', col:'#6A5B8A', notas:[{n:'Parcial 1',v:9},{n:'Parcial 2',v:9}], final:9, asis:{on:false}, reg:null, hab:['Bases de Datos','Ingeniería de Software'] },
-    { id:'eco', n:'Economía para Ingeniería', cat:'Cátedra Vera', est:'libre', col:'#A67C1F', notas:[{n:'Parcial 1',v:3}], final:null, asis:{on:false}, reg:null, hab:[] },
-    { id:'qui', n:'Química General', cat:'Cátedra Lugo', est:'recursando', col:'#84806F', notas:[{n:'Parcial 1',v:2}], final:null, asis:{on:true,p:4,t:9,min:75}, reg:null, hab:[] },
-    { id:'ing', n:'Inglés Técnico I', cat:'Cátedra Ortiz', est:'aprobada', col:'#5C7343', notas:[], final:8, asis:{on:false}, reg:null, hab:['Inglés Técnico II'] },
-    { id:'aed', n:'Algoritmos y Estructuras de Datos', cat:'Cátedra Molina', est:'aprobada', col:'#7B3F53', notas:[], final:10, asis:{on:false}, reg:null, hab:['Programación Orientada a Objetos'] },
-    { id:'ami', n:'Análisis Matemático I', cat:'Cátedra Ferrari', est:'aprobada', col:'#6B7F3A', notas:[], final:6, asis:{on:false}, reg:null, hab:['Análisis Matemático II','Física I'] }
-  ];
-  EVENTOS = [
-    { f:'2026-08-05', tipo:'Parcial', titulo:'Parcial 1', mid:'amii' },
-    { f:'2026-08-07', tipo:'Trabajo práctico', titulo:'TP 1', mid:'bd' },
-    { f:'2026-08-14', tipo:'Entrega', titulo:'Entrega TP 2', mid:'bd' },
-    { f:'2026-08-18', tipo:'Parcial', titulo:'Parcial 2', mid:'amii' },
-    { f:'2026-08-20', tipo:'Trabajo práctico', titulo:'TP 3', mid:'fis2' },
-    { f:'2026-08-24', tipo:'Presentación', titulo:'Presentación de proyecto', mid:'bd' },
-    { f:'2026-08-26', tipo:'Parcial', titulo:'Parcial 2', mid:'fis2' },
-    { f:'2026-08-28', tipo:'Final', titulo:'Final', mid:'eco' },
-    { f:'2026-09-03', tipo:'Parcial', titulo:'Parcial 1', mid:'so' },
-    { f:'2026-09-05', tipo:'Regularidad', titulo:'Vence la regularidad', mid:'so' },
-    { f:'2026-09-10', tipo:'Trabajo práctico', titulo:'TP 4', mid:'fis2' },
-    { f:'2026-09-15', tipo:'Final', titulo:'Final', mid:'alg' },
-    { f:'2026-09-22', tipo:'Parcial', titulo:'Parcial 3', mid:'amii' }
-  ];
-  APLAZO = { m:'Economía para Ingeniería', v:2 };
-  PLAN_TOTAL = 38;
-  HOY = new Date(2026, 7, 12);
+  MATERIAS = [];
+  EVENTOS = [];
+  APLAZO = null;
+  PLAN_TOTAL = 0;
+  HOY = new Date();
   DIAS = ['dom','lun','mar','mié','jue','vie','sáb'];
   MESES = ['enero','febrero','marzo','abril','mayo','junio','julio','agosto','septiembre','octubre','noviembre','diciembre'];
 
@@ -1210,19 +1247,26 @@ class Component extends DCLogic {
 
     // --- próximos eventos ---
     const futuros = this.EVENTOS.filter(e => this.parse(e.f) >= hoy).sort((a, b) => a.f < b.f ? -1 : 1);
-    const p0 = futuros[0], m0 = _matAll(p0.mid), d0 = this.parse(p0.f);
-    const prox = { dia: d0.getDate(), mes: this.MESES[d0.getMonth()].slice(0, 3), diaSemana: this.DIAS[d0.getDay()], tipo: p0.tipo, titulo: p0.titulo, materia: m0.n, catedra: m0.cat, color: m0.col };
+    const p0 = futuros[0];
+    const m0 = p0 ? _matAll(p0.mid) : null;
+    const d0 = p0 ? this.parse(p0.f) : null;
+    const hayProx = !!p0;
+    const prox = p0
+      ? { dia: d0.getDate(), mes: this.MESES[d0.getMonth()].slice(0, 3), diaSemana: this.DIAS[d0.getDay()], tipo: p0.tipo, titulo: p0.titulo, materia: (m0 && m0.n) || 'Materia', catedra: (m0 && m0.cat) || '', color: (m0 && m0.col) || '#565B47' }
+      : { dia: '-', mes: '', diaSemana: '', tipo: '', titulo: 'Todavía no cargaste eventos', materia: '', catedra: '', color: '#565B47' };
     const proxDespues = futuros.slice(1, 3).map(e => {
       const m = _matAll(e.mid);
-      return { fecha: this.fmtCorto(this.parse(e.f)), texto: e.titulo + ' de ' + m.n, color: m.col };
+      return { fecha: this.fmtCorto(this.parse(e.f)), texto: e.titulo + ' de ' + ((m && m.n) || 'materia'), color: (m && m.col) || '#565B47' };
     });
 
     // --- promedios ---
     const aprobadas = MATS.filter(m => ['aprobada','promocionada'].includes(this.estadoDe(m)) && m.final != null);
     const suma = aprobadas.reduce((a, m) => a + m.final, 0);
-    const promSin = (suma / aprobadas.length).toFixed(2);
-    const promCon = ((suma + this.APLAZO.v) / (aprobadas.length + 1)).toFixed(2);
-    const carreraPct = +(aprobadas.length / this.PLAN_TOTAL * 100).toFixed(1);
+    const promSin = aprobadas.length > 0 ? (suma / aprobadas.length).toFixed(2) : '—';
+    const aplazoV = (this.APLAZO && this.APLAZO.v) || 0;
+    const aplazoN = (this.APLAZO && this.APLAZO.v != null) ? 1 : 0;
+    const promCon = (aprobadas.length + aplazoN) > 0 ? ((suma + aplazoV) / (aprobadas.length + aplazoN)).toFixed(2) : '—';
+    const carreraPct = this.PLAN_TOTAL > 0 ? +(aprobadas.length / this.PLAN_TOTAL * 100).toFixed(1) : 0;
     const cursandoN = MATS.filter(m => this.estadoDe(m) === 'cursando').length;
     const estaSemana = this.EVENTOS.filter(e => { const d = this.parse(e.f); const diff = (d - hoy) / 86400000; return diff >= 0 && diff < 14; }).length;
 
@@ -1403,18 +1447,7 @@ class Component extends DCLogic {
     // --- HORARIOS ---
     const horDias = [{n:'Lun'},{n:'Mar'},{n:'Mié'},{n:'Jue'},{n:'Vie'},{n:'Sáb'}];
     const horHoras = ['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00'];
-    const horBloques = {
-      '08:00-0': {mat:'Análisis Mat. II', aula:'Aula 12', col:'#4E6B33'},
-      '10:00-0': {mat:'Química General',   aula:'Lab 3',   col:'#84806F'},
-      '14:00-1': {mat:'Física II',         aula:'Aula 8',  col:'#2F6B63'},
-      '18:00-1': {mat:'POO',               aula:'Aula 5',  col:'#6A5B8A'},
-      '09:00-2': {mat:'Álgebra',           aula:'Aula 12', col:'#8C6E4A'},
-      '15:00-2': {mat:'Bases de Datos',    aula:'Lab 1',   col:'#9B4A2A'},
-      '11:00-3': {mat:'Análisis Mat. II',  aula:'Aula 12', col:'#4E6B33'},
-      '16:00-3': {mat:'Sist. Operativos',  aula:'Aula 8',  col:'#3E5C7E'},
-      '08:00-4': {mat:'Física II',         aula:'Aula 8',  col:'#2F6B63'},
-      '13:00-4': {mat:'Bases de Datos',    aula:'Lab 1',   col:'#9B4A2A'}
-    };
+    const horBloques = {};
     const horFilas = horHoras.map(h => ({
       hora: h,
       celdas: [0,1,2,3,4,5].map(d => {
@@ -1423,19 +1456,11 @@ class Component extends DCLogic {
                  : { tieneMat:false, mat:'', aula:'', bg:'rgba(0,0,0,0)', bd:'rgba(0,0,0,0.04)', fg:'#565B47', pad:'0' };
       })
     }));
-    const horLeyenda = [
-      {n:'Análisis Mat. II', color:'#4E6B33'},
-      {n:'Física II',        color:'#2F6B63'},
-      {n:'Bases de Datos',   color:'#9B4A2A'},
-      {n:'POO',              color:'#6A5B8A'},
-      {n:'Álgebra',          color:'#8C6E4A'},
-      {n:'Química',          color:'#84806F'},
-      {n:'Sist. Operativos', color:'#3E5C7E'}
-    ];
+    const horLeyenda = [];
 
     // --- PLAN DE ESTUDIO ---
     const cursandoList = MATS.filter(m => this.estadoDe(m) === 'cursando');
-    const planMat = _matAll(S.planMid) || cursandoList[0] || MATS[0];
+    const planMat = _matAll(S.planMid) || cursandoList[0] || MATS[0] || { id:'', n:'—', col:'#565B47' };
     const planMaterias = cursandoList.map(m => {
       const on = S.planMid === m.id;
       return { n: m.n, pick: () => this.setState({ planMid: m.id }), bd: on ? '#3B4A2F' : '#D3D8C2', bg: on ? '#3B4A2F' : '#F8F9F2', fg: on ? '#F2F5E6' : '#4B5240' };
@@ -1444,14 +1469,8 @@ class Component extends DCLogic {
     const planFechaDate = planEventoFinal ? this.parse(planEventoFinal.f) : new Date(hoy.getTime() + 30*86400000);
     const planFecha = planFechaDate.getDate() + ' ' + this.MESES[planFechaDate.getMonth()];
     const planDias = Math.max(0, Math.round((planFechaDate - hoy) / 86400000));
-    const planTemasPorMat = {
-      amii: ['Sucesiones y series','Series numéricas','Series de potencias','Series de Fourier','Ecuaciones diferenciales de 1er orden','EDO lineales','Sistemas de EDO','Aplicaciones'],
-      fis2: ['Electrostática','Campo eléctrico','Potencial y capacidad','Corriente y resistencia','Circuitos DC','Magnetismo','Inducción electromagnética','Circuitos AC'],
-      bd:   ['Modelo relacional','SQL básico','Consultas avanzadas','Joins y subconsultas','Normalización','Índices y performance','Transacciones','NoSQL'],
-      so:   ['Procesos','Threads','Sincronización','Deadlocks','Memoria virtual','File systems','I/O','Casos: Linux y Windows'],
-      alg:  ['Vectores en R2 y R3','Matrices','Determinantes','Sistemas lineales','Espacios vectoriales','Transformaciones','Autovalores','Cónicas y cuádricas']
-    };
-    const planTemas = planTemasPorMat[planMat.id] || ['Repaso teoría','Ejercicios de práctica','Problemas tipo parcial','Simulacros'];
+    const planTemasPorMat = {};
+    const planTemas = planTemasPorMat[planMat.id] || [];
     const semTotal = Math.max(1, Math.ceil(planDias / 7));
     const perSem = Math.ceil(planTemas.length / semTotal);
     const planSemanas = [];
@@ -1558,60 +1577,22 @@ class Component extends DCLogic {
     };
 
     // --- FLASHCARDS ---
-    const flashDecksData = {
-      amii: [
-        { p:'¿Qué es una serie geométrica?', r:'Una serie de la forma Σ ar^n donde |r|<1 para que converja.' },
-        { p:'Fórmula de la suma de una serie geométrica convergente', r:'S = a / (1 - r) para |r| < 1' },
-        { p:'¿Qué establece el criterio de la razón?', r:'Si lim |a(n+1)/a(n)| < 1, la serie converge absolutamente.' },
-        { p:'¿Qué es una serie de Fourier?', r:'Una representación de una función periódica como suma de senos y cosenos.' }
-      ],
-      fis2: [
-        { p:'Ley de Coulomb', r:'F = k · q1·q2 / r²' },
-        { p:'Ley de Ohm', r:'V = I · R' },
-        { p:'Ley de Gauss (forma integral)', r:'∮ E · dA = Q_enc / ε₀' }
-      ],
-      bd: [
-        { p:'¿Qué es una clave primaria?', r:'Un atributo (o conjunto) que identifica de forma única a cada fila de una tabla.' },
-        { p:'Diferencia entre INNER JOIN y LEFT JOIN', r:'INNER devuelve solo filas con coincidencia; LEFT devuelve todas las de la izquierda + coincidencias.' }
-      ],
-      so: [
-        { p:'¿Qué es un deadlock?', r:'Situación en la que dos o más procesos se bloquean esperando recursos que el otro tiene.' }
-      ]
-    };
-    const flashDecks = [
-      {id:'amii', n:'Análisis Mat. II'},
-      {id:'fis2', n:'Física II'},
-      {id:'bd',   n:'Bases de Datos'},
-      {id:'so',   n:'Sistemas Operativos'}
-    ].map(d => {
+    const flashDecksData = {};
+    const flashDecks = [].map(d => {
       const on = S.flashDeckId === d.id;
       const cant = (flashDecksData[d.id] || []).length;
       return { n: d.n, cantidad: cant, pick: () => this.setState({ flashDeckId: d.id, flashIdx: 0, flashFlipped: false }), bd: on ? '#3B4A2F' : '#D3D8C2', bg: on ? '#3B4A2F' : '#F8F9F2', fg: on ? '#F2F5E6' : '#4B5240' };
     });
     const flashCards = flashDecksData[S.flashDeckId] || [];
-    const flashCard = flashCards[S.flashIdx] || { p: 'Todavía no hay tarjetas en este mazo', r: '' };
+    const flashCard = flashCards[S.flashIdx] || { p: 'Todavía no cargaste flashcards', r: '' };
     const flashActTotal = flashCards.length || 1;
     const flashActN = flashCards.length ? (S.flashIdx + 1) : 0;
 
     // --- EXAMEN ---
-    const examOpc = [
-      { letra:'A', texto:'Existe al menos un punto c en (a,b) tal que f\'(c) = 0' },
-      { letra:'B', texto:'Existe al menos un punto c en (a,b) tal que f\'(c) = (f(b) - f(a)) / (b - a)' },
-      { letra:'C', texto:'La función f es constante en el intervalo [a,b]' },
-      { letra:'D', texto:'La derivada de f es continua en (a,b)' }
-    ];
+    const examOpc = [];
 
     // --- BANCO ---
-    const bancoDefault = [
-      {mat:'Análisis Matemático II', cat:'Ferrari', tipo:'Parcial 1', anio:'2025', descargas:142, col:'#4E6B33', esDefault:true},
-      {mat:'Análisis Matemático II', cat:'Ferrari', tipo:'Final',     anio:'2024', descargas:98,  col:'#4E6B33', esDefault:true},
-      {mat:'Física II',              cat:'Sosa',    tipo:'Parcial 2', anio:'2025', descargas:76,  col:'#2F6B63', esDefault:true},
-      {mat:'Bases de Datos',         cat:'Iriarte', tipo:'Parcial 1', anio:'2025', descargas:210, col:'#9B4A2A', esDefault:true},
-      {mat:'Bases de Datos',         cat:'Iriarte', tipo:'Recuperatorio', anio:'2024', descargas:54, col:'#9B4A2A', esDefault:true},
-      {mat:'Sistemas Operativos',    cat:'Peralta', tipo:'Parcial 2', anio:'2025', descargas:64,  col:'#3E5C7E', esDefault:true},
-      {mat:'POO',                    cat:'Molina',  tipo:'Final',     anio:'2025', descargas:88,  col:'#6A5B8A', esDefault:true},
-      {mat:'Álgebra',                cat:'Duarte',  tipo:'Parcial 1', anio:'2025', descargas:120, col:'#8C6E4A', esDefault:true}
-    ];
+    const bancoDefault = [];
     const bancoSubidos = S.uploads.map(u => ({ mat: u.matNombre, cat: u.cat, tipo: u.tipo, anio: u.anio, descargas: u.descargas || 0, col: u.col || '#565B47', esDefault:false, id: u.id, download: descargarSubido(u), dlLabel: 'Descargar' }));
     const bancoItems = [...bancoSubidos, ...bancoDefault].map(b => Object.assign({}, b, {
       download: b.download || (() => alert('Este es un parcial de ejemplo. Subí los tuyos con el botón de arriba y podrás descargarlos.')),
@@ -1620,16 +1601,7 @@ class Component extends DCLogic {
 
     // --- GRUPOS ---
     const avatarColors = ['#5C6E48','#8A5A3B','#3E5C7E','#84806F','#6A5B8A','#9B4A2A','#2F6B63'];
-    const gruposItems = [
-      { n:'Los Fourier',         mat:'Análisis Mat. II', col:'#4E6B33', prox:'Jueves 20hs · Google Meet',   miembros: ['LC','MP','JV','SR','+2'] },
-      { n:'Circuitos y Café',    mat:'Física II',        col:'#2F6B63', prox:'Sábado 15hs · Biblioteca',    miembros: ['FT','AB','LC'] },
-      { n:'SELECT * FROM Team',  mat:'Bases de Datos',   col:'#9B4A2A', prox:'Miércoles 19hs · Discord',    miembros: ['LC','KP','NS','AM','+3'] },
-      { n:'Estudio POO',         mat:'Programación',     col:'#6A5B8A', prox:'Viernes 18hs · Aula 5',       miembros: ['MP','LC','JV'] }
-    ].map(g => ({
-      n: g.n, mat: g.mat, col: g.col, prox: g.prox,
-      miembros: g.miembros.map((i, idx) => ({ i, bg: avatarColors[idx % avatarColors.length] })),
-      miembrosTxt: g.miembros.length + ' miembros'
-    }));
+    const gruposItems = [];
 
     // --- MATERIAS: acciones ---
     const abrirAddMat = () => this.setState({ modal:'addMat', matForm:{ id:'', n:'', cat:'', col:'#4E6B33', est:'cursando' } });
@@ -1750,14 +1722,8 @@ class Component extends DCLogic {
     };
 
     // --- POMODORO ---
-    const pomoBars = [
-      { n:'Análisis Mat. II',     color:'#4E6B33', pct:80, txt:'4.0 hs' },
-      { n:'Física II',            color:'#2F6B63', pct:50, txt:'2.5 hs' },
-      { n:'Bases de Datos',       color:'#9B4A2A', pct:65, txt:'3.2 hs' },
-      { n:'Sistemas Operativos',  color:'#3E5C7E', pct:30, txt:'1.5 hs' },
-      { n:'Álgebra',              color:'#8C6E4A', pct:15, txt:'0.7 hs' }
-    ];
-    const pomoTotalH = pomoBars.reduce((s,p) => s + parseFloat(p.txt), 0).toFixed(1);
+    const pomoBars = [];
+    const pomoTotalH = '0.0';
 
     // ============ CUATRIMESTRE + TIMELINE ============
     const _pad = (n) => (n<10?'0':'')+n;
@@ -1851,6 +1817,17 @@ class Component extends DCLogic {
     // Config: navegación y handlers
     const irConfig = () => this.setState({ screen: 'config' });
     const irCalendario = () => this.setState({ screen: 'calendario' });
+    const resetTodo = () => {
+      if (!S.user) return;
+      if (!confirm('¿Seguro que querés borrar TODOS tus datos? Esta acción no se puede deshacer.')) return;
+      const confirm2 = prompt('Escribí BORRAR para confirmar:');
+      if (confirm2 !== 'BORRAR') return;
+      try {
+        const prefix = 'mate_' + S.user.email + '_';
+        ['materias','notas','uploads','chatConvos','cuatri'].forEach(k => localStorage.removeItem(prefix + k));
+      } catch(e){}
+      this.setState({ userMats: [], notas: {}, uploads: [], chatConvos: {}, cuatri: null, cuatriForm: { ini:'', fin:'' }, screen: 'inicio', materiaId: null });
+    };
     const setBackendUrl = (e) => this.setState({ backendUrlBuf: e.target.value, backendMsg: '', backendMsgKind: '' });
     const guardarBackendUrl = () => {
       const url = (S.backendUrlBuf || '').trim().replace(/\/+$/, '');
@@ -1920,6 +1897,19 @@ class Component extends DCLogic {
       chatEnviarDisabled: S.chatSending || (!(S.chatInput || '').trim() && !S.chatPdfPending),
       chatEnviarBg: S.chatSending ? '#8F887F' : '#3B4A2F',
       chatEnviarCursor: S.chatSending ? 'wait' : 'pointer',
+      horVacio: Object.keys(horBloques).length === 0,
+      horLleno: Object.keys(horBloques).length > 0,
+      planVacio: planSemanas.length === 0 || (planSemanas[0] && planSemanas[0].temas.length === 0),
+      flashVacio: flashDecks.length === 0,
+      flashLleno: flashDecks.length > 0,
+      examVacio: examOpc.length === 0,
+      examLleno: examOpc.length > 0,
+      bancoVacio: bancoItems.length === 0,
+      gruposVacio: gruposItems.length === 0,
+      gruposLleno: gruposItems.length > 0,
+      pomoVacio: pomoBars.length === 0,
+      pomoLleno: pomoBars.length > 0,
+      hayProx, noHayProx: !hayProx,
       flashDecks, flashPregunta: flashCard.p, flashRespuesta: flashCard.r,
       flashFrente: !S.flashFlipped, flashDorso: S.flashFlipped, flashActN, flashActTotal,
       flashFlip: () => this.setState({ flashFlipped: !S.flashFlipped }),
@@ -1949,7 +1939,7 @@ class Component extends DCLogic {
       hayCuatriErr: !!S.__cuatriErr, cuatriErr: S.__cuatriErr || '',
       perfilNombre: (user && user.nombre) || '—', perfilApodo: (user && user.apodo) || '—', perfilEmail: (user && user.email) || '—', perfilCarrera: (user && user.carrera) || '—', perfilUni: (user && user.universidad) || '—',
       backendUrl: S.backendUrlBuf || S.backendUrl || '',
-      setBackendUrl, guardarBackendUrl, probarBackend,
+      setBackendUrl, guardarBackendUrl, probarBackend, resetTodo,
       hayBackendMsg: !!S.backendMsg,
       backendMsg: S.backendMsg || '',
       backendMsgColor: S.backendMsgKind === 'err' ? '#9B3B28' : (S.backendMsgKind === 'ok' ? '#3B4A2F' : '#565B47'),
@@ -1962,7 +1952,7 @@ class Component extends DCLogic {
       esInicio: screen === 'inicio', esMaterias: screen === 'materias', esDetalle: screen === 'detalle',
       esCalendario: screen === 'calendario', esOtra: !conocidas.includes(screen),
       otraTitulo, irInicio: go('inicio'),
-      hoyTexto: 'miércoles 12 de agosto',
+      hoyTexto: this.DIAS[hoy.getDay()] + ' ' + hoy.getDate() + ' de ' + this.MESES[hoy.getMonth()],
       saludoTxt: ((user && (user.apodo || user.nombre)) ? 'Buenas, ' + (user.apodo || user.nombre) : 'Buenas'),
       prox: proxConColor,
       resumen: [
@@ -1972,7 +1962,7 @@ class Component extends DCLogic {
         { valor: aprobadas.length, label: 'materias aprobadas' }
       ],
       carreraPct, carreraPctTxt: Math.round(carreraPct) + '%',
-      carreraTexto: aprobadas.length + ' de ' + this.PLAN_TOTAL + ' materias del plan',
+      carreraTexto: this.PLAN_TOTAL > 0 ? (aprobadas.length + ' de ' + this.PLAN_TOTAL + ' materias del plan') : (aprobadas.length + ' materias aprobadas'),
       promSin, promCon,
       filtros, materias: listaMaterias, hayMaterias: listaMaterias.length > 0, sinMaterias: listaMaterias.length === 0,
       simOpen: S.simOpen, toggleSim: () => this.setState({ simOpen: !S.simOpen }),
