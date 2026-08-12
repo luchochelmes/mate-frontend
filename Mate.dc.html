@@ -526,11 +526,11 @@
                   <div style="min-height:{{ celdaAlto }};border-radius:8px;background:{{ c.bg }};border:1px solid {{ c.bd }};padding:5px 5px 6px;display:flex;flex-direction:column;gap:4px">
                     <span style="font-family:"Instrument Sans",sans-serif;font-size:11.5px;color:{{ c.numColor }};font-weight:{{ c.numPeso }}">{{ c.dia }}</span>
                     <sc-for list="{{ c.eventos }}" as="ev" hint-placeholder-count="0">
-                      <div style="display:flex;align-items:center;gap:3px;padding:2px 5px;border-radius:4px;background:{{ ev.bgColor }};opacity:{{ ev.op }};overflow:hidden">
+                      <button type="button" onClick="{{ ev.editEv }}" style="display:flex;align-items:center;gap:3px;padding:2px 5px;border-radius:4px;background:{{ ev.bgColor }};opacity:{{ ev.op }};overflow:hidden;border:0;cursor:pointer;width:100%;text-align:left">
                         <span style="width:5px;height:5px;border-radius:999px;flex:none;background:{{ ev.color }}"></span>
                         <span style="font-family:'Instrument Sans',sans-serif;font-size:10px;font-weight:700;color:{{ ev.color }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.4">{{ ev.tipo }}</span>
                         <span style="font-family:'Instrument Sans',sans-serif;font-size:10px;color:{{ ev.color }};opacity:.75;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;line-height:1.4;flex:1;min-width:0">· {{ ev.mat }}</span>
-                      </div>
+                      </button>
                     </sc-for>
                   </div>
                 </sc-for>
@@ -561,6 +561,8 @@
                         <span style="font-size:15.5px;font-weight:600;color:#23281C;text-decoration:{{ e.deco }}">{{ e.titulo }}</span>
                         <span style="font-size:13px;color:#565B47">{{ e.materia }} · {{ e.tipo }}</span>
                       </div>
+                      <button type="button" onClick="{{ e.editEv }}" style="flex:none;padding:6px 8px;border-radius:7px;border:1px solid #DDE1D0;background:#F8F9F2;color:#565B47;font-size:12px;cursor:pointer" aria-label="Editar">✏</button>
+                      <button type="button" onClick="{{ e.eliminarEv }}" style="flex:none;padding:6px 8px;border-radius:7px;border:1px solid #E2CBAE;background:#fff;color:#9B3B28;font-size:12px;cursor:pointer" aria-label="Eliminar">✕</button>
                       <button type="button" onClick="{{ e.toggle }}" style="flex:none;width:26px;height:26px;border-radius:999px;border:1.5px solid {{ e.checkBd }};background:{{ e.checkBg }};color:#F8F9F2;font-size:13px;line-height:1;display:flex;align-items:center;justify-content:center;animation:{{ e.anim }}" aria-label="Marcar como hecho">{{ e.check }}</button>
                     </div>
                   </sc-for>
@@ -1285,9 +1287,12 @@
           <sc-if value="{{ hayEvError }}" hint-placeholder-val="{{ false }}">
             <div style="font-size:13px;color:#9B3B28;background:#F3E1DC;border:1px solid #E2CBAE;border-radius:8px;padding:8px 12px">{{ evError }}</div>
           </sc-if>
-          <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:6px">
+          <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:6px;flex-wrap:wrap">
+            <sc-if value="{{ evEsEdicion }}" hint-placeholder-val="{{ false }}">
+              <button type="button" onClick="{{ eliminarEvActual }}" style="border:1px solid #E2CBAE;background:#fff;color:#9B3B28;border-radius:8px;padding:10px 16px;font-size:14px;margin-right:auto">Eliminar</button>
+            </sc-if>
             <button type="button" onClick="{{ cerrarModal }}" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 16px;font-size:14px;color:#565B47">Cancelar</button>
-            <button type="button" onClick="{{ guardarEv }}" style="background:#3B4A2F;color:#EDF1E0;border-radius:8px;padding:10px 18px;font-size:14px;font-weight:600">Guardar evento</button>
+            <button type="button" onClick="{{ guardarEv }}" style="background:#3B4A2F;color:#EDF1E0;border-radius:8px;padding:10px 18px;font-size:14px;font-weight:600">Guardar</button>
           </div>
         </div>
       </sc-if>
@@ -1586,6 +1591,13 @@ class Component extends DCLogic {
       this.saveUserKey('uploads', updated);
       this.setState({ uploads: updated });
     };
+    const eliminarEv = (id) => () => {
+      if (!confirm('¿Eliminar este evento?')) return;
+      const updated = S.eventos.filter(e => e.id !== id);
+      this.saveUserKey('eventos', updated);
+      this.setState({ eventos: updated, modal: null });
+    };
+    const abrirEditEv = (ev) => () => this.setState({ modal: 'addEv', __evErr: null, evForm: { id: ev.id, mid: ev.mid, f: ev.f, tipo: ev.tipo, titulo: ev.titulo } });
     const dens = this.props.densidad || 'cómoda';
     const screen = S.screen || this.props.pantallaInicial || 'inicio';
     const isMobile = S.w < 860;
@@ -1700,7 +1712,7 @@ class Component extends DCLogic {
       const dnum = i - primerDia + 1;
       if (dnum < 1 || dnum > totalDias) { mesCeldas.push({ dia: '', bg: 'rgba(0,0,0,0)', bd: 'rgba(0,0,0,0)', numColor: '#C6CBB6', numPeso: 400, eventos: [] }); continue; }
       const iso = y + '-' + String(mo + 1).padStart(2, '0') + '-' + String(dnum).padStart(2, '0');
-      const evs = S.eventos.filter(e => e.f === iso).map(e => { const m = _matAll(e.mid); const pasado = this.parse(e.f) < hoy; const matCorta = m.n !== '—' ? m.n.split(' ')[0] : ''; return { color: m.col, bgColor: m.col + '1A', op: pasado ? 0.45 : 1, tipo: e.tipo || 'Evento', mat: matCorta }; });
+      const evs = S.eventos.filter(e => e.f === iso).map(e => { const m = _matAll(e.mid); const pasado = this.parse(e.f) < hoy; const matCorta = m.n !== '—' ? m.n.split(' ')[0] : ''; return { id: e.id, mid: e.mid, f: e.f, titulo: e.titulo, color: m.col, bgColor: m.col + '1A', op: pasado ? 0.45 : 1, tipo: e.tipo || 'Evento', mat: matCorta, editEv: abrirEditEv(e) }; });
       const esHoy = y === hoy.getFullYear() && mo === hoy.getMonth() && dnum === hoy.getDate();
       mesCeldas.push({ dia: dnum, bg: esHoy ? '#3B4A2F' : '#EFF1E6', bd: esHoy ? '#3B4A2F' : '#E4E7D8', numColor: esHoy ? '#EDF1E0' : '#5B6151', numPeso: esHoy ? 600 : 400, eventos: evs });
     }
@@ -1715,7 +1727,7 @@ class Component extends DCLogic {
     const lista = Object.keys(grupos).map(mes => ({
       mes, items: grupos[mes].map(({ e, d }) => {
         const m = _matAll(e.mid), hecho = !!S.hechos[e.f + e.titulo];
-        return { dia: d.getDate(), diaSemana: this.DIAS[d.getDay()], titulo: e.titulo, materia: m.n, tipo: e.tipo, color: m.col, op: hecho ? 0.5 : 1, deco: hecho ? 'line-through' : 'none', check: hecho ? '✓' : '', checkBd: hecho ? '#2F7A55' : '#C9CEB8', checkBg: hecho ? '#2F7A55' : 'rgba(0,0,0,0)', anim: hecho ? 'matepop .32s ease' : 'none', toggle: () => this.setState({ hechos: Object.assign({}, S.hechos, { [e.f + e.titulo]: !hecho }) }) };
+        return { dia: d.getDate(), diaSemana: this.DIAS[d.getDay()], titulo: e.titulo, materia: m.n, tipo: e.tipo, color: m.col, op: hecho ? 0.5 : 1, deco: hecho ? 'line-through' : 'none', check: hecho ? '✓' : '', checkBd: hecho ? '#2F7A55' : '#C9CEB8', checkBg: hecho ? '#2F7A55' : 'rgba(0,0,0,0)', anim: hecho ? 'matepop .32s ease' : 'none', toggle: () => this.setState({ hechos: Object.assign({}, S.hechos, { [e.f + e.titulo]: !hecho }) }), editEv: abrirEditEv(e), eliminarEv: eliminarEv(e.id) };
       })
     }));
 
@@ -2157,13 +2169,6 @@ class Component extends DCLogic {
       this.saveUserKey('eventos', updated);
       this.setState({ eventos: updated, modal: null, __evErr: null, tlPop: null });
     };
-    const eliminarEv = (id) => () => {
-      if (!confirm('¿Eliminar este evento?')) return;
-      const updated = S.eventos.filter(e => e.id !== id);
-      this.saveUserKey('eventos', updated);
-      this.setState({ eventos: updated });
-    };
-
     // --- HORARIOS: acciones ---
     const abrirAddHor = () => this.setState({ modal: 'addHor', horForm: { id:'', dia: 0, horaIni: '08:00', horaFin: '09:00', mat: (MATS[0] && MATS[0].n) || '', aula: '' } });
     const setHorDia = (e) => this.setState({ horForm: Object.assign({}, S.horForm, { dia: parseInt(e.target.value, 10) }) });
@@ -2435,6 +2440,7 @@ class Component extends DCLogic {
       esModalEv: S.modal === 'addEv',
       esModalHor: S.modal === 'addHor',
       evForm: S.evForm, setEvMid, setEvF, setEvTitulo, evTipoOpts, evMatOpts, guardarEv,
+      evEsEdicion: !!S.evForm.id, eliminarEvActual: eliminarEv(S.evForm.id),
       hayEvError: !!S.__evErr, evError: S.__evErr || '',
       horForm: S.horForm, setHorDia, setHorIni, setHorFin, setHorMat, setHorAula, horDiasOpts, horHorasOpts, horMatOpts, guardarHor,
       hayHorError: !!S.__horErr, horError: S.__horErr || '',
