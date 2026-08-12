@@ -1485,7 +1485,8 @@ class Component extends DCLogic {
     const chatVacio = chatConvo.length === 0 && !S.chatSending;
     const chatMensajes = chatConvo.map(m => {
       const esBot = m.role === 'assistant';
-      const badge = m.provider === 'anthropic' ? 'CLAUDE' : (m.provider === 'groq' ? 'GROQ' : '');
+      let badge = m.provider === 'anthropic' ? 'CLAUDE' : (m.provider === 'groq' ? 'GROQ' : '');
+      if (m.provider === 'groq' && m.routedAs === 'hard-fallback') badge = 'GROQ (fallback)';
       const badgeColor = m.provider === 'anthropic' ? '#8A5A3B' : '#4E6B33';
       return {
         align: esBot ? 'flex-start' : 'flex-end',
@@ -1542,7 +1543,7 @@ class Component extends DCLogic {
         });
         const data = await resp.json().catch(() => ({}));
         if (!resp.ok) throw new Error(data.error || ('HTTP ' + resp.status));
-        const botMsg = { role: 'assistant', content: data.reply || '(sin respuesta)', provider: data.provider || 'unknown' };
+        const botMsg = { role: 'assistant', content: data.reply || '(sin respuesta)', provider: data.provider || 'unknown', routedAs: data.routedAs || '' };
         const conMate = { ...this.state, chatConvos: Object.assign({}, this.state.chatConvos) };
         const trasEnvio = [...(this.state.chatConvos[chatActMat.id] || []), botMsg];
         const finalConvos = Object.assign({}, this.state.chatConvos, { [chatActMat.id]: trasEnvio });
