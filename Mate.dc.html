@@ -630,7 +630,7 @@
           <div style="background:#F8F9F2;border:1px solid #DDE1D0;border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:6px">
             <div style="font-family:'Instrument Sans',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#565B47;padding:4px 10px 8px">Materias</div>
             <sc-for list="{{ chatMaterias }}" as="c" hint-placeholder-count="6">
-              <button type="button" onClick="{{ c.pick }}" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:9px;background:{{ c.bg }};text-align:left">
+              <button type="button" onClick="{{ c.pick }}" style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:9px;background:{{ c.bg }};text-align:left;border:0;cursor:pointer">
                 <span style="width:10px;height:10px;border-radius:3px;background:{{ c.col }}"></span>
                 <div style="display:flex;flex-direction:column;min-width:0;flex:1">
                   <span style="font-size:13.5px;font-weight:{{ c.peso }};color:#23281C;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ c.n }}</span>
@@ -643,16 +643,60 @@
             <div style="padding:16px 18px;border-bottom:1px solid #E7EADB;display:flex;align-items:center;gap:10px">
               <span style="width:12px;height:12px;border-radius:3px;background:{{ chatActMat.col }}"></span>
               <span style="font-family:Fraunces,serif;font-weight:700;font-size:16px">{{ chatActMat.n }}</span>
-              <span style="font-size:12px;color:#565B47;margin-left:auto">Con tu material · IA</span>
+              <button type="button" onClick="{{ chatLimpiar }}" style="margin-left:auto;background:none;border:0;font-size:12px;color:#8A5A3B;text-decoration:underline;cursor:pointer;padding:0">Limpiar conversación</button>
             </div>
-            <div style="flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:12px">
+
+            <sc-if value="{{ chatSinBackend }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:18px;display:flex;flex-direction:column;gap:10px;align-items:center;text-align:center;background:#F6EDE1;border-bottom:1px solid #E2CBAE">
+                <div style="font-family:Fraunces,serif;font-weight:700;font-size:16px;color:#33392A;max-width:44ch;text-wrap:pretty">Configurá primero la URL del backend para poder chatear con la IA.</div>
+                <button type="button" onClick="{{ irConfig }}" style="background:#3B4A2F;color:#EDF1E0;border-radius:8px;padding:8px 16px;font-size:13.5px;font-weight:600;border:0;cursor:pointer">Ir a Configuración</button>
+              </div>
+            </sc-if>
+
+            <div style="flex:1;overflow-y:auto;padding:18px;display:flex;flex-direction:column;gap:12px" id="chatScroll">
+              <sc-if value="{{ chatVacio }}" hint-placeholder-val="{{ true }}">
+                <div style="margin:auto;text-align:center;color:#565B47;max-width:44ch;display:flex;flex-direction:column;gap:8px;padding:20px">
+                  <div style="font-family:Fraunces,serif;font-weight:700;font-size:18px;color:#23281C">Empezá una conversación</div>
+                  <div style="font-size:13.5px;line-height:1.5">Preguntame algo sobre {{ chatActMat.n }}. Las preguntas rápidas van por Groq, las complejas o con PDF por Claude.</div>
+                </div>
+              </sc-if>
               <sc-for list="{{ chatMensajes }}" as="m" hint-placeholder-count="4">
-                <div style="max-width:75%;align-self:{{ m.align }};background:{{ m.bg }};color:{{ m.fg }};padding:10px 14px;border-radius:12px;font-size:14px;line-height:1.4">{{ m.texto }}</div>
+                <div style="display:flex;flex-direction:column;gap:4px;align-self:{{ m.align }};max-width:82%">
+                  <sc-if value="{{ m.esBot }}" hint-placeholder-val="{{ false }}">
+                    <span style="font-family:'Instrument Sans',sans-serif;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:{{ m.badgeColor }};font-weight:700">{{ m.badge }}</span>
+                  </sc-if>
+                  <div style="background:{{ m.bg }};color:{{ m.fg }};padding:10px 14px;border-radius:12px;font-size:14px;line-height:1.5;white-space:pre-wrap;text-wrap:pretty">{{ m.texto }}</div>
+                  <sc-if value="{{ m.tienePdf }}" hint-placeholder-val="{{ false }}">
+                    <span style="font-size:11.5px;color:#565B47">📎 {{ m.pdfName }}</span>
+                  </sc-if>
+                </div>
               </sc-for>
+              <sc-if value="{{ chatSending }}" hint-placeholder-val="{{ false }}">
+                <div style="align-self:flex-start;display:flex;align-items:center;gap:8px;color:#565B47;font-size:13px;padding:8px 14px">
+                  <span style="width:8px;height:8px;border-radius:999px;background:#8A5A3B;animation:matepop 1s ease-in-out infinite"></span>
+                  Pensando...
+                </div>
+              </sc-if>
+              <sc-if value="{{ chatHayError }}" hint-placeholder-val="{{ false }}">
+                <div style="align-self:center;font-size:13px;color:#9B3B28;background:#F3E1DC;border:1px solid #E2CBAE;border-radius:8px;padding:8px 12px;max-width:80%">{{ chatError }}</div>
+              </sc-if>
             </div>
-            <div style="padding:12px 14px;border-top:1px solid #E7EADB;display:flex;gap:8px">
-              <input type="text" placeholder="Preguntá lo que quieras..." style="flex:1;border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
-              <button type="button" style="background:#3B4A2F;color:#EDF1E0;border-radius:8px;padding:0 16px;font-size:14px;font-weight:600">Enviar</button>
+
+            <sc-if value="{{ chatPdfCargado }}" hint-placeholder-val="{{ false }}">
+              <div style="padding:6px 14px;border-top:1px solid #E7EADB;display:flex;align-items:center;gap:8px;font-size:12.5px;color:#565B47;background:#EFF1E6">
+                <span>📎 {{ chatPdfName }}</span>
+                <span style="color:#8A5A3B">— irá a Claude</span>
+                <button type="button" onClick="{{ chatQuitarPdf }}" style="margin-left:auto;background:none;border:0;color:#9B3B28;font-size:12px;cursor:pointer;text-decoration:underline;padding:0">Quitar</button>
+              </div>
+            </sc-if>
+
+            <div style="padding:12px 14px;border-top:1px solid #E7EADB;display:flex;gap:8px;align-items:center">
+              <label style="cursor:pointer;background:#F8F9F2;border:1px solid #DDE1D0;border-radius:8px;padding:10px 12px;font-size:14px;color:#565B47" title="Adjuntar PDF">
+                📎
+                <input type="file" accept="application/pdf" onChange="{{ chatSetPdf }}" style="display:none">
+              </label>
+              <input type="text" placeholder="Preguntá lo que quieras..." value="{{ chatInput }}" onInput="{{ chatSetInput }}" onKeyDown="{{ chatOnKey }}" style="flex:1;border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
+              <button type="button" onClick="{{ chatEnviar }}" disabled="{{ chatEnviarDisabled }}" style="background:{{ chatEnviarBg }};color:#EDF1E0;border:0;border-radius:8px;padding:10px 16px;font-size:14px;font-weight:600;cursor:{{ chatEnviarCursor }}">Enviar</button>
             </div>
           </div>
         </section>
@@ -870,6 +914,22 @@
             <span style="font-size:12px;color:#565B47">Los valores por defecto siguen el calendario argentino: 1er cuatri de marzo a julio, 2do cuatri de agosto a diciembre.</span>
           </div>
 
+          <div style="background:#F8F9F2;border:1px solid #DDE1D0;border-radius:14px;padding:22px;display:flex;flex-direction:column;gap:12px">
+            <div style="font-family:'Instrument Sans',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#565B47">Chat con IA</div>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <label style="font-size:12px;color:#565B47">URL del backend</label>
+              <input type="text" placeholder="https://mate-backend-XXXX.vercel.app/api/chat" value="{{ backendUrl }}" onInput="{{ setBackendUrl }}" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:13.5px;font-family:'Instrument Sans',monospace,inherit;color:#23281C">
+              <span style="font-size:12px;color:#565B47">Pegá acá la URL que te dio Vercel cuando deployaste el backend. Se guarda en este navegador.</span>
+            </div>
+            <div style="display:flex;gap:10px;flex-wrap:wrap">
+              <button type="button" onClick="{{ guardarBackendUrl }}" style="background:#3B4A2F;color:#EDF1E0;border-radius:8px;padding:10px 18px;font-size:14px;font-weight:600;border:0;cursor:pointer">Guardar</button>
+              <button type="button" onClick="{{ probarBackend }}" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 16px;font-size:14px;color:#23281C;cursor:pointer">Probar conexión</button>
+            </div>
+            <sc-if value="{{ hayBackendMsg }}" hint-placeholder-val="{{ false }}">
+              <div style="font-size:13px;color:{{ backendMsgColor }};background:{{ backendMsgBg }};border:1px solid {{ backendMsgBd }};border-radius:8px;padding:8px 12px">{{ backendMsg }}</div>
+            </sc-if>
+          </div>
+
           <div style="background:#F8F9F2;border:1px solid #DDE1D0;border-radius:14px;padding:22px;display:flex;flex-direction:column;gap:10px">
             <div style="font-family:'Instrument Sans',sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#565B47">Cuenta</div>
             <div style="display:flex;flex-direction:column;gap:4px;font-size:14px;color:#33392A">
@@ -1070,6 +1130,9 @@ class Component extends DCLogic {
     cuatriForm: { ini:'', fin:'' },
     tlPop: null,
     __cuatriErr: null,
+    chatConvos: {}, chatInput: '', chatSending: false, chatPdfPending: null, chatError: null,
+    backendUrlBuf: '', backendMsg: '', backendMsgKind: '',
+    backendUrl: (typeof localStorage !== 'undefined' && localStorage.getItem('mate_backend_url')) || '',
     flashDeckId: 'amii', flashIdx: 0, flashFlipped: false,
     chatSel: 'amii',
     planMid: 'amii'
@@ -1085,6 +1148,8 @@ class Component extends DCLogic {
         const u = accs.find(a => a.email === cur);
         if (u) { this.setState({ user: u }); this.loadUserData(u); }
       }
+      const url = localStorage.getItem('mate_backend_url') || '';
+      if (url) this.setState({ backendUrl: url, backendUrlBuf: url });
     } catch(e) {}
   }
   componentDidUpdate(pp, ps) {
@@ -1100,6 +1165,7 @@ class Component extends DCLogic {
       const notas = JSON.parse(localStorage.getItem(prefix + 'notas') || '{}');
       const uploads = JSON.parse(localStorage.getItem(prefix + 'uploads') || '[]');
       const cuatriRaw = localStorage.getItem(prefix + 'cuatri');
+      const chatConvos = JSON.parse(localStorage.getItem(prefix + 'chatConvos') || '{}');
       const cuatri = cuatriRaw ? JSON.parse(cuatriRaw) : null;
       let userMats;
       if (rawMats) {
@@ -1108,7 +1174,7 @@ class Component extends DCLogic {
         userMats = JSON.parse(JSON.stringify(this.MATERIAS));
         localStorage.setItem(prefix + 'materias', JSON.stringify(userMats));
       }
-      this.setState({ userMats, notas, uploads, cuatri, cuatriForm: cuatri ? { ini: cuatri.inicio, fin: cuatri.fin } : { ini:'', fin:'' } });
+      this.setState({ userMats, notas, uploads, chatConvos, cuatri, cuatriForm: cuatri ? { ini: cuatri.inicio, fin: cuatri.fin } : { ini:'', fin:'' } });
     } catch(e) {}
   }
   saveUserKey(key, val) {
@@ -1400,26 +1466,95 @@ class Component extends DCLogic {
       });
     }
 
-    // --- CHAT ---
-    const chatUltimos = {
-      amii: '¿Podrías explicarme series de Fourier?',
-      fis2: 'Dame ejercicios de circuitos DC',
-      bd:   'Cuál es la diferencia entre INNER y LEFT JOIN',
-      so:   'Explicame deadlock con un ejemplo',
-      alg:  'Cómo se calcula un autovalor',
-      poo:  'Diferencia entre abstracción y encapsulamiento'
+    // --- CHAT (funcional, conectado al backend) ---
+    const _chatMats = MATS.slice(0, 8);
+    const chatActMat = _matAll(S.chatSel) || _chatMats[0] || { id:'', n:'General', col:'#565B47' };
+    const chatConvo = (S.chatConvos && S.chatConvos[chatActMat.id]) || [];
+    const chatUltimo = (arr) => {
+      if (!arr || !arr.length) return 'Sin mensajes';
+      const last = arr[arr.length - 1];
+      const t = (last && last.content) || '';
+      return t.length > 40 ? t.slice(0,40) + '…' : t;
     };
-    const chatMaterias = MATS.slice(0, 6).map(m => {
+    const chatMaterias = _chatMats.map(m => {
       const on = S.chatSel === m.id;
-      return { n: m.n, col: m.col, pick: () => this.setState({ chatSel: m.id }), bg: on ? '#E9EBDD' : 'rgba(0,0,0,0)', peso: on ? 700 : 500, ultimo: chatUltimos[m.id] || 'Sin mensajes' };
+      const conv = (S.chatConvos && S.chatConvos[m.id]) || [];
+      return { n: m.n, col: m.col, pick: () => this.setState({ chatSel: m.id, chatError: null }), bg: on ? '#E9EBDD' : 'rgba(0,0,0,0)', peso: on ? 700 : 500, ultimo: chatUltimo(conv) };
     });
-    const chatActMat = _matAll(S.chatSel) || MATS[0];
-    const chatMensajes = [
-      { align:'flex-start', bg:'#EDEFE0', fg:'#23281C', texto:'Hola! Soy tu asistente para ' + chatActMat.n + '. ¿En qué te puedo ayudar hoy?' },
-      { align:'flex-end',   bg:'#3B4A2F', fg:'#EDF1E0', texto: chatUltimos[chatActMat.id] || '¿Podrías darme un resumen del último tema?' },
-      { align:'flex-start', bg:'#EDEFE0', fg:'#23281C', texto:'Claro. Te lo explico paso a paso...' },
-      { align:'flex-start', bg:'#EDEFE0', fg:'#23281C', texto:'(este chat se conectará al material que subas cuando la función esté activa online)' }
-    ];
+    const chatSinBackend = !S.backendUrl;
+    const chatVacio = chatConvo.length === 0 && !S.chatSending;
+    const chatMensajes = chatConvo.map(m => {
+      const esBot = m.role === 'assistant';
+      const badge = m.provider === 'anthropic' ? 'CLAUDE' : (m.provider === 'groq' ? 'GROQ' : '');
+      const badgeColor = m.provider === 'anthropic' ? '#8A5A3B' : '#4E6B33';
+      return {
+        align: esBot ? 'flex-start' : 'flex-end',
+        bg: esBot ? '#EDEFE0' : '#3B4A2F',
+        fg: esBot ? '#23281C' : '#EDF1E0',
+        texto: m.content,
+        esBot, badge, badgeColor,
+        tienePdf: !!m.pdfName,
+        pdfName: m.pdfName || ''
+      };
+    });
+
+    const chatSetInput = (e) => this.setState({ chatInput: e.target.value });
+    const chatSetPdf = (e) => {
+      const file = e && e.target && e.target.files && e.target.files[0];
+      if (!file) return;
+      if (file.size > 20 * 1024 * 1024) { this.setState({ chatError: 'El PDF pesa más de 20 MB. Elegí uno más chico.' }); return; }
+      const reader = new FileReader();
+      reader.onload = () => {
+        const dataUrl = reader.result || '';
+        const b64 = dataUrl.split(',')[1] || '';
+        this.setState({ chatPdfPending: { filename: file.name, base64: b64 }, chatError: null });
+      };
+      reader.readAsDataURL(file);
+    };
+    const chatQuitarPdf = () => this.setState({ chatPdfPending: null });
+    const chatLimpiar = () => {
+      if (!confirm('¿Borrar toda la conversación de ' + chatActMat.n + '?')) return;
+      const nuevas = Object.assign({}, S.chatConvos); delete nuevas[chatActMat.id];
+      this.saveUserKey('chatConvos', nuevas);
+      this.setState({ chatConvos: nuevas, chatError: null });
+    };
+    const chatEnviar = async () => {
+      if (S.chatSending) return;
+      const texto = (S.chatInput || '').trim();
+      if (!texto && !S.chatPdfPending) return;
+      if (!S.backendUrl) { this.setState({ chatError: 'Configurá la URL del backend primero.' }); return; }
+      const pdfInfo = S.chatPdfPending;
+      const userMsg = { role: 'user', content: texto || 'Analizá este PDF, por favor.', pdfName: pdfInfo ? pdfInfo.filename : null };
+      const prev = (S.chatConvos && S.chatConvos[chatActMat.id]) || [];
+      const nuevoTurno = [...prev, userMsg];
+      const nuevasConvos = Object.assign({}, S.chatConvos, { [chatActMat.id]: nuevoTurno });
+      this.saveUserKey('chatConvos', nuevasConvos);
+      this.setState({ chatConvos: nuevasConvos, chatInput: '', chatSending: true, chatError: null });
+      // Enviar
+      try {
+        const historyForApi = nuevoTurno.map(m => ({ role: m.role, content: m.content }));
+        const body = { messages: historyForApi, materia: chatActMat.n };
+        if (pdfInfo) body.pdf = pdfInfo.base64;
+        const resp = await fetch(S.backendUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+        const data = await resp.json().catch(() => ({}));
+        if (!resp.ok) throw new Error(data.error || ('HTTP ' + resp.status));
+        const botMsg = { role: 'assistant', content: data.reply || '(sin respuesta)', provider: data.provider || 'unknown' };
+        const conMate = { ...this.state, chatConvos: Object.assign({}, this.state.chatConvos) };
+        const trasEnvio = [...(this.state.chatConvos[chatActMat.id] || []), botMsg];
+        const finalConvos = Object.assign({}, this.state.chatConvos, { [chatActMat.id]: trasEnvio });
+        this.saveUserKey('chatConvos', finalConvos);
+        this.setState({ chatConvos: finalConvos, chatSending: false, chatPdfPending: null });
+      } catch (err) {
+        this.setState({ chatSending: false, chatError: 'No se pudo enviar: ' + (err.message || err) });
+      }
+    };
+    const chatOnKey = (e) => {
+      if (e && e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); chatEnviar(); }
+    };
 
     // --- FLASHCARDS ---
     const flashDecksData = {
@@ -1715,6 +1850,29 @@ class Component extends DCLogic {
     // Config: navegación y handlers
     const irConfig = () => this.setState({ screen: 'config' });
     const irCalendario = () => this.setState({ screen: 'calendario' });
+    const setBackendUrl = (e) => this.setState({ backendUrlBuf: e.target.value, backendMsg: '', backendMsgKind: '' });
+    const guardarBackendUrl = () => {
+      const url = (S.backendUrlBuf || '').trim().replace(/\/+$/, '');
+      try { localStorage.setItem('mate_backend_url', url); } catch(e){}
+      this.setState({ backendUrl: url, backendMsg: 'Guardado ✓', backendMsgKind: 'ok' });
+    };
+    const probarBackend = async () => {
+      const url = (S.backendUrlBuf || S.backendUrl || '').trim().replace(/\/+$/, '');
+      if (!url) { this.setState({ backendMsg: 'Poné una URL primero.', backendMsgKind: 'err' }); return; }
+      this.setState({ backendMsg: 'Probando...', backendMsgKind: 'info' });
+      try {
+        const resp = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ messages: [{ role:'user', content: 'ping' }], materia: 'test' })
+        });
+        const data = await resp.json().catch(() => ({}));
+        if (!resp.ok) throw new Error(data.error || ('HTTP ' + resp.status));
+        this.setState({ backendMsg: '✓ Backend OK. Respondió con ' + (data.provider || '?') + '.', backendMsgKind: 'ok' });
+      } catch (err) {
+        this.setState({ backendMsg: 'No pude conectar: ' + (err.message || err), backendMsgKind: 'err' });
+      }
+    };
     const setCuatriIni = (e) => this.setState({ cuatriForm: { ...S.cuatriForm, ini: e.target.value }, __cuatriErr: null });
     const setCuatriFin = (e) => this.setState({ cuatriForm: { ...S.cuatriForm, fin: e.target.value }, __cuatriErr: null });
     const guardarCuatri = () => {
@@ -1754,6 +1912,13 @@ class Component extends DCLogic {
       horDias, horFilas, horLeyenda,
       planMat, planFecha, planDias, planMaterias, planSemanas,
       chatMaterias, chatActMat, chatMensajes,
+      chatInput: S.chatInput, chatSetInput, chatSetPdf, chatQuitarPdf, chatLimpiar, chatEnviar, chatOnKey,
+      chatSending: S.chatSending, chatHayError: !!S.chatError, chatError: S.chatError || '',
+      chatVacio, chatSinBackend,
+      chatPdfCargado: !!S.chatPdfPending, chatPdfName: (S.chatPdfPending && S.chatPdfPending.filename) || '',
+      chatEnviarDisabled: S.chatSending || (!(S.chatInput || '').trim() && !S.chatPdfPending),
+      chatEnviarBg: S.chatSending ? '#8F887F' : '#3B4A2F',
+      chatEnviarCursor: S.chatSending ? 'wait' : 'pointer',
       flashDecks, flashPregunta: flashCard.p, flashRespuesta: flashCard.r,
       flashFrente: !S.flashFlipped, flashDorso: S.flashFlipped, flashActN, flashActTotal,
       flashFlip: () => this.setState({ flashFlipped: !S.flashFlipped }),
@@ -1782,6 +1947,13 @@ class Component extends DCLogic {
       setCuatriIni, setCuatriFin, guardarCuatri, resetCuatri,
       hayCuatriErr: !!S.__cuatriErr, cuatriErr: S.__cuatriErr || '',
       perfilNombre: (user && user.nombre) || '—', perfilApodo: (user && user.apodo) || '—', perfilEmail: (user && user.email) || '—', perfilCarrera: (user && user.carrera) || '—', perfilUni: (user && user.universidad) || '—',
+      backendUrl: S.backendUrlBuf || S.backendUrl || '',
+      setBackendUrl, guardarBackendUrl, probarBackend,
+      hayBackendMsg: !!S.backendMsg,
+      backendMsg: S.backendMsg || '',
+      backendMsgColor: S.backendMsgKind === 'err' ? '#9B3B28' : (S.backendMsgKind === 'ok' ? '#3B4A2F' : '#565B47'),
+      backendMsgBg:    S.backendMsgKind === 'err' ? '#F3E1DC' : (S.backendMsgKind === 'ok' ? '#E1E7D2' : '#EFF1E6'),
+      backendMsgBd:    S.backendMsgKind === 'err' ? '#E2CBAE' : (S.backendMsgKind === 'ok' ? '#C5CFB0' : '#DDE1D0'),
       padBottom: isMobile ? '96px' : 'clamp(18px,3.5vw,40px)',
       cardPad: dens === 'compacta' ? '13px' : '16px',
       celdaAlto: isMobile ? '46px' : '74px',
