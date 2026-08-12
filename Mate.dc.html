@@ -306,8 +306,9 @@
           <sc-if value="{{ hayMaterias }}" hint-placeholder-val="{{ true }}">
             <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(262px,1fr));gap:14px">
               <sc-for list="{{ materias }}" as="m" hint-placeholder-count="6">
-                <button type="button" onClick="{{ m.abrir }}" style="text-align:left;background:#F8F9F2;border:1px solid #DDE1D0;border-left:4px solid {{ m.col }};border-radius:13px;padding:{{ cardPad }};display:flex;flex-direction:column;gap:11px;transition:border-color .18s ease,transform .18s ease" style-hover="transform:translateY(-2px)">
-                  <div style="display:flex;flex-direction:column;gap:3px">
+                <div role="button" tabindex="0" onClick="{{ m.abrir }}" onKeyDown="{{ m.abrirKey }}" style="position:relative;cursor:pointer;text-align:left;background:#F8F9F2;border:1px solid #DDE1D0;border-left:4px solid {{ m.col }};border-radius:13px;padding:{{ cardPad }};display:flex;flex-direction:column;gap:11px;transition:border-color .18s ease,transform .18s ease" style-hover="transform:translateY(-2px)">
+                  <button type="button" onClick="{{ m.eliminarDesdeLista }}" aria-label="Eliminar materia" style="position:absolute;top:8px;right:8px;width:28px;height:28px;border-radius:999px;background:rgba(155,59,40,0);border:0;color:#8F887F;cursor:pointer;font-size:16px;line-height:1;display:flex;align-items:center;justify-content:center;transition:all .16s ease" style-hover="background:#F3E1DC;color:#9B3B28">×</button>
+                  <div style="display:flex;flex-direction:column;gap:3px;padding-right:32px">
                     <span style="font-family:Fraunces,serif;font-weight:700;font-size:16.5px;letter-spacing:-0.01em;line-height:1.25;text-wrap:pretty">{{ m.n }}</span>
                     <span style="font-size:12.5px;color:#565B47">{{ m.cat }}</span>
                   </div>
@@ -323,7 +324,7 @@
                   <sc-if value="{{ m.tieneAviso }}" hint-placeholder-val="{{ false }}">
                     <span style="font-size:12.5px;color:#8A5A3B;line-height:1.35">{{ m.aviso }}</span>
                   </sc-if>
-                </button>
+                </div>
               </sc-for>
             </div>
           </sc-if>
@@ -1179,7 +1180,7 @@ class Component extends DCLogic {
       let aviso = null;
       if (m.reg) { const dias = Math.round((this.parse(m.reg) - hoy) / 86400000); if (dias <= 45) aviso = 'La regularidad vence el ' + this.fmtCorto(this.parse(m.reg)) + '.'; }
       if (!aviso && m.asis.on) { const pct = Math.round(m.asis.p / m.asis.t * 100); if (pct < m.asis.min) aviso = 'Vas por debajo del mínimo de asistencia.'; }
-      return { n: m.n, cat: m.cat, col: m.col, estColor: E[k].color, estBg: mk.bg, estOp: mk.op, estLabel: E[k].label, chips, tieneAviso: !!aviso, aviso: aviso || '', abrir: () => this.setState({ screen: 'detalle', materiaId: m.id }) };
+      return { n: m.n, cat: m.cat, col: m.col, estColor: E[k].color, estBg: mk.bg, estOp: mk.op, estLabel: E[k].label, chips, tieneAviso: !!aviso, aviso: aviso || '', abrir: () => this.setState({ screen: 'detalle', materiaId: m.id }), abrirKey: (e) => { if (e && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); this.setState({ screen: 'detalle', materiaId: m.id }); } }, eliminarDesdeLista: (e) => { if (e && e.stopPropagation) e.stopPropagation(); this.setState({ modal: 'delMat', confirmDelId: m.id }); } };
     });
 
     // --- simulador ---
