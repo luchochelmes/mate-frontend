@@ -65,13 +65,29 @@
         </div>
       </sc-if>
       <sc-if value="{{ modoLogin }}" hint-placeholder-val="{{ true }}">
-        <div style="display:flex;flex-direction:column;gap:10px">
-          <input type="email" placeholder="Email" value="{{ form.email }}" onInput="{{ setEmail }}" style="width:100%;min-width:0;box-sizing:border-box;border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
-          <div style="position:relative;display:flex">
-            <input type="{{ passType }}" placeholder="Contraseña" value="{{ form.password }}" onInput="{{ setPassword }}" style="flex:1;width:100%;min-width:0;box-sizing:border-box;border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 44px 10px 12px;font-size:14px;font-family:inherit;color:#23281C">
-            <button type="button" onClick="{{ toggleShowPass }}" aria-label="Mostrar contraseña" style="position:absolute;right:6px;top:50%;transform:translateY(-50%);background:none;border:0;padding:6px 8px;color:#565B47;font-size:12.5px;cursor:pointer">{{ showPassLabel }}</button>
+        <sc-if value="{{ noResetPassMode }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <input type="email" placeholder="Email" value="{{ form.email }}" onInput="{{ setEmail }}" style="width:100%;min-width:0;box-sizing:border-box;border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
+            <div style="position:relative;display:flex">
+              <input type="{{ passType }}" placeholder="Contraseña" value="{{ form.password }}" onInput="{{ setPassword }}" style="flex:1;width:100%;min-width:0;box-sizing:border-box;border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 44px 10px 12px;font-size:14px;font-family:inherit;color:#23281C">
+              <button type="button" onClick="{{ toggleShowPass }}" aria-label="Mostrar contraseña" style="position:absolute;right:6px;top:50%;transform:translateY(-50%);background:none;border:0;padding:6px 8px;color:#565B47;font-size:12.5px;cursor:pointer">{{ showPassLabel }}</button>
+            </div>
+            <button type="button" onClick="{{ irResetPass }}" style="background:none;border:0;color:#8A5A3B;text-decoration:underline;cursor:pointer;font-size:13px;padding:0;text-align:left">¿Olvidaste tu contraseña?</button>
           </div>
-        </div>
+        </sc-if>
+        <sc-if value="{{ resetPassMode }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="font-size:13.5px;color:#565B47;line-height:1.5">Ingresá tu email y te mandamos un link para restablecer tu contraseña.</div>
+            <sc-if value="{{ resetPassSent }}" hint-placeholder-val="{{ false }}">
+              <div style="font-size:13.5px;color:#2F7A55;background:#E1EDD8;border:1px solid #C5CFB0;border-radius:8px;padding:10px 12px">¡Listo! Revisá tu casilla de correo y seguí el link que te mandamos.</div>
+            </sc-if>
+            <input type="email" placeholder="Tu email" value="{{ resetPassEmail }}" onInput="{{ setResetEmail }}" style="width:100%;min-width:0;box-sizing:border-box;border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
+            <div style="display:flex;gap:8px">
+              <button type="button" onClick="{{ volverAlLogin }}" style="flex:1;border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px;font-size:14px;color:#565B47;cursor:pointer">Volver</button>
+              <button type="button" onClick="{{ enviarResetPass }}" style="flex:2;background:#3B4A2F;color:#EDF1E0;border-radius:8px;padding:10px 18px;font-size:14px;font-weight:600;border:0;cursor:pointer">Enviar email</button>
+            </div>
+          </div>
+        </sc-if>
       </sc-if>
       <sc-if value="{{ hayAuthError }}" hint-placeholder-val="{{ false }}">
         <div style="font-size:13px;color:#9B3B28;background:#F3E1DC;border:1px solid #E2CBAE;border-radius:8px;padding:10px 12px">{{ authError }}</div>
@@ -121,9 +137,12 @@
 
       <sc-if value="{{ esInicio }}" hint-placeholder-val="{{ true }}">
         <section data-screen-label="Inicio" style="animation:matein .3s ease both;display:flex;flex-direction:column;gap:26px">
-          <header style="display:flex;flex-direction:column;gap:4px">
-            <div style="font-family:"Instrument Sans",sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#565B47">{{ hoyTexto }}</div>
-            <h1 style="margin:0;font-family:Fraunces,serif;font-weight:700;font-size:clamp(22px,3vw,28px);letter-spacing:-0.01em;color:#23281C">{{ saludoTxt }}</h1>
+          <header style="display:flex;align-items:flex-end;justify-content:space-between;gap:14px;flex-wrap:wrap">
+            <div style="display:flex;flex-direction:column;gap:4px">
+              <div style="font-family:&quot;Instrument Sans&quot;,sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#565B47">{{ hoyTexto }}</div>
+              <h1 style="margin:0;font-family:Fraunces,serif;font-weight:700;font-size:clamp(22px,3vw,28px);letter-spacing:-0.01em;color:#23281C">{{ saludoTxt }}</h1>
+            </div>
+            <button type="button" onClick="{{ abrirAddMat }}" style="background:#3B4A2F;color:#EDF1E0;border-radius:9px;padding:10px 16px;font-size:14px;font-weight:600;border:0;cursor:pointer;white-space:nowrap">+ Nueva materia</button>
           </header>
 
           <sc-if value="{{ cuatriConfigurado }}" hint-placeholder-val="{{ true }}">
@@ -388,9 +407,10 @@
               <sc-if value="{{ det.tieneNotas }}" hint-placeholder-val="{{ true }}">
                 <div style="display:flex;flex-direction:column;gap:9px">
                   <sc-for list="{{ det.notas }}" as="nt" hint-placeholder-count="2">
-                    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding-bottom:8px;border-bottom:1px solid #E7EADB">
-                      <span style="font-size:14.5px;color:#33392A">{{ nt.n }}</span>
+                    <div style="display:flex;align-items:center;gap:12px;padding-bottom:8px;border-bottom:1px solid #E7EADB">
+                      <span style="font-size:14.5px;color:#33392A;flex:1">{{ nt.n }}</span>
                       <span style="font-family:Fraunces,serif;font-weight:800;font-size:21px;color:{{ nt.color }}">{{ nt.v }}</span>
+                      <button type="button" onClick="{{ nt.eliminarNota }}" style="background:none;border:0;color:#9B3B28;cursor:pointer;font-size:14px;padding:0 4px;flex-shrink:0" aria-label="Eliminar nota">✕</button>
                     </div>
                   </sc-for>
                 </div>
@@ -524,7 +544,7 @@
                 </sc-for>
                 <sc-for list="{{ mesCeldas }}" as="c" hint-placeholder-count="42">
                   <div style="min-height:{{ celdaAlto }};border-radius:8px;background:{{ c.bg }};border:1px solid {{ c.bd }};padding:5px 5px 6px;display:flex;flex-direction:column;gap:4px">
-                    <span style="font-family:"Instrument Sans",sans-serif;font-size:11.5px;color:{{ c.numColor }};font-weight:{{ c.numPeso }}">{{ c.dia }}</span>
+                    <button type="button" onClick="{{ c.irAgregarEvDia }}" style="font-family:'Instrument Sans',sans-serif;font-size:11.5px;color:{{ c.numColor }};font-weight:{{ c.numPeso }};background:none;border:0;cursor:pointer;padding:0;text-align:left">{{ c.dia }}</button>
                     <sc-for list="{{ c.eventos }}" as="ev" hint-placeholder-count="0">
                       <button type="button" onClick="{{ ev.editEv }}" style="display:flex;align-items:center;gap:3px;padding:2px 5px;border-radius:4px;background:{{ ev.bgColor }};opacity:{{ ev.op }};overflow:hidden;border:0;cursor:pointer;width:100%;text-align:left">
                         <span style="width:5px;height:5px;border-radius:999px;flex:none;background:{{ ev.color }}"></span>
@@ -1445,7 +1465,8 @@ class Component extends DCLogic {
     chatSel: 'amii',
     planMid: 'amii',
     menuOpen: false,
-    cookiesOk: false
+    cookiesOk: false,
+    resetPassMode: false, resetPassEmail: '', resetPassSent: false,
   };
 
   componentDidMount() {
@@ -1607,6 +1628,7 @@ class Component extends DCLogic {
       this.setState({ eventos: updated, modal: null });
     };
     const abrirEditEv = (ev) => () => this.setState({ modal: 'addEv', __evErr: null, evForm: { id: ev.id, mid: ev.mid, f: ev.f, tipo: ev.tipo, titulo: ev.titulo } });
+    const abrirEvDia = (iso) => () => this.setState({ modal: 'addEv', __evErr: null, evForm: { id: '', mid: (MATS[0] && MATS[0].id) || '', f: iso, tipo: 'Parcial', titulo: '' } });
     const dens = this.props.densidad || 'cómoda';
     const screen = S.screen || this.props.pantallaInicial || 'inicio';
     const isMobile = S.w < 860;
@@ -1690,7 +1712,11 @@ class Component extends DCLogic {
       const regCerca = m.reg && regDias <= 45;
       det = {
         n: m.n, cat: m.cat, col: m.col, estados,
-        notas: m.notas.map(n => ({ n: n.n, v: n.v, color: n.v < 4 ? '#9B3B28' : '#23281C' })),
+        notas: m.notas.map((n, i) => ({ n: n.n, v: n.v, color: n.v < 4 ? '#9B3B28' : '#23281C', eliminarNota: () => {
+          const updated = (S.userMats || this.MATERIAS).map(mat => mat.id === m.id ? Object.assign({}, mat, { notas: mat.notas.filter((_, idx) => idx !== i) }) : mat);
+          this.saveUserKey('materias', updated);
+          this.setState({ userMats: updated });
+        } })),
         tieneNotas: m.notas.length > 0, sinNotas: m.notas.length === 0,
         finalLabel: m.final != null ? 'Nota final' : 'Nota final', finalTxt: m.final != null ? String(m.final) : '—',
         asisOn: m.asis.on, asisPct, asisColor: asisPct < (m.asis.min || 0) ? '#8A5A3B' : '#2F7A55',
@@ -1723,7 +1749,7 @@ class Component extends DCLogic {
       const iso = y + '-' + String(mo + 1).padStart(2, '0') + '-' + String(dnum).padStart(2, '0');
       const evs = S.eventos.filter(e => e.f === iso).map(e => { const m = _matAll(e.mid); const pasado = this.parse(e.f) < hoy; const matCorta = m.n !== '—' ? m.n.split(' ')[0] : ''; return { id: e.id, mid: e.mid, f: e.f, titulo: e.titulo, color: m.col, bgColor: m.col + '1A', op: pasado ? 0.45 : 1, tipo: e.tipo || 'Evento', mat: matCorta, editEv: abrirEditEv(e) }; });
       const esHoy = y === hoy.getFullYear() && mo === hoy.getMonth() && dnum === hoy.getDate();
-      mesCeldas.push({ dia: dnum, bg: esHoy ? '#3B4A2F' : '#EFF1E6', bd: esHoy ? '#3B4A2F' : '#E4E7D8', numColor: esHoy ? '#EDF1E0' : '#5B6151', numPeso: esHoy ? 600 : 400, eventos: evs });
+      mesCeldas.push({ dia: dnum, bg: esHoy ? '#3B4A2F' : '#EFF1E6', bd: esHoy ? '#3B4A2F' : '#E4E7D8', numColor: esHoy ? '#EDF1E0' : '#5B6151', numPeso: esHoy ? 600 : 400, eventos: evs, irAgregarEvDia: abrirEvDia(iso) });
     }
     const leyenda = [...new Set(S.eventos.filter(e => { const d = this.parse(e.f); return d.getMonth() === mo && d.getFullYear() === y; }).map(e => e.mid))].map(id => { const m = _matAll(id); return { n: m.n, color: m.col }; });
 
@@ -1814,6 +1840,18 @@ class Component extends DCLogic {
       const sb = window.mateSb;
       if (sb) await sb.auth.signOut();
       this.setState({ user: null, screen: null });
+    };
+    const irResetPass = () => this.setState({ resetPassMode: true, resetPassEmail: S.form.email || '', resetPassSent: false, authError: null });
+    const volverAlLogin = () => this.setState({ resetPassMode: false, resetPassSent: false, authError: null });
+    const setResetEmail = (e) => this.setState({ resetPassEmail: e.target.value });
+    const enviarResetPass = async () => {
+      const email = (S.resetPassEmail || '').trim();
+      const ok = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      if (!ok) return this.setState({ authError: 'Ingresá un email válido.' });
+      const sb = window.mateSb;
+      if (!sb) return;
+      await sb.auth.resetPasswordForEmail(email, { redirectTo: 'https://matestudio.vercel.app' });
+      this.setState({ resetPassSent: true, authError: null });
     };
 
     // --- NAV SECTIONS (expandido) ---
@@ -2166,7 +2204,7 @@ class Component extends DCLogic {
       const on = S.evForm.tipo === t;
       return { label: t, pick: () => this.setState({ evForm: Object.assign({}, S.evForm, { tipo: t }) }), bd: on ? '#3B4A2F' : '#D3D8C2', bg: on ? '#3B4A2F' : '#F8F9F2', fg: on ? '#F2F5E6' : '#4B5240' };
     });
-    const evMatOpts = MATS.map(m => ({ v: m.id, n: m.n }));
+    const evMatOpts = [{ v: '', n: '— Sin materia / General' }, ...MATS.map(m => ({ v: m.id, n: m.n }))];
     const guardarEv = () => {
       const f = S.evForm;
       if (!f.mid) { this.setState({ __evErr:'Elegí una materia.' }); return; }
@@ -2409,11 +2447,14 @@ class Component extends DCLogic {
       menuStopProp: e => e.stopPropagation(),
       noCookiesOk: !S.cookiesOk,
       aceptarCookies: () => { localStorage.setItem('mate_cookies_ok', '1'); this.setState({ cookiesOk: true }); },
-      padTop: isMobile ? '52px' : '0px',
+      padTop: isMobile ? 'calc(52px + 18px)' : '0px',
       modalPad: isMobile ? '16px 16px 20px' : '28px 28px 24px',
       hayUsuario, noHayUsuario: !hayUsuario,
       modoLogin: S.authMode === 'login', modoRegister: S.authMode === 'register',
       form: S.form, authTabs, doAuth, doLogout,
+      resetPassMode: S.resetPassMode, noResetPassMode: !S.resetPassMode,
+      resetPassEmail: S.resetPassEmail, resetPassSent: S.resetPassSent,
+      irResetPass, volverAlLogin, setResetEmail, enviarResetPass,
       setNombre: setField('nombre'), setApellido: setField('apellido'), setApodo: setField('apodo'),
       setEmail: setField('email'), setCarrera: setField('carrera'), setUniversidad: setField('universidad'), setPassword: setField('password'),
       authBtnLabel: S.authMode === 'login' ? 'Iniciar sesión' : 'Crear mi cuenta',
