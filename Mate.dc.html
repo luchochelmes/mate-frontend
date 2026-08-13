@@ -1330,11 +1330,19 @@
             </div>
             <div style="display:flex;flex-direction:column;gap:6px">
               <label style="font-size:12px;color:#565B47">Desde</label>
-              <input type="time" value="{{ horForm.horaIni }}" onInput="{{ setHorIni }}" step="300" style="width:100%;min-width:0;box-sizing:border-box;border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
+              <select onChange="{{ setHorIni }}" value="{{ horForm.horaIni }}" style="width:100%;min-width:0;box-sizing:border-box;border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
+                <sc-for list="{{ horHorasOpts }}" as="h" hint-placeholder-count="14">
+                  <option value="{{ h }}">{{ h }}</option>
+                </sc-for>
+              </select>
             </div>
             <div style="display:flex;flex-direction:column;gap:6px">
               <label style="font-size:12px;color:#565B47">Hasta</label>
-              <input type="time" value="{{ horForm.horaFin }}" onInput="{{ setHorFin }}" step="300" style="width:100%;min-width:0;box-sizing:border-box;border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
+              <select onChange="{{ setHorFin }}" value="{{ horForm.horaFin }}" style="width:100%;min-width:0;box-sizing:border-box;border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
+                <sc-for list="{{ horHorasOpts }}" as="h" hint-placeholder-count="14">
+                  <option value="{{ h }}">{{ h }}</option>
+                </sc-for>
+              </select>
             </div>
           </div>
           <div style="display:flex;flex-direction:column;gap:6px">
@@ -2224,7 +2232,7 @@ class Component extends DCLogic {
     const setHorMat = (e) => this.setState({ horForm: Object.assign({}, S.horForm, { mat: e.target.value }) });
     const setHorAula = (e) => this.setState({ horForm: Object.assign({}, S.horForm, { aula: e.target.value }) });
     const horDiasOpts = [{v:0,n:'Lunes'},{v:1,n:'Martes'},{v:2,n:'Miércoles'},{v:3,n:'Jueves'},{v:4,n:'Viernes'},{v:5,n:'Sábado'}];
-    const horHorasOpts = ['08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00'];
+    const horHorasOpts = ['07:00','08:00','09:00','10:00','11:00','12:00','13:00','14:00','15:00','16:00','17:00','18:00','19:00','20:00','21:00','22:00','23:00'];
     const horMatOpts = MATS.map(m => ({ v: m.n, n: m.n, col: m.col }));
     const guardarHor = () => {
       const f = S.horForm;
@@ -2447,7 +2455,7 @@ class Component extends DCLogic {
       menuStopProp: e => e.stopPropagation(),
       noCookiesOk: !S.cookiesOk,
       aceptarCookies: () => { localStorage.setItem('mate_cookies_ok', '1'); this.setState({ cookiesOk: true }); },
-      padTop: isMobile ? 'calc(52px + 18px)' : '0px',
+      padTop: isMobile ? 'calc(52px + 32px)' : '0px',
       modalPad: isMobile ? '16px 16px 20px' : '28px 28px 24px',
       hayUsuario, noHayUsuario: !hayUsuario,
       modoLogin: S.authMode === 'login', modoRegister: S.authMode === 'register',
