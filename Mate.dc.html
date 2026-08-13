@@ -51,15 +51,15 @@
       <sc-if value="{{ modoRegister }}" hint-placeholder-val="{{ false }}">
         <div style="display:flex;flex-direction:column;gap:10px">
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-            <input type="text" placeholder="Nombre" value="{{ form.nombre }}" onInput="{{ setNombre }}" style="width:100%;min-width:0;box-sizing:border-box;border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
-            <input type="text" placeholder="Apellido" value="{{ form.apellido }}" onInput="{{ setApellido }}" style="width:100%;min-width:0;box-sizing:border-box;border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
+            <input type="text" placeholder="Nombre *" required value="{{ form.nombre }}" onInput="{{ setNombre }}" style="width:100%;min-width:0;box-sizing:border-box;border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
+            <input type="text" placeholder="Apellido *" required value="{{ form.apellido }}" onInput="{{ setApellido }}" style="width:100%;min-width:0;box-sizing:border-box;border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
           </div>
-          <input type="text" placeholder="Apodo (como te digan tus amigos)" value="{{ form.apodo }}" onInput="{{ setApodo }}" style="width:100%;min-width:0;box-sizing:border-box;border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
-          <input type="email" placeholder="Email" value="{{ form.email }}" onInput="{{ setEmail }}" style="width:100%;min-width:0;box-sizing:border-box;border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
+          <input type="text" placeholder="Apodo (opcional)" value="{{ form.apodo }}" onInput="{{ setApodo }}" style="width:100%;min-width:0;box-sizing:border-box;border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
+          <input type="email" placeholder="Email *" required value="{{ form.email }}" onInput="{{ setEmail }}" style="width:100%;min-width:0;box-sizing:border-box;border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
           <input type="text" placeholder="Carrera (ej: Ingeniería en Sistemas)" value="{{ form.carrera }}" onInput="{{ setCarrera }}" style="width:100%;min-width:0;box-sizing:border-box;border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
           <input type="text" placeholder="Universidad (ej: UTN FRC)" value="{{ form.universidad }}" onInput="{{ setUniversidad }}" style="width:100%;min-width:0;box-sizing:border-box;border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
           <div style="position:relative;display:flex">
-            <input type="{{ passType }}" placeholder="Contraseña" value="{{ form.password }}" onInput="{{ setPassword }}" style="flex:1;width:100%;min-width:0;box-sizing:border-box;border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 44px 10px 12px;font-size:14px;font-family:inherit;color:#23281C">
+            <input type="{{ passType }}" placeholder="Contraseña * (mín. 6 caracteres)" required value="{{ form.password }}" onInput="{{ setPassword }}" style="flex:1;width:100%;min-width:0;box-sizing:border-box;border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 44px 10px 12px;font-size:14px;font-family:inherit;color:#23281C">
             <button type="button" onClick="{{ toggleShowPass }}" aria-label="Mostrar contraseña" style="position:absolute;right:6px;top:50%;transform:translateY(-50%);background:none;border:0;padding:6px 8px;color:#565B47;font-size:12.5px;cursor:pointer">{{ showPassLabel }}</button>
           </div>
         </div>
@@ -1388,6 +1388,13 @@
   </div>
 </sc-if>
 
+<sc-if value="{{ noCookiesOk }}" hint-placeholder-val="{{ false }}">
+  <div style="position:fixed;bottom:0;left:0;right:0;background:#2E3A25;color:#E7EBDA;z-index:300;padding:14px 20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;box-shadow:0 -2px 12px rgba(0,0,0,.18)">
+    <span style="flex:1;font-size:13.5px;line-height:1.5;min-width:200px">Mate usa cookies para mantener tu sesión iniciada y guardar tus preferencias. Al usar la app aceptás esto.</span>
+    <button type="button" onClick="{{ aceptarCookies }}" style="background:#C9D3A9;color:#23281C;border-radius:8px;padding:9px 20px;font-size:14px;font-weight:600;border:0;cursor:pointer;white-space:nowrap;flex-shrink:0">Entendido</button>
+  </div>
+</sc-if>
+
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;pantallaInicial&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;inicio&quot;,&quot;materias&quot;,&quot;calendario&quot;],&quot;default&quot;:&quot;inicio&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Vista&quot;},&quot;mostrarAvisos&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Inicio&quot;},&quot;densidad&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;cómoda&quot;,&quot;compacta&quot;],&quot;default&quot;:&quot;cómoda&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Vista&quot;}}">
 class Component extends DCLogic {
@@ -1437,12 +1444,14 @@ class Component extends DCLogic {
     flashModal: false, flashFormP: '', flashFormR: '', flashFormMat: '', flashFormErr: null,
     chatSel: 'amii',
     planMid: 'amii',
-    menuOpen: false
+    menuOpen: false,
+    cookiesOk: false
   };
 
   componentDidMount() {
     this._r = () => this.setState({ w: window.innerWidth });
     window.addEventListener('resize', this._r);
+    if (localStorage.getItem('mate_cookies_ok')) this.setState({ cookiesOk: true });
     const sb = window.mateSb;
     if (!sb) return;
     sb.auth.getSession().then(({ data: { session } }) => {
@@ -2398,6 +2407,8 @@ class Component extends DCLogic {
       abrirMenu: () => this.setState({ menuOpen: true }),
       cerrarMenu: () => this.setState({ menuOpen: false }),
       menuStopProp: e => e.stopPropagation(),
+      noCookiesOk: !S.cookiesOk,
+      aceptarCookies: () => { localStorage.setItem('mate_cookies_ok', '1'); this.setState({ cookiesOk: true }); },
       padTop: isMobile ? '52px' : '0px',
       modalPad: isMobile ? '16px 16px 20px' : '28px 28px 24px',
       hayUsuario, noHayUsuario: !hayUsuario,
