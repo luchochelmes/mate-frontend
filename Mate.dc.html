@@ -951,9 +951,12 @@
                   <span style="font-family:'Instrument Sans',sans-serif;font-size:11px;color:#4B5240;background:#E9EBDD;border-radius:6px;padding:3px 7px">{{ b.tipo }}</span>
                   <span style="font-family:'Instrument Sans',sans-serif;font-size:11px;color:#4B5240;background:#E9EBDD;border-radius:6px;padding:3px 7px">{{ b.anio }}</span>
                 </div>
-                <div style="display:flex;align-items:center;justify-content:space-between;margin-top:4px">
+                <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:4px">
                   <span style="font-size:12px;color:#565B47">↓ {{ b.descargas }}</span>
-                  <button type="button" onClick="{{ b.download }}" style="background:#3B4A2F;color:#EDF1E0;border-radius:7px;padding:6px 12px;font-size:12.5px;font-weight:600">{{ b.dlLabel }}</button>
+                  <div style="display:flex;gap:6px">
+                    <button type="button" onClick="{{ b.eliminar }}" style="border:1px solid #E2CBAE;background:#fff;color:#9B3B28;border-radius:7px;padding:6px 10px;font-size:12.5px;cursor:pointer">Eliminar</button>
+                    <button type="button" onClick="{{ b.download }}" style="background:#3B4A2F;color:#EDF1E0;border-radius:7px;padding:6px 12px;font-size:12.5px;font-weight:600">{{ b.dlLabel }}</button>
+                  </div>
                 </div>
               </div>
             </sc-for>
@@ -2080,7 +2083,7 @@ class Component extends DCLogic {
 
     // --- BANCO ---
     const bancoDefault = [];
-    const bancoSubidos = S.uploads.map(u => ({ mat: u.matNombre, cat: u.cat, tipo: u.tipo, anio: u.anio, descargas: u.descargas || 0, col: u.col || '#565B47', esDefault:false, id: u.id, download: descargarSubido(u), dlLabel: 'Descargar' }));
+    const bancoSubidos = S.uploads.map(u => ({ mat: u.matNombre, cat: u.cat, tipo: u.tipo, anio: u.anio, descargas: u.descargas || 0, col: u.col || '#565B47', esDefault:false, id: u.id, download: descargarSubido(u), dlLabel: 'Descargar', eliminar: eliminarSubido(u) }));
     const bancoItems = [...bancoSubidos, ...bancoDefault].map(b => Object.assign({}, b, {
       download: b.download || (() => alert('Este es un parcial de ejemplo. Subí los tuyos con el botón de arriba y podrás descargarlos.')),
       dlLabel: b.dlLabel || 'Descargar'
