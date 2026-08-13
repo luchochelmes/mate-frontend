@@ -2458,7 +2458,7 @@ class Component extends DCLogic {
       menuStopProp: e => e.stopPropagation(),
       noCookiesOk: !S.cookiesOk,
       aceptarCookies: () => { localStorage.setItem('mate_cookies_ok', '1'); this.setState({ cookiesOk: true }); },
-      padTop: isMobile ? 'calc(52px + 32px)' : '0px',
+      padTop: isMobile ? 'calc(52px + 60px)' : 'clamp(32px,4vw,52px)',
       modalPad: isMobile ? '16px 16px 20px' : '28px 28px 24px',
       hayUsuario, noHayUsuario: !hayUsuario,
       modoLogin: S.authMode === 'login', modoRegister: S.authMode === 'register',
