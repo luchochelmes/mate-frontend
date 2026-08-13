@@ -932,12 +932,12 @@
           </header>
           <div style="display:flex;gap:10px;flex-wrap:wrap">
             <input type="text" placeholder="Buscar por materia o cátedra..." style="flex:1;min-width:220px;border:1px solid #DDE1D0;background:#F8F9F2;border-radius:8px;padding:10px 14px;font-size:14px;font-family:inherit;color:#23281C">
-            <button type="button" onClick="{{ abrirUpParcial }}" style="background:#3B4A2F;color:#EDF1E0;border-radius:8px;padding:10px 18px;font-size:14px;font-weight:600">+ Subir parcial</button>
+            <button type="button" onClick="{{ abrirUpParcial }}" style="background:#3B4A2F;color:#EDF1E0;border-radius:8px;padding:10px 18px;font-size:14px;font-weight:600">+ Subir archivo</button>
           </div>
           <sc-if value="{{ bancoVacio }}" hint-placeholder-val="{{ true }}">
             <div style="background:#F8F9F2;border:1px dashed #C9CEB8;border-radius:14px;padding:44px 24px;text-align:center;color:#565B47;display:flex;flex-direction:column;gap:8px;align-items:center">
               <span style="font-family:Fraunces,serif;font-weight:700;font-size:17px;color:#33392A">Todavía no hay parciales</span>
-              <span style="font-size:14px;max-width:44ch">Subí tu primer parcial con el botón “Subir parcial”. Los parciales que subas aparecen acá para descargar después.</span>
+              <span style=”font-size:14px;max-width:44ch”>Subí tu primer archivo con el botón “Subir archivo”. Los archivos que subas aparecen acá para descargar después.</span>
             </div>
           </sc-if>
           <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px">
@@ -1390,12 +1390,21 @@
               <input type="text" placeholder="2026" value="{{ parForm.anio }}" onInput="{{ setParAnio }}" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 12px;font-size:14px;font-family:inherit;color:#23281C">
             </div>
           </div>
-          <div style="display:flex;flex-direction:column;gap:6px">
+          <div style="display:flex;flex-direction:column;gap:8px">
             <label style="font-size:12px;color:#565B47">Tipo</label>
-            <div style="display:flex;flex-wrap:wrap;gap:6px">
-              <sc-for list="{{ parTipoOpts }}" as="t" hint-placeholder-count="5">
-                <button type="button" onClick="{{ t.pick }}" style="font-size:12.5px;border:1px solid {{ t.bd }};background:{{ t.bg }};color:{{ t.fg }};border-radius:999px;padding:5px 12px">{{ t.label }}</button>
-              </sc-for>
+            <div style="display:flex;flex-direction:column;gap:6px">
+              <div style="font-size:11px;color:#9B9B8A;letter-spacing:.08em;text-transform:uppercase">Evaluaciones</div>
+              <div style="display:flex;flex-wrap:wrap;gap:6px">
+                <sc-for list="{{ parTipoEvals }}" as="t" hint-placeholder-count="5">
+                  <button type="button" onClick="{{ t.pick }}" style="font-size:12.5px;border:1px solid {{ t.bd }};background:{{ t.bg }};color:{{ t.fg }};border-radius:999px;padding:5px 12px">{{ t.label }}</button>
+                </sc-for>
+              </div>
+              <div style="font-size:11px;color:#9B9B8A;letter-spacing:.08em;text-transform:uppercase;margin-top:4px">Material de estudio</div>
+              <div style="display:flex;flex-wrap:wrap;gap:6px">
+                <sc-for list="{{ parTipoMat }}" as="t" hint-placeholder-count="4">
+                  <button type="button" onClick="{{ t.pick }}" style="font-size:12.5px;border:1px solid {{ t.bd }};background:{{ t.bg }};color:{{ t.fg }};border-radius:999px;padding:5px 12px">{{ t.label }}</button>
+                </sc-for>
+              </div>
             </div>
           </div>
           <div style="display:flex;flex-direction:column;gap:6px">
@@ -1410,7 +1419,7 @@
           </sc-if>
           <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:6px">
             <button type="button" onClick="{{ cerrarModal }}" style="border:1px solid #DDE1D0;background:#fff;border-radius:8px;padding:10px 16px;font-size:14px;color:#565B47">Cancelar</button>
-            <button type="button" onClick="{{ guardarParcial }}" style="background:#3B4A2F;color:#EDF1E0;border-radius:8px;padding:10px 18px;font-size:14px;font-weight:600">Subir parcial</button>
+            <button type="button" onClick="{{ guardarParcial }}" style="background:#3B4A2F;color:#EDF1E0;border-radius:8px;padding:10px 18px;font-size:14px;font-weight:600">Subir archivo</button>
           </div>
         </div>
       </sc-if>
@@ -2173,11 +2182,9 @@ class Component extends DCLogic {
     const setParMat = e => this.setState({ parForm: Object.assign({}, S.parForm, { mat: e.target.value }) });
     const setParCat = e => this.setState({ parForm: Object.assign({}, S.parForm, { cat: e.target.value }) });
     const setParAnio = e => this.setState({ parForm: Object.assign({}, S.parForm, { anio: e.target.value }) });
-    const parTipoLista = ['Parcial 1','Parcial 2','Recuperatorio','Final','TP','Resumen','Apunte','Bibliografía','Otro'];
-    const parTipoOpts = parTipoLista.map(t => {
-      const on = S.parForm.tipo === t;
-      return { label: t, pick: () => this.setState({ parForm: Object.assign({}, S.parForm, { tipo: t }) }), bd: on ? '#3B4A2F' : '#D3D8C2', bg: on ? '#3B4A2F' : '#F8F9F2', fg: on ? '#F2F5E6' : '#4B5240' };
-    });
+    const _mkTipoOpt = t => { const on = S.parForm.tipo === t; return { label: t, pick: () => this.setState({ parForm: Object.assign({}, S.parForm, { tipo: t }) }), bd: on ? '#3B4A2F' : '#D3D8C2', bg: on ? '#3B4A2F' : '#F8F9F2', fg: on ? '#F2F5E6' : '#4B5240' }; };
+    const parTipoEvals = ['Parcial 1','Parcial 2','Recuperatorio','Final','TP'].map(_mkTipoOpt);
+    const parTipoMat   = ['Resumen','Apunte','Bibliografía','Otro'].map(_mkTipoOpt);
     const parMatOpts = MATS.map(m => ({ v: m.id, n: m.n }));
     const setParFile = (e) => {
       const file = e && e.target && e.target.files && e.target.files[0];
@@ -2538,13 +2545,13 @@ class Component extends DCLogic {
       esModalMat: S.modal === 'addMat' || S.modal === 'editMat',
       esModalDel: S.modal === 'delMat',
       esModalParcial: S.modal === 'upParcial',
-      modalTitle: S.modal === 'addMat' ? 'Nueva materia' : (S.modal === 'editMat' ? 'Editar materia' : (S.modal === 'delMat' ? 'Eliminar materia' : (S.modal === 'upParcial' ? 'Subir parcial' : (S.modal === 'addEv' ? 'Nuevo evento' : (S.modal === 'addHor' ? 'Nuevo bloque de horario' : ''))))),
+      modalTitle: S.modal === 'addMat' ? 'Nueva materia' : (S.modal === 'editMat' ? 'Editar materia' : (S.modal === 'delMat' ? 'Eliminar materia' : (S.modal === 'upParcial' ? 'Subir archivo' : (S.modal === 'addEv' ? 'Nuevo evento' : (S.modal === 'addHor' ? 'Nuevo bloque de horario' : ''))))),
       abrirAddMat, abrirEditMat, pedirDelMat, cerrarModal, modalOverlayClick,
       matForm: S.matForm, setMatN, setMatCat, matColors, matEstOpts, guardarMat,
       hayMatError: !!S.__matErr, matError: S.__matErr || '',
       delMatNom: (S.confirmDelId && (_matAll(S.confirmDelId) || {}).n) || '',
       confirmarDelMat,
-      abrirUpParcial, parForm: S.parForm, setParMat, setParCat, setParAnio, setParFile, parTipoOpts, parMatOpts,
+      abrirUpParcial, parForm: S.parForm, setParMat, setParCat, setParAnio, setParFile, parTipoEvals, parTipoMat, parMatOpts,
       parTieneArchivo: !!S.parForm.base64,
       hayParError: !!S.__parErr, parError: S.__parErr || '',
       guardarParcial,
